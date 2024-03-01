@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Filter Include="Core">
+            <UniqueIdentifier>{C05F4454-B7C2-4F54-8908-958C87F5930A}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="x64">
+            <UniqueIdentifier>{0DBB582E-684F-4EE5-BEE0-02DE755B540C}</UniqueIdentifier>
+        </Filter>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="Core\AssetAssistLibrary.cpp">
+            <Filter>Core</Filter>
+        </ClCompile>
+        <ClCompile Include="Core\AssetPackage.cpp">
+            <Filter>Core</Filter>
+        </ClCompile>
+        <ClCompile Include="Core\AssetPackageManage.cpp">
+            <Filter>Core</Filter>
+        </ClCompile>
+        <ClCompile Include="RenZhaiAssetHandleType.cpp" />
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="Core\AssetAssistLibrary.h">
+            <Filter>Core</Filter>
+        </ClInclude>
+        <ClInclude Include="Core\AssetPackage.h">
+            <Filter>Core</Filter>
+        </ClInclude>
+        <ClInclude Include="Core\AssetPackageManage.h">
+            <Filter>Core</Filter>
+        </ClInclude>
+        <ClInclude Include="RenZhaiAssetHandle.h" />
+        <ClInclude Include="RenZhaiAssetHandleMacro.h" />
+        <ClInclude Include="RenZhaiAssetHandleType.h" />
+    </ItemGroup>
+</Project>

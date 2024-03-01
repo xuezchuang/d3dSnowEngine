@@ -1,0 +1,2 @@
+1.先编译RenzhaiBuildTool生成反射数据 再运行RenzhaiEngine
+2,如果启动奔溃 请注掉SSAO的渲染，因为个别电脑不支持这个

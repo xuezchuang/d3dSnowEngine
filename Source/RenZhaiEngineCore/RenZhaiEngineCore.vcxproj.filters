@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Filter Include="Core">
+            <UniqueIdentifier>{641E6A4E-4A48-4B8B-9272-B0D2565D5572}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="Core\Path">
+            <UniqueIdentifier>{38742626-3159-46D1-82F7-0E3F7EB57BDD}</UniqueIdentifier>
+        </Filter>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="Core\Path\EnginePath.cpp">
+            <Filter>Core\Path</Filter>
+        </ClCompile>
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="Core\Path\EnginePath.h">
+            <Filter>Core\Path</Filter>
+        </ClInclude>
+        <ClInclude Include="RenZhaiEngineCore.h" />
+        <ClInclude Include="RenZhaiEngineCoreMacro.h" />
+    </ItemGroup>
+</Project>

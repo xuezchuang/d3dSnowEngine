@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Filter Include="Archive">
+            <UniqueIdentifier>{C4DE147E-0662-47D8-8AE1-C6E19F6C228B}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="CodeReflection">
+            <UniqueIdentifier>{3369408E-45B4-435C-9ACE-F3BF4CD185D1}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="Component">
+            <UniqueIdentifier>{AC24A210-946C-4801-BBF8-C5C4A121D6E4}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="Construction">
+            <UniqueIdentifier>{1C1A4FC1-0CEA-41E9-8E80-62FBFEEC675D}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="CoreObject">
+            <UniqueIdentifier>{5FFB52FD-B2D4-4126-AA8D-7FA598D83364}</UniqueIdentifier>
+        </Filter>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="Archive\Archive.cpp">
+            <Filter>Archive</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\ClassManage.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\Frame.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\FunctionManage.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\NativeClass.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\ScriptCommand.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\Template.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="Component\Component.cpp">
+            <Filter>Component</Filter>
+        </ClCompile>
+        <ClCompile Include="Construction\ConstructionComponents.cpp">
+            <Filter>Construction</Filter>
+        </ClCompile>
+        <ClCompile Include="Construction\ObjectConstruction.cpp">
+            <Filter>Construction</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\ArrayPropertyObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\ClassObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\ContainerPropertyObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\CoreMinimalObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\EnumObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\FieldObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\FunctionObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\GuidInterface.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\MapPropertyObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\PropertyObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+        <ClCompile Include="CoreObject\StructObject.cpp">
+            <Filter>CoreObject</Filter>
+        </ClCompile>
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="Archive\Archive.h">
+            <Filter>Archive</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\ClassManage.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\CodeReflectionMacroTag.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\Frame.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\FunctionManage.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\NativeClass.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\ReflectionTag.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\ScriptCommand.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\ScriptMacro.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\Template.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="Component\Component.h">
+            <Filter>Component</Filter>
+        </ClInclude>
+        <ClInclude Include="Construction\ConstructionComponents.h">
+            <Filter>Construction</Filter>
+        </ClInclude>
+        <ClInclude Include="Construction\ObjectConstruction.h">
+            <Filter>Construction</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreMacro.h" />
+        <ClInclude Include="CoreObject\ArrayPropertyObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\ClassObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\ContainerPropertyObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\CoreMinimalObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\CoreObjectType.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\EnumObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\FieldObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\FunctionObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\GuidInterface.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\MapPropertyObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\PropertyObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObject\StructObject.h">
+            <Filter>CoreObject</Filter>
+        </ClInclude>
+        <ClInclude Include="CoreObjectMinimal.h" />
+        <ClInclude Include="RenZhaiCoreObjectMacro.h" />
+    </ItemGroup>
+</Project>

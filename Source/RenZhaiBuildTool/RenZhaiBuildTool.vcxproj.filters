@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Filter Include="CodeReflection">
+            <UniqueIdentifier>{4AC4A20C-9C48-4BD1-B93E-3FB037D98914}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="CodeReflection\CollectClassInfoFun">
+            <UniqueIdentifier>{9A7DF6D4-B16D-4C54-9840-5916AFADAEE2}</UniqueIdentifier>
+        </Filter>
+        <Filter Include="CodeReflection\IntermediateFile">
+            <UniqueIdentifier>{63387B56-FE40-4E6E-A911-EC247F089FD4}</UniqueIdentifier>
+        </Filter>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="CodeReflection\CollectClassInfoFun\CollectClassInfo.cpp">
+            <Filter>CodeReflection\CollectClassInfoFun</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\CppSourceCodeType.cpp">
+            <Filter>CodeReflection</Filter>
+        </ClCompile>
+        <ClCompile Include="CodeReflection\IntermediateFile\SpawnIntermediateFile.cpp">
+            <Filter>CodeReflection\IntermediateFile</Filter>
+        </ClCompile>
+        <ClCompile Include="RenZhaiBuildToolMain.cpp" />
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="CodeReflection\CollectClassInfoFun\CollectClassInfo.h">
+            <Filter>CodeReflection\CollectClassInfoFun</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\CppSourceCodeType.h">
+            <Filter>CodeReflection</Filter>
+        </ClInclude>
+        <ClInclude Include="CodeReflection\IntermediateFile\SpawnIntermediateFile.h">
+            <Filter>CodeReflection\IntermediateFile</Filter>
+        </ClInclude>
+        <ClInclude Include="RenZhaiBuildTool.h" />
+        <ClInclude Include="TestObject.h" />
+    </ItemGroup>
+</Project>
