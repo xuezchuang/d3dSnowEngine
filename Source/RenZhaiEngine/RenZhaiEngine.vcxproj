@@ -643,7 +643,7 @@
     <IncludePath>$(SolutionDir)Source\RenZhaiCoreObject;$(SolutionDir)Source\RenZhaiMeshImportExportTool;$(SolutionDir)Source\SimpleBaseLibrary;$(SolutionDir)Source\RenZhaiAssetHandle;$(SolutionDir)Source\RenZhaiEngineCore;$(SolutionDir)Source\RenZhaiEngine\imgui;$(SolutionDir)Intermediate\CodeReflection;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\Other\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -688,6 +688,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;FBXSDK_EXPORTS;_CRT_SECURE_NO_WARNINGS;SIMPLE_LIBRARY_EXPORTS;CLOSE_DISABLE_DEBUG_INFOR;EDITOR_ENGINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>Disabled</Optimization>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

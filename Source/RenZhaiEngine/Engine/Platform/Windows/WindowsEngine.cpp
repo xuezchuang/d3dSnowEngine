@@ -51,6 +51,7 @@ int CWindowsEngine::PreInit(FWinMainCommandParameters InParameters)
 {
 	//自适应屏幕大小绑定
 	OnResetSizeDelegate.AddFunction(this, &CWindowsEngine::OnResetSize);
+	ActiveDelegate.AddFunction(this, &CWindowsEngine::OnActive);
 
 	InitPath();
 
@@ -107,13 +108,18 @@ int CWindowsEngine::PostInit()
 
 void CWindowsEngine::Tick(float DeltaTime)
 {
-	for (auto& Tmp : GObjects)
+	if(m_bPaused)
 	{
-		if (Tmp->IsTick())
-		{
-			Tmp->Tick(DeltaTime);
-		}
+		Sleep(30);
+		return;
 	}
+	//for (auto& Tmp : GObjects)
+	//{
+	//	if (Tmp->IsTick())
+	//	{
+	//		Tmp->Tick(DeltaTime);
+	//	}
+	//}
 
 	if (World)
 	{
@@ -135,13 +141,31 @@ void CWindowsEngine::Tick(float DeltaTime)
 	}
 }
 
-void CWindowsEngine::OnResetSize(int InWidth, int InHeight)
+void CWindowsEngine::OnResetSize(int InWidth, int InHeight, int wParam)
 {
-	RenderingEngine->OnResetSize(InWidth, InHeight);
+	if(wParam == SIZE_MINIMIZED)
+	{
+		m_bPaused = true;
+		return;
+	}
+	m_bPaused = false;
+	RenderingEngine->OnResetSize(InWidth, InHeight,wParam);
 
 #if EDITOR_ENGINE
-	EditorEngine->OnResetSize(InWidth, InHeight);
+	EditorEngine->OnResetSize(InWidth, InHeight,wParam);
 #endif
+}
+
+void CWindowsEngine::OnActive(int wParam, int lParam)
+{
+	if(wParam == WA_INACTIVE)
+	{
+		m_bPaused = true;
+	}
+	else
+	{
+		m_bPaused = false;
+	}
 }
 
 int CWindowsEngine::PreExit()

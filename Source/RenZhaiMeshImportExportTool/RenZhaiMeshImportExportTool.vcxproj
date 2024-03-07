@@ -79,7 +79,7 @@
     <IncludePath>$(SolutionDir)Source\RenZhaiMeshImportExportTool\;$(SolutionDir)Source\RenZhaiMeshImportExportTool\ThirdPartyLibrary\FBX\include\;$(SolutionDir)Source\SimpleBaseLibrary;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Source\RenZhaiMeshImportExportTool\ThirdPartyLibrary\FBX\lib\vs2015\x64\debug\;$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\Other\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;MESHIMPORTEXPORTTOOL_EXPORTS;FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

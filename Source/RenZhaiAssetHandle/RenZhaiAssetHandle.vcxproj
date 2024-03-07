@@ -77,7 +77,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
-    <IntDir>$(SolutionDir)Intermediate\Other\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\Other\$(ProjectName)\</IntDir>
     <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\RenZhaiCoreObject\;$(SolutionDir)Source\RenZhaiEngineCore\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

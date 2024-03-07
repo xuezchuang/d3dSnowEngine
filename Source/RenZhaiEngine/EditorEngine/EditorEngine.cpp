@@ -39,7 +39,7 @@ int CEditorEngine::PostInit()
 	return 0;
 }
 
-void CEditorEngine::OnResetSize(int InWidth, int InHeight)
+void CEditorEngine::OnResetSize(int InWidth, int InHeight, int nWara)
 {
 }
 

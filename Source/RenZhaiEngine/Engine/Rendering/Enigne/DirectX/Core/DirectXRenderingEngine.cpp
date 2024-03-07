@@ -33,6 +33,9 @@
 #if defined(_WIN32)
 #include "../../../../Core/WinMainCommandParameters.h"
 
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
+
 #if EDITOR_ENGINE
 #include "../../../../../EditorEngine/SelectEditor/OperationHandle/MoveArrow.h"
 #include "../../../../../EditorEngine/SelectEditor/OperationHandle/RotatorArrow.h"
@@ -82,8 +85,10 @@ int CDirectXRenderingEngine::PreInit(FWinMainCommandParameters InParameters)
 	return 0;
 }
 
+
 int CDirectXRenderingEngine::Init(FWinMainCommandParameters InParameters)
 {
+
 	InitDirect3D();
 
 	PostInitDirect3D();
@@ -921,7 +926,7 @@ void CDirectXRenderingEngine::Tick(float DeltaTime)
 	WaitGPUCommandQueueComplete();
 }
 
-void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight)
+void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight, int wParam)
 {
 	if (D3dDevice)
 	{
@@ -1014,10 +1019,12 @@ void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight)
 	}
 }
 
+
+
+
 int CDirectXRenderingEngine::PreExit()
 {
-
-
+	
 	Engine_Log("Engine post exit complete.");
 	return 0;
 }
@@ -1032,6 +1039,17 @@ int CDirectXRenderingEngine::Exit()
 int CDirectXRenderingEngine::PostExit()
 {
 	FEngineRenderConfig::Destroy();
+	WaitGPUCommandQueueComplete();
+//#if defined(_DEBUG)
+//	// 假设你已经创建了ID3D12Device对象d3dDevice
+//	IDXGIDebug1* dxgiDebug;
+//	if(SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
+//	{
+//		dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_FLAGS(DXGI_DEBUG_RLO_SUMMARY | DXGI_DEBUG_RLO_IGNORE_INTERNAL));
+//		dxgiDebug->Release();
+//	}
+//#endif
+
 
 	Engine_Log("Engine post exit complete.");
 	return 0;
@@ -1132,12 +1150,13 @@ void CDirectXRenderingEngine::WaitGPUCommandQueueComplete()
 
 bool CDirectXRenderingEngine::InitDirect3D()
 {
-	//Debug
+#if defined(DEBUG) || defined(_DEBUG) 
 	ComPtr<ID3D12Debug> D3D12Debug;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&D3D12Debug))))
+	if(SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&D3D12Debug))))
 	{
 		D3D12Debug->EnableDebugLayer();
 	}
+#endif
 
 	////////////////////////////////////////////////////////////////////////////////////////
 		//HRESULT
@@ -1183,7 +1202,9 @@ bool CDirectXRenderingEngine::InitDirect3D()
 	Queue->Signal
 	wait
 	*/
-	ANALYSIS_HRESULT(D3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&Fence)));
+	//ANALYSIS_HRESULT(D3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&Fence)));
+	ANALYSIS_HRESULT(D3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(Fence.GetAddressOf())));
+	
 
 	//初始化命令对象
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1302,7 +1323,7 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 	int WindowWidth = FEngineRenderConfig::GetRenderConfig()->ScrrenWidth;
 	int WindowHight = FEngineRenderConfig::GetRenderConfig()->ScrrenHight;
 
-	OnResetSize(WindowWidth,WindowHight);
+	OnResetSize(WindowWidth,WindowHight,0);
 }
 
 #endif

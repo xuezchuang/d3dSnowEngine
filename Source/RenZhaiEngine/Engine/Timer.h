@@ -15,4 +15,6 @@ private:
 
 	__int64 CurrentTime;
 	__int64 PrevTime;
+
+	bool mAppPaused = false;
 };

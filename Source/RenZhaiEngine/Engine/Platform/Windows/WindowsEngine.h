@@ -21,7 +21,8 @@ public:
 	virtual int PostInit();
 
 	virtual void Tick(float DeltaTime);
-	virtual void OnResetSize(int InWidth, int InHeight);
+	virtual void OnResetSize(int InWidth, int InHeight,int wParam);
+	virtual void OnActive(int wParam,int lParam);
 
 	virtual int PreExit();
 	virtual int Exit();
@@ -46,5 +47,8 @@ protected:
 	class CEditorEngine* EditorEngine;
 #endif
 	CWorld* World;
+
+private:
+	bool m_bPaused = false;
 };
 #endif

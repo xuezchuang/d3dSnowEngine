@@ -20,7 +20,7 @@ public:
 
 	virtual void UpdateCalculations(float DeltaTime,const FViewportInfo &ViewportInfo);
 	virtual void Tick(float DeltaTime);
-	virtual void OnResetSize(int InWidth, int InHeight);
+	virtual void OnResetSize(int InWidth, int InHeight, int wParam);
 
 	virtual int PreExit();
 	virtual int Exit();

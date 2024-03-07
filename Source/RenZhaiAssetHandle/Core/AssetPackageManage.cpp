@@ -15,25 +15,25 @@ FAssetPackageManage* FAssetPackageManage::Get()
 
 void FAssetPackageManage::Tick(float DeltaTime)
 {
-	bool bExit = false;
-	std::map<string, CAssetPackage*> TmpPackags;
-	for (auto& Tmp : Instance->Packages)
-	{
-		if (Tmp.second->IsPeriodOfDestruction())
-		{
-			bExit = true;
-		}
-		else
-		{
-			TmpPackags.insert(Tmp);
-		}
-	}
+	//bool bExit = false;
+	//std::map<string, CAssetPackage*> TmpPackags;
+	//for (auto& Tmp : Instance->Packages)
+	//{
+	//	if (Tmp.second->IsPeriodOfDestruction())
+	//	{
+	//		bExit = true;
+	//	}
+	//	else
+	//	{
+	//		TmpPackags.insert(Tmp);
+	//	}
+	//}
 
-	//通过赋值的方式来删除
-	if (bExit)
-	{
-		Instance->Packages = TmpPackags;
-	}
+	////通过赋值的方式来删除
+	//if (bExit)
+	//{
+	//	Instance->Packages = TmpPackags;
+	//}
 }
 
 void FAssetPackageManage::Destory()

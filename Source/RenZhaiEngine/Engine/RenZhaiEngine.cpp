@@ -45,10 +45,10 @@ int Init(CEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd
 	}
 
 	//初始化我们的资产
-	FAssetPackageManage::Get()->Init();
+	//FAssetPackageManage::Get()->Init();
 
 	ReturnValue = InEngine->PostInit();
-	if (ReturnValue != 0)
+	if(ReturnValue != 0)
 	{
 		Engine_Log_Error("[%i]Engine post initialization error, please check the initialization problem.", ReturnValue);
 		return ReturnValue;

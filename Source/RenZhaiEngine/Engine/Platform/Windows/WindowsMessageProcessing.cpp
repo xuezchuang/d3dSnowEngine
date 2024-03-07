@@ -31,6 +31,9 @@ LRESULT CALLBACK EngineWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 	case WM_MOUSEMOVE:
 		MouseMoveDelegate.Broadcast(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
+	case WM_ACTIVATE:
+		ActiveDelegate.Broadcast(GET_X_LPARAM(wParam), GET_Y_LPARAM(lParam));
+		return 0;
 	case WM_MOUSEWHEEL:
 		MousesWheelsDelegate.Broadcast(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam),(short)HIWORD(wParam));
 		return 0;
@@ -39,7 +42,7 @@ LRESULT CALLBACK EngineWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 		int ViewportWidth = LOWORD(lParam);
 		int ViewportHeight = HIWORD(lParam);
 
-		OnResetSizeDelegate.Broadcast(ViewportWidth, ViewportHeight);
+		OnResetSizeDelegate.Broadcast(ViewportWidth, ViewportHeight, wParam);
 
 		return 0;
 	}
