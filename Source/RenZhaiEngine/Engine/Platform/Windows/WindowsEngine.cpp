@@ -84,7 +84,7 @@ int CWindowsEngine::Init(FWinMainCommandParameters InParameters)
 
 	//×¢²á¶ÔÓ¦µÄworld
 	BUILD_OBJECT_PARAMETERS_BY_NO_COMPONENT(, this);
-	World = CreateObject<CWorld>(Param,new CWorld());
+	World = CreateObject<CWorld>(Param, new CWorld());
 	RenderingEngine->World = World;
 
 	Engine_Log("Engine initialization complete.");
@@ -113,13 +113,13 @@ void CWindowsEngine::Tick(float DeltaTime)
 		Sleep(30);
 		return;
 	}
-	//for (auto& Tmp : GObjects)
-	//{
-	//	if (Tmp->IsTick())
-	//	{
-	//		Tmp->Tick(DeltaTime);
-	//	}
-	//}
+	for(auto& Tmp : GObjects)
+	{
+		if(Tmp->IsTick())
+		{
+			Tmp->Tick(DeltaTime);
+		}
+	}
 
 	if (World)
 	{

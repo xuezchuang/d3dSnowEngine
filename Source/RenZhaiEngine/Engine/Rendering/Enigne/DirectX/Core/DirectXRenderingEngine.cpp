@@ -108,7 +108,6 @@ int CDirectXRenderingEngine::PostInit()
 	{
 #if EDITOR_ENGINE
 		
-
 		if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
 		{
 			InMoveArrow->CreateMesh();
@@ -888,6 +887,10 @@ int CDirectXRenderingEngine::PostInit()
 
 	WaitGPUCommandQueueComplete();
 
+	int nWidth = FEngineRenderConfig::GetRenderConfig()->ScrrenWidth;
+	int nHeight = FEngineRenderConfig::GetRenderConfig()->ScrrenHight;
+
+	OnResetSize(nWidth, nHeight, 0);
 	return 0;
 }
 
@@ -1040,6 +1043,10 @@ int CDirectXRenderingEngine::PostExit()
 {
 	FEngineRenderConfig::Destroy();
 	WaitGPUCommandQueueComplete();
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 //#if defined(_DEBUG)
 //	// 假设你已经创建了ID3D12Device对象d3dDevice
 //	IDXGIDebug1* dxgiDebug;

@@ -136,12 +136,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 				Tick(Engine,Timer->GetDeltaTime());
 
 				//模拟电脑固定消耗
-			//	Sleep(1);
+				Sleep(1);
 			}
 		}
 
 		//退出
 		ReturnValue = Exit(Engine);
+		delete Engine;
 	}
 	else
 	{
