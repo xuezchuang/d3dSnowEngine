@@ -48,6 +48,7 @@ void FAssetPackageManage::Destory()
 
 void FAssetPackageManage::Init()
 {
+	return;
 	def_c_paths_v2 Paths;
 	init_def_c_paths_v2(&Paths);
 

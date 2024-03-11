@@ -25,5 +25,6 @@ protected:
 	virtual void SetLightComponent(CLightComponent* InNewComponent);
 
 public:
-	const CLightComponent* GetLightComponent() const { return  LightComponent; }
+	//const CLightComponent* GetLightComponent() const { return  LightComponent; }
+	CLightComponent* GetLightComponent() const { return  LightComponent; }
 };

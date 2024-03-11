@@ -62,8 +62,6 @@ void Tick(CEngine* InEngine, float DeltaTime)
 	FAssetPackageManage::Tick(DeltaTime);
 
 	InEngine->Tick(DeltaTime);
-
-	//Sleep(30);
 }
 
 int Exit(CEngine* InEngine)
@@ -136,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 				Tick(Engine,Timer->GetDeltaTime());
 
 				//模拟电脑固定消耗
-				Sleep(1);
+				//Sleep(1);
 			}
 		}
 

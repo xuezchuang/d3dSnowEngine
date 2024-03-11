@@ -166,25 +166,25 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 
 	//渲染SSAO
 	//SSAO.Draw(DeltaTime);
-	//RootSignature.PreDraw(DeltaTime);
+	RootSignature.PreDraw(DeltaTime);
 
 	//存储我们的SSAO到指定的buffer
-	//SSAO.SaveToSSAOBuffer();
+	SSAO.SaveToSSAOBuffer();
 
 	//主视口清除画布
 	//ClearMainSwapChainCanvas();
 
-	//重新绑定贴图
+	////重新绑定贴图
 	//GeometryMap.Draw2DTexture(DeltaTime);
 
-	//渲染
+	////渲染
 	//GeometryMap.DynamicShadowCubeMap.PreDraw(DeltaTime);
 
-	//渲染阴影
+	////渲染阴影
 	//GeometryMap.DrawShadow(DeltaTime);
 
-	//动态反射
-	//if (DynamicCubeMap.IsExitDynamicReflectionMesh())
+	////动态反射
+	//if(DynamicCubeMap.IsExitDynamicReflectionMesh())
 	//{
 	//	DynamicCubeMap.PreDraw(DeltaTime);
 	//}
@@ -194,15 +194,15 @@ void FRenderingPipeline::PreDraw(float DeltaTime)
 
 void FRenderingPipeline::Draw(float DeltaTime)
 {	
-	////主视口
-	//GeometryMap.DrawViewport(DeltaTime);
+	//主视口
+	GeometryMap.DrawViewport(DeltaTime);
 
 	////CubeMap 覆盖原先被修改的CubeMap
 	//GeometryMap.DrawCubeMapTexture(DeltaTime);
 
 	////各类层级
 	//RenderLayer.Draw(RENDERLAYER_BACKGROUND,DeltaTime);
-	//RenderLayer.Draw(RENDERLAYER_OPAQUE, DeltaTime);
+	RenderLayer.Draw(RENDERLAYER_OPAQUE, DeltaTime);
 	//RenderLayer.Draw(RENDERLAYER_SKINNED_OPAQUE, DeltaTime);//渲染动画层
 	//RenderLayer.Draw(RENDERLAYER_TRANSPARENT, DeltaTime);
 
@@ -218,7 +218,7 @@ void FRenderingPipeline::Draw(float DeltaTime)
 	//渲染UI
 	UIPipeline.Draw(DeltaTime);
 
-	//DirectXPipelineState.Draw(DeltaTime);
+	DirectXPipelineState.Draw(DeltaTime);
 }
 
 void FRenderingPipeline::PostDraw(float DeltaTime)

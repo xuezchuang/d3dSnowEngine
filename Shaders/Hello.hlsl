@@ -135,6 +135,8 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 	float4 FinalColor = { 0.f,0.f,0.f,1.f };
 
+	//return float4(1.0f, 0.0f, 0.0f, 1.0f);
+	
 	for (int i = 0; i < 16; i++)
 	{
 		if (length(SceneLights[i].LightIntensity.xyz) > 0.f)
