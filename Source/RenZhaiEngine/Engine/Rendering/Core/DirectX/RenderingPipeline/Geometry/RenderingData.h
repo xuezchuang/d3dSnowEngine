@@ -15,9 +15,7 @@ struct FRenderingDataSection :public FMeshSection
 };
 
 //提供渲染内容的接口
-struct FRenderingData 
-	:public IDirectXDeviceInterfece_Struct
-	,public std::enable_shared_from_this<FRenderingData>
+struct FRenderingData :public IDirectXDeviceInterfece_Struct, public std::enable_shared_from_this<FRenderingData>
 {
 public:
 	FRenderingData();

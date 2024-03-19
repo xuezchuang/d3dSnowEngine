@@ -106,28 +106,6 @@ int CDirectXRenderingEngine::PostInit()
 
 	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
 	{
-		if(GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
-		{
-			ParallelLight->GetLightComponent()->GetLightMesh()->SetVisible(false);
-			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
-			ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
-			ParallelLight->SetScale(fvector_3d(1));
-			ParallelLight->SetLightIntensity(fvector_3d(1.1f, 1.1f, 1.1f));
-		}
-
-		if(GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
-		{
-			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
-			InBoxMesh->SetPosition(XMFLOAT3(0.f, 0.0f, 20.f));
-			InBoxMesh->SetScale(fvector_3d(1));
-			if(CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
-			{
-				//	InMaterial->SetBaseColor(fvector_4d(0.5f));
-				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-			}
-		}
-		goto FINIAL;
-
 #if EDITOR_ENGINE
 		
 		if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
@@ -191,6 +169,33 @@ int CDirectXRenderingEngine::PostInit()
 		//}	
 
 		
+		if(GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
+		{
+			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
+
+			InBoxMesh->SetPosition(XMFLOAT3(0.0f, 0.0f, 2.5f));
+			InBoxMesh->SetScale(fvector_3d(1));
+			if(CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
+			{
+				//	InMaterial->SetBaseColor(fvector_4d(0.5f));
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+			}
+		}
+
+		if(GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
+		{
+			InPlaneMesh->CreateMesh(7.f, 7.f, 2, 2);
+			InPlaneMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
+			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, -90.0f));
+			if(CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+			{
+				//InMaterial->SetMaterialType(ShadowTexture);
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+				
+			}
+		}
+
+		goto FINIAL;
 
 		////ÌðÌðÈ¦
 		if (GTorusMesh* InTorusMesh = World->CreateActorObject<GTorusMesh>())

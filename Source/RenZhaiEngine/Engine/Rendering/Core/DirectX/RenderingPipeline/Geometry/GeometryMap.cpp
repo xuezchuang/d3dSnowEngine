@@ -782,11 +782,7 @@ bool FGeometry::IsRenderingDataExistence(CMeshComponent* InKey)
 }
 
 template<class T>
-void FGeometry::DuplicateMesh_Interior(
-	CMeshComponent* InMesh,
-	std::shared_ptr<FRenderingData>& MeshData,
-	FMeshData<T>& InMyRenderingData, 
-	int InKey)
+void FGeometry::DuplicateMesh_Interior(CMeshComponent* InMesh, std::shared_ptr<FRenderingData>& MeshData, FMeshData<T>& InMyRenderingData, int InKey)
 {
 	if (std::shared_ptr<FRenderLayer> InRenderLayer = FRenderLayerManage::FindByRenderLayer((int)InMesh->GetRenderLayerType()))
 	{
@@ -858,9 +854,7 @@ void FGeometry::BuildMesh_Interior(
 }
 
 template<class T>
-void FGeometry::BuildBoundingBox(
-	const FRenderContent<T>& MeshData,
-	BoundingBox& OutBounds)
+void FGeometry::BuildBoundingBox(const FRenderContent<T>& MeshData,BoundingBox& OutBounds)
 {
 	//求AABB
 	{
@@ -889,10 +883,7 @@ void FGeometry::BuildBoundingBox(
 }
 
 template<class T>
-void FGeometry::BuildRenderingSection(
-	const FRenderContent<T>& MeshData,
-	std::shared_ptr<FRenderingData> InRenderingData,
-	FMeshData<T>& InMeshRenderingData)
+void FGeometry::BuildRenderingSection(const FRenderContent<T>& MeshData, std::shared_ptr<FRenderingData> InRenderingData, FMeshData<T>& InMeshRenderingData)
 {
 	if (InRenderingData)
 	{
@@ -901,8 +892,7 @@ void FGeometry::BuildRenderingSection(
 		for (auto& Tmp : MeshData.SectionDescribe)
 		{
 			InRenderingData->Sections.push_back(FRenderingDataSection());
-			FRenderingDataSection& InSection = InRenderingData->Sections[
-				InRenderingData->Sections.size() - 1];
+			FRenderingDataSection& InSection = InRenderingData->Sections[InRenderingData->Sections.size() - 1];
 
 			InSection.MeshObjectIndex = MeshObjectCount++;
 
@@ -928,24 +918,14 @@ void FGeometry::BuildRenderingSection(
 
 		//高效的插入
 		//索引的合并
-		InMeshRenderingData.IndexData.insert(
-			InMeshRenderingData.IndexData.end(),
-			MeshData.Data.IndexData.begin(),
-			MeshData.Data.IndexData.end());
+		InMeshRenderingData.IndexData.insert(InMeshRenderingData.IndexData.end(), MeshData.Data.IndexData.begin(), MeshData.Data.IndexData.end());
 
 		//顶点的合并
-		InMeshRenderingData.VertexData.insert(
-			InMeshRenderingData.VertexData.end(),
-			MeshData.Data.VertexData.begin(),
-			MeshData.Data.VertexData.end());
+		InMeshRenderingData.VertexData.insert(InMeshRenderingData.VertexData.end(), MeshData.Data.VertexData.begin(), MeshData.Data.VertexData.end());
 	}
 }
 
-void FGeometry::BuildMesh(
-	const size_t InMeshHash,
-	CMeshComponent* InMesh,
-	const FMeshRenderingData& MeshData,
-	int InKey)
+void FGeometry::BuildMesh(const size_t InMeshHash,CMeshComponent* InMesh,const FMeshRenderingData& MeshData,int InKey)
 {
 	BuildMesh_Interior(
 	InMeshHash, 
@@ -959,11 +939,7 @@ void FGeometry::BuildMesh(
 	});
 }
 
-void FGeometry::BuildMesh(
-	const size_t InMeshHash,
-	CMeshComponent* InMesh, 
-	const FSkinnedMeshRenderingData& SkinnedMeshData,
-	int InKey)
+void FGeometry::BuildMesh(const size_t InMeshHash,CMeshComponent* InMesh, const FSkinnedMeshRenderingData& SkinnedMeshData,int InKey)
 {
 	BuildMesh_Interior(
 	InMeshHash,
@@ -1050,12 +1026,7 @@ void FGeometry::Build(int InType)
 	}
 }
 
-bool FGeometry::GetRenderingDataInfo(
-	ERenderingMeshType InMeshType,
-	UINT& VertexSizeInBytes, 
-	UINT& IndexSizeInBytes, 
-	void*& VertexDataPtr,
-	void*& IndexDataPtr)
+bool FGeometry::GetRenderingDataInfo(ERenderingMeshType InMeshType,UINT& VertexSizeInBytes, UINT& IndexSizeInBytes, void*& VertexDataPtr,void*& IndexDataPtr)
 {
 	VertexSizeInBytes = 0;
 	IndexSizeInBytes = 0;
@@ -1145,9 +1116,7 @@ void FGeometry::FindRenderingDatas(std::function<EFindValueType(std::shared_ptr<
 	}
 }
 
-void FGeometry::DuplicateMeshRenderingSection(
-	const std::shared_ptr<FRenderingData>& MeshData,
-	std::shared_ptr<FRenderingData>& InMeshRenderingData)
+void FGeometry::DuplicateMeshRenderingSection(const std::shared_ptr<FRenderingData>& MeshData,std::shared_ptr<FRenderingData>& InMeshRenderingData)
 {
 	for (auto& Tmp : MeshData->Sections)
 	{
@@ -1167,15 +1136,12 @@ void FGeometry::DuplicateMeshRenderingSection(
 	}
 }
 
-void FGeometry::BuildUniqueRenderingSection(
-	const std::shared_ptr<FRenderingData>& MeshData,
-	std::shared_ptr<FRenderingData>& InMeshRenderingData)
+void FGeometry::BuildUniqueRenderingSection(const std::shared_ptr<FRenderingData>& MeshData,std::shared_ptr<FRenderingData>& InMeshRenderingData)
 {
 	for (auto& Tmp : MeshData->Sections)
 	{
 		InMeshRenderingData->Sections.push_back(FRenderingDataSection());
-		FRenderingDataSection& InUniqueSection = InMeshRenderingData->Sections[
-			InMeshRenderingData->Sections.size() - 1];
+		FRenderingDataSection& InUniqueSection = InMeshRenderingData->Sections[InMeshRenderingData->Sections.size() - 1];
 
 		InUniqueSection.MeshObjectIndex = Tmp.MeshObjectIndex;
 

@@ -95,12 +95,12 @@ void GCamera::ExecuteKeyboard(const FInputKey& InputKey)
 		}
 	}
 
-	if (InputKey.KeyName == "alt")
-	{
-		CmeraType = ECmeraType::ObservationObject;
+	//if (InputKey.KeyName == "alt")
+	//{
+	//	CmeraType = ECmeraType::ObservationObject;
 
-		SetDirty(true);
-	}
+	//	SetDirty(true);
+	//}
 
 	if (InputKey.KeyName == "F")
 	{

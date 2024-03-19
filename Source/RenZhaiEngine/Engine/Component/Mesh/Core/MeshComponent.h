@@ -18,6 +18,10 @@ class CMeshComponent :public CTransformationComponent
 
 	CVARIABLE()
 	vector<CMaterial*> Materials;
+
+	CVARIABLE()
+	bool Visible;
+
 public:
 	CMeshComponent();
 
