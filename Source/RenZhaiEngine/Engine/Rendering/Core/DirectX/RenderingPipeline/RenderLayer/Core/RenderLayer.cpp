@@ -222,11 +222,16 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 						RightVector,
 						UPVector, 
 						ForwardVector);
+
 				}
 
 				//更新模型位置
 				XMMATRIX ATRIXWorld = XMLoadFloat4x4(&InRenderingData->WorldMatrix);
-				XMMATRIX ATRIXTextureTransform = XMLoadFloat4x4(&InRenderingData->TextureTransform);
+
+				XMFLOAT4X4 TextureTransform(InRenderingData->TextureTransform);
+				const XMFLOAT3& TexScale = InRenderingData->Mesh->GetTextureScale();
+				XMStoreFloat4x4(&TextureTransform, XMMatrixScaling(TexScale.x, TexScale.y, TexScale.z));
+				XMMATRIX ATRIXTextureTransform = XMLoadFloat4x4(&TextureTransform);
 				
 				//法线矩阵
 				XMVECTOR AATRIXWorldDeterminant = XMMatrixDeterminant(ATRIXWorld);

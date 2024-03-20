@@ -210,6 +210,11 @@ void CTransformationComponent::SetUPVector(const XMFLOAT3& InUPVector)
 	});
 }
 
+void CTransformationComponent::SetTextureScale(const XMFLOAT3& Tex)
+{
+	TextureScale = Tex;
+}
+
 frotator CTransformationComponent::GetRotation() const
 {
 	frotator Rotator;

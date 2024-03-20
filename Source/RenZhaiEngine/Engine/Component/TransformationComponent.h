@@ -19,6 +19,8 @@ public:
 	virtual void SetRightVector(const XMFLOAT3& InRightVector);
 	virtual void SetUPVector(const XMFLOAT3& InUPVector);
 
+	virtual void SetTextureScale(const XMFLOAT3& Tex);
+	XMFLOAT3& GetTextureScale() { return TextureScale; }
 public:
 	XMFLOAT3 &GetPosition() { return Position; }
 	frotator GetRotation() const;
@@ -29,6 +31,7 @@ public:
 	XMFLOAT3 &GetRightVector() { return RightVector; }
 	XMFLOAT3 &GetUPVector() { return UPVector; }
 
+	
 #if EDITOR_ENGINE
 	virtual bool UpdateEditorPropertyDetails(CPropertyObject* InProperty);
 #endif // EDITOR_ENGINE
@@ -48,6 +51,9 @@ private:
 
 	CVARIABLE(CodeType = Resources, Category = Transformation,Draggable)
 	XMFLOAT3 Scale;
+
+	CVARIABLE(CodeType = Resources, Category = Transformation, Draggable)
+	XMFLOAT3 TextureScale;
 
 	XMFLOAT3 ForwardVector;
 	XMFLOAT3 RightVector;

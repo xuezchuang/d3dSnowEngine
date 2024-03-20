@@ -184,14 +184,14 @@ int CDirectXRenderingEngine::PostInit()
 
 		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
 		{
-			InPlaneMesh->CreateMesh(70.f, 70.f, 2, 2);
+			InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
 			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
 			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
+			InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
 			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
 			{
 				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
 				InMaterial->SetBaseColor("tile");
-
 			}
 		}
 
