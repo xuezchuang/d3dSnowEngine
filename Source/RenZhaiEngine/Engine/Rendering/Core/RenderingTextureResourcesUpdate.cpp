@@ -58,19 +58,21 @@ void FRenderingTextureResourcesUpdate::BuildTextureConstantBuffer(ID3D12Descript
 {
 	UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	
-	CD3DX12_CPU_DESCRIPTOR_HANDLE Handle(InHeap->GetCPUDescriptorHandleForHeapStart());
-	Handle.Offset(Offset,DescriptorOffset);
+
 
 	for (auto &Tmp : TexturesMapping)
 	{
 		//根据类型初始化对应贴图
 		ResetTextureByType(&Tmp.second);
 
+		CD3DX12_CPU_DESCRIPTOR_HANDLE Handle(InHeap->GetCPUDescriptorHandleForHeapStart());
+		Handle.Offset(Offset + Tmp.second->RenderingTextureID, DescriptorOffset);
+
 		GetD3dDevice()->CreateShaderResourceView(
 			Tmp.second->Data.Get(),
 			&ShaderResourceViewDesc, Handle);
 
-		Handle.Offset(1,DescriptorOffset);
+		//Handle.Offset(1,DescriptorOffset);
 	}
 }
 

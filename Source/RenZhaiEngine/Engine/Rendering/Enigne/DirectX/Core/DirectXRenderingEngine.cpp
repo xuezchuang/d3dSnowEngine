@@ -168,30 +168,30 @@ int CDirectXRenderingEngine::PostInit()
 		//	SpotLight->SetConicalOuterCorner(60.f);
 		//}	
 
-		
-		if(GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
+		//
+		if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 		{
 			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
-
-			InBoxMesh->SetPosition(XMFLOAT3(0.0f, 0.0f, 2.5f));
+			InBoxMesh->SetPosition(XMFLOAT3(0.0f, 2.5f, 0.0f));
 			InBoxMesh->SetScale(fvector_3d(1));
 			if(CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
 			{
 				//	InMaterial->SetBaseColor(fvector_4d(0.5f));
 				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+				InMaterial->SetBaseColor("stone"); 
 			}
 		}
 
-		if(GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
+		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
 		{
-			InPlaneMesh->CreateMesh(7.f, 7.f, 2, 2);
-			InPlaneMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
-			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, -90.0f));
-			if(CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+			InPlaneMesh->CreateMesh(70.f, 70.f, 2, 2);
+			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
+			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
+			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
 			{
-				//InMaterial->SetMaterialType(ShadowTexture);
 				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-				
+				InMaterial->SetBaseColor("tile");
+
 			}
 		}
 
