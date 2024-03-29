@@ -55,17 +55,17 @@ template<class TReturn, typename ...ParamTypes>
 class FLambdaDelegate :public FDelegateBase<TReturn, ParamTypes...>
 {
 public:
-	FLambdaDelegate(std::function<TReturn(ParamTypes...)> InLambda)
-		:LambdaFuncation(InLambda)
+	FLambdaDelegate(std::function<TReturn(ParamTypes...)>&& InLambda)
+		:LambdaFunction(std::move(InLambda))
 	{}
 
 	virtual TReturn Execute(ParamTypes ...Params)
 	{
-		return LambdaFuncation(Params...);
+		return LambdaFunction(Params...);
 	}
 
 private:
-	std::function<TReturn(ParamTypes...)> LambdaFuncation;
+	std::function<TReturn(ParamTypes...)> LambdaFunction;
 };
 
 template<class TReturn, typename ...ParamTypes>
@@ -122,11 +122,11 @@ public:
 		CurrentDelegatePtr = new FObjectDelegate<TObjectType,TReturn, ParamTypes...>(InObject, InFuncation);
 	}
 
-	void BindLambda(std::function<TReturn(ParamTypes...)> InLambda)
+	void BindLambda(std::function<TReturn(ParamTypes...)>&& InLambda)
 	{
 		ReleaseDelegate();
 
-		CurrentDelegatePtr = new FLambdaDelegate<TReturn, ParamTypes...>(InLambda);
+		CurrentDelegatePtr = new FLambdaDelegate<TReturn, ParamTypes...>(std::forward<std::function<TReturn(ParamTypes...)>>(InLambda));
 	}
 
 	void Bind(TReturn(* InFuncation)(ParamTypes...))

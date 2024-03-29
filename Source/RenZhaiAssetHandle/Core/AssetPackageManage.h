@@ -17,6 +17,7 @@ public:
 
 public:
 	CAssetPackage* AddPackage(const string& InName, CAssetPackage* InPackage);
+	void DeletePackage(const string& InName);
 	CAssetPackage* FindPackage(const string& InPackageName);
 	CAssetPackage* FindPackageSafe(const string& InPackageName);
 

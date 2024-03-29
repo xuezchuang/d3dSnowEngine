@@ -147,6 +147,7 @@
     <ClCompile Include="Engine\Core\Construction\ActorMeshConstruction.cpp" />
     <ClCompile Include="Engine\Core\Construction\MeshConstruction.cpp" />
     <ClCompile Include="Engine\Core\Engine.cpp" />
+    <ClCompile Include="Engine\Core\Level\Level.cpp" />
     <ClCompile Include="Engine\Core\Viewport\ClientViewport.cpp" />
     <ClCompile Include="Engine\Core\Viewport\Viewport.cpp" />
     <ClCompile Include="Engine\Core\Viewport\ViewportInfo.cpp" />
@@ -397,6 +398,7 @@
     <ClInclude Include="Engine\Core\Construction\MacroConstruction.h" />
     <ClInclude Include="Engine\Core\Construction\MeshConstruction.h" />
     <ClInclude Include="Engine\Core\Engine.h" />
+    <ClInclude Include="Engine\Core\Level\Level.h" />
     <ClInclude Include="Engine\Core\Viewport\ClientViewport.h" />
     <ClInclude Include="Engine\Core\Viewport\Viewport.h" />
     <ClInclude Include="Engine\Core\Viewport\ViewportInfo.h" />
@@ -690,6 +692,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -699,6 +702,9 @@
       <StackReserveSize>10000000</StackReserveSize>
       <StackCommitSize>10000000</StackCommitSize>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

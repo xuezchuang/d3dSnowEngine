@@ -24,6 +24,12 @@ void FAssetMenuEditor::DrawEditor(float DeltaTime)
 			ImGui::OpenPopup("Create Blueprint");
 		}
 
+		if (ImGui::Button("Create Level"))
+		{
+			//ImGui::CloseCurrentPopup();
+			ImGui::OpenPopup("Create Level");
+		}
+
 		//Modal
 		if (ImGui::BeginPopupModal("Create Blueprint", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
@@ -98,9 +104,45 @@ void FAssetMenuEditor::DrawEditor(float DeltaTime)
 			ImGui::EndPopup();
 		}
 
-		if (ImGui::Button("Create Blueprint1"))
+		if (ImGui::BeginPopupModal("Create Level", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ImGui::CloseCurrentPopup();
+			if (ImGui::InputText("Input new blueprint asset name", CreateAssetNameText, 128))
+			{
+
+			}
+
+			ImVec2 ButtonSize(ImGui::GetFontSize() * 7.f, 0.f);
+			if (ImGui::Button("Create", ButtonSize))
+			{
+				if (strlen(CreateAssetNameText) > 4)
+				{
+					if (!CurrentSelectAssetPath.expired())
+					{
+						auto AssetPackage = AssetAssistLibrary::CreateAssetPackage(
+							CurrentSelectAssetPath.lock()->FileDirectory,
+							CreateAssetNameText,
+							ClassSelectedIndex);
+
+						AssetPackage->Save();
+
+						ClassSelectedIndex = 0;
+						SelectedClassName = "";
+
+						memset(CreateAssetNameText, 0, 128);
+						ImGui::CloseCurrentPopup();
+					}
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Cancel", ButtonSize))
+			{
+				memset(CreateAssetNameText, 0, 128);
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
 		}
 
 		if (ImGui::Button("Create Blueprint2"))

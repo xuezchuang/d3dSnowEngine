@@ -35,6 +35,7 @@
 #include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/FogComponent.CodeReflection.cpp"
 #include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/TransformationComponent.CodeReflection.cpp"
 #include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/Camera.CodeReflection.cpp"
+#include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/Level.CodeReflection.cpp"
 #include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/ClientViewport.CodeReflection.cpp"
 #include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/World.CodeReflection.cpp"
 #include "C:/Graph/RenZhaiEngine/Intermediate/CodeReflection/BlueprinFunctiontLibrary.CodeReflection.cpp"

@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/EditorBase.h"
 
+class CWorld;
 class FToolbarEditor :public FEditorBase
 {
 public:
@@ -10,4 +11,7 @@ public:
 
 public:
 	void NewLevel();
+	void SaveLevel();
+protected:
+	CWorld* m_World;
 };

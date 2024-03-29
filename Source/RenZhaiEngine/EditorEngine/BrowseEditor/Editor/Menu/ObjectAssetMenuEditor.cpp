@@ -21,6 +21,13 @@ void FObjectAssetMenuEditor::DrawEditor(float DeltaTime)
 			ImVec2 ButtonSize(ImGui::GetFontSize() * 7.0f, 0.0f);
 			if (ImGui::Button("Delete", ButtonSize))
 			{
+				//std::string strAssertName = AssertName;
+				//replace_string_inline(strAssertName, ".", "\0");
+
+				//FAssetPackageManage::Get()->DeletePackage(strAssertName);
+				std::string assertName;
+				char name[128];
+				get_path_clean_filename(name, AssetFullPath);
 				remove(AssetFullPath);
 
 				ImGui::CloseCurrentPopup();

@@ -6,5 +6,5 @@ class FEngineFactory
 public:
 	FEngineFactory();
 
-	static CEngine*CreateEngine();
+	static CEngine*Instance();
 };

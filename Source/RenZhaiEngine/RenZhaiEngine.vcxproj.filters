@@ -403,6 +403,9 @@
     <Filter Include="Engine\Rendering\Core\DirectX\shader\AO">
       <UniqueIdentifier>{9cc810ea-21d7-444c-a498-dac6ead0c6b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\Level">
+      <UniqueIdentifier>{fcb536b5-2a16-478d-8528-a7a7fd6e57ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\EngineVariableTable.cpp">
@@ -1123,6 +1126,9 @@
       <Filter>imgui\libs\usynergy</Filter>
     </ClCompile>
     <ClCompile Include="LinkCodeReflection.build.cpp" />
+    <ClCompile Include="Engine\Core\Level\Level.cpp">
+      <Filter>Engine\Core\Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\EngineVariableTable.h">
@@ -1886,6 +1892,9 @@
     </ClInclude>
     <ClInclude Include="imgui\libs\usynergy\uSynergy.h">
       <Filter>imgui\libs\usynergy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Level\Level.h">
+      <Filter>Engine\Core\Level</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

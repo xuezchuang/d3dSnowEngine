@@ -45,7 +45,7 @@ int Init(CEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd
 	}
 
 	//初始化我们的资产
-	//FAssetPackageManage::Get()->Init();
+	FAssetPackageManage::Get()->Init();
 
 	ReturnValue = InEngine->PostInit();
 	if(ReturnValue != 0)
@@ -101,7 +101,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 {
 	int ReturnValue = 0;
 
-	Engine = FEngineFactory::CreateEngine();
+	Engine = FEngineFactory::Instance();
 	if (Engine)
 	{
 		//初始化

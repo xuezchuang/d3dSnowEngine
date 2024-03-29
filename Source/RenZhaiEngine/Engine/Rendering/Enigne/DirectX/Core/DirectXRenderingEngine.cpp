@@ -1048,9 +1048,6 @@ void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight, int wParam)
 	}
 }
 
-
-
-
 int CDirectXRenderingEngine::PreExit()
 {
 	

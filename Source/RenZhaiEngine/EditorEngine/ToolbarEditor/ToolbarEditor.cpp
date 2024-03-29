@@ -1,8 +1,11 @@
 #include "ToolbarEditor.h"
+#include "../../Engine/EngineFactory.h"
+#include "../../Engine/Platform/Windows/WindowsEngine.h"
+#include "../../Engine/Core/World.h"
 
 void FToolbarEditor::BuildEditor()
 {
-
+	m_World = ((CWindowsEngine*)FEngineFactory::Instance())->GetWorld();
 }
 
 void FToolbarEditor::DrawEditor(float DeltaTime)
@@ -19,6 +22,11 @@ void FToolbarEditor::DrawEditor(float DeltaTime)
 			if (ImGui::MenuItem("Open Level"))
 			{
 
+			}
+
+			if (ImGui::MenuItem("Save Level"))
+			{
+				SaveLevel();
 			}
 
 			if (ImGui::MenuItem("Open Asset"))
@@ -58,4 +66,9 @@ void FToolbarEditor::ExitEditor()
 void FToolbarEditor::NewLevel()
 {
 
+}
+
+void FToolbarEditor::SaveLevel()
+{
+	m_World->SaveLevel();
 }

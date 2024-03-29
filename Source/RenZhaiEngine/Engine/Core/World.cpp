@@ -8,9 +8,21 @@ CWorld::CWorld()
 	Camera = CreateObject<GCamera>(Param, new GCamera());
 
 	Camera->SetPosition(XMFLOAT3(0.f, 10.f, -50.f));
+	Level = NULL;
 }
 
 bool CWorld::LineTraceBySingle(FCollisionResult& OutResult, const fvector_3d& InStart, const fvector_3d& InEnd)
 {
 	return false;
+}
+
+bool CWorld::SaveLevel()
+{
+	if (Level == NULL)
+	{
+		Level = new CLevel();
+		assert(false);
+	}
+	//Level->
+	return true;
 }
