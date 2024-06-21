@@ -1,9 +1,9 @@
 #include "ThirdPartyLibrary/FBX/include/fbxsdk.h"
 #include "FBXAssist.h"
 
-#pragma comment(lib, "libfbxsdk.lib")
-#pragma comment(lib, "libfbxsdk-md.lib")
-#pragma comment(lib, "libfbxsdk-mt.lib")
+//#pragma comment(lib, "libfbxsdk.lib")
+//#pragma comment(lib, "libfbxsdk-md.lib")
+//#pragma comment(lib, "libfbxsdk-mt.lib")
 
 //FBX»ù´¡API
 void InitializeSdkObjects(class FbxManager*& InManager, FbxScene*& InScene);
