@@ -115,10 +115,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;SIMPLE_LIBRARY_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BrowseInformation>true</BrowseInformation>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UndefinePreprocessorDefinitions>
+      </UndefinePreprocessorDefinitions>
+      <DisableSpecificWarnings>4244;4311;4302;4267;4305;4133;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,8 +174,8 @@
     <ClCompile Include="simple_library\private\simple_image\Core\simple_image_bmp.cpp" />
     <ClCompile Include="simple_library\private\simple_image\simple_image.cpp" />
     <ClCompile Include="simple_library\private\simple_math\math_utils.cpp" />
-    <ClCompile Include="simple_library\private\simple_math\simple_math.c" />
-    <ClCompile Include="simple_library\private\simple_math\simple_math.cpp" />
+    <ClCompile Include="simple_library\private\simple_math\simple_math_c.c" />
+    <ClCompile Include="simple_library\private\simple_math\simple_math_cpp.cpp" />
     <ClCompile Include="simple_library\private\simple_math\soft_rasterization\soft_rasterization.cpp" />
     <ClCompile Include="simple_library\private\simple_math\transformation\matrix\matrix_2x2.cpp" />
     <ClCompile Include="simple_library\private\simple_math\transformation\matrix\matrix_3x3.cpp" />

@@ -1,7 +1,5 @@
-// Copyright (C) RenZhai.2022.All Rights Reserved.
-#include "simple_library/public/simple_library.h"
 #include "simple_library/public/simple_library_macro.h"
-
+#include "simple_library/public/simple_library.h"
 #define VARIABLE(...)
 
 namespace soft_rasterization

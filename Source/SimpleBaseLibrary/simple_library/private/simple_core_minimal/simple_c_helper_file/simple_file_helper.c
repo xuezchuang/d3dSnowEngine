@@ -16,57 +16,58 @@ char wildcard[] = "*";
 #endif 
 
 //用于检测ShellExecute的返回值信息
-bool check_ShellExecute_ret(int ret)
+bool check_ShellExecute_ret(HINSTANCE ret_code )
 {
+	intptr_t  ret = (intptr_t)ret_code;
 	if (ret == 0)
 	{
 		// 内存不足
-		assert(0, "open_url_w=>insufficient memory.");
+		assert(0);// , "open_url_w=>insufficient memory.");
 	}
 	else if (ret == 2)
 	{
 		// 文件名错误
-		assert(0, "open_url_w=>File name error.");
+		assert(0);//, "open_url_w=>File name error.");
 	}
 	else if (ret == 3)
 	{
 		// 路径名错误
-		assert(0, "open_url_w=>Path name error.");
+		assert(0);//, "open_url_w=>Path name error.");
 	}
 	else if (ret == 11)
 	{
 		// EXE 文件无效
-		assert(0, "open_url_w=>Invalid .exe file.");
+		assert(0);//, "open_url_w=>Invalid .exe file.");
 	}
 	else if (ret == 26)
 	{
 		// 发生共享错误
-		assert(0, "open_url_w=>A sharing error occurred.");
+		assert(0);//, "open_url_w=>A sharing error occurred.");
 	}
 	else if (ret == 27)
 	{
 		// 文件名不完全或无效
-		assert(0, "open_url_w=>incomplete or invalid file name.");
+		assert(0);//, "open_url_w=>incomplete or invalid file name.");
 	}
 	else if (ret == 28)
 	{
 		// 超时
-		assert(0, "open_url_w=>timeout.");
+		assert(0);//, "open_url_w=>timeout.");
 	}
 	else if (ret == 29)
 	{
 		// DDE 事务失败
-		assert(0, "open_url_w=> DDE transaction failed.");
+		assert(0);//, "open_url_w=> DDE transaction failed.");
 	}
 	else if (ret == 30)
 	{
 		// 正在处理其他 DDE 事务而不能完成该 DDE 事务
-		assert(0, "open_url_w=> is processing another DDE transaction and cannot complete the DDE transaction.");
+		assert(0);//, "open_url_w=> is processing another DDE transaction and cannot complete the DDE transaction.");
 	}
 	else if (ret == 31)
 	{
 		// 没有相关联的应用程序
-		assert(0, "open_url_w=>no associated application.");
+		assert(0);//, "open_url_w=>no associated application.");
 	}
 
 	return ret <= 32;
@@ -237,11 +238,11 @@ int get_def_c_offset_w(const wchar_t* str)
 		sizeof(wchar_t);//拷贝中自带的\0结尾
 }
 
-char* get_max_len_path(const def_c_paths *Paths,int *max_len)
+const char* get_max_len_path(const def_c_paths *Paths,int *max_len)
 {
 	if (Paths)
 	{
-		char* max_path = NULL;
+		const char* max_path = NULL;
 		for (int i = 0; i < Paths->index; i++)
 		{
 			int paht_len = strlen(Paths->paths[i]);
@@ -272,14 +273,14 @@ void remove_directory_all(const char* file_dir)
 	for (int i = 0; i < Paths.index; i++)
 	{
 		int max_len = 0;
-		char* max_path = get_max_len_path(&Paths,&max_len);
+		const char* max_path = get_max_len_path(&Paths,&max_len);
 
 		if (max_path && max_path[0]!= '\0')
 		{
 			//添加路径
 			add_def_c_paths(&tmp_paths, max_path);
 
-			memset(max_path, 0, strlen(max_path));
+			//memset(max_path, 0, strlen(max_path));
 		}
 	}
 
@@ -742,7 +743,7 @@ int get_def_c_paths_offset_by_index(def_c_paths_v2* c_paths, int index)
 			return offset;
 		}
 
-		int len = strlen(c_paths->paths[offset]);
+		int len = strlen(&c_paths->paths[offset]);
 		offset += len + sizeof(char);
 	}
 
@@ -759,7 +760,7 @@ int get_def_c_paths_offset_by_index_w(def_c_paths_w_v2* c_paths, int index)
 			return offset;
 		}
 
-		int len = wcslen(c_paths->paths[offset]);
+		int len = wcslen(&c_paths->paths[offset]);
 		offset += len + sizeof(wchar_t);
 	}
 
@@ -867,7 +868,7 @@ unsigned int get_file_size(FILE *file_handle)
 	return file_size;
 }
 
-bool save_data_to_disk(const char* path, char* buf, int buf_size)
+bool save_data_to_disk(const char* path, char* buf, size_t buf_size)
 {
 	FILE* f = NULL;
 	if ((f = fopen(path, L"wb")) != NULL)

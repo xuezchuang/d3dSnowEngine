@@ -1,4 +1,4 @@
-#ifndef _CRT_SECURE_NO_WARNINGS
+﻿#ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif // !_CRT_SECURE_NO_WARNINGS
 
@@ -130,11 +130,11 @@ namespace simple_cpp_helper_file
 		int final_num = 0;
 		for (auto& tmp : in_array)
 		{
-			final_num += strlen(tmp.c_str());
+			final_num += static_cast<int>(strlen(tmp.c_str()));
 		}
 
 		//为/n留下空间
-		final_num += in_array.size();
+		final_num += static_cast<int>(in_array.size());
 
 		//先划分一个缓冲区
 		std::string final_str;
@@ -145,7 +145,7 @@ namespace simple_cpp_helper_file
 		int start_pos = 0;
 		for (auto& tmp : in_array)
 		{
-			int tmp_str_len = strlen(tmp.c_str());
+			int tmp_str_len = static_cast<int>(strlen(tmp.c_str()));
 			if (simple_cpp_string_algorithm::index_valid(final_str.size(), start_pos))
 			{
 				char* ptr = &final_str[start_pos];

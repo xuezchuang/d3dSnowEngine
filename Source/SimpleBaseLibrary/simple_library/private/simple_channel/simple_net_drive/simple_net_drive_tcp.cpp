@@ -256,7 +256,7 @@ bool FSimpleTCPNetDrive::Init()
 		//服务端设置地址
 		MainConnetion->GetConnetionAddr().sin_family = AF_INET;//IPV4互联网协议族
 		MainConnetion->GetConnetionAddr().sin_addr.S_un.S_addr = htonl(INADDR_ANY);//0.0.0.0 所以地址、
-		MainConnetion->GetConnetionAddr().sin_port = htons(98592);
+		MainConnetion->GetConnetionAddr().sin_port = htons(u_short(98592));
 
 		if (bind(MainConnetion->GetSocket(), (SOCKADDR*)&MainConnetion->GetConnetionAddr(), sizeof(MainConnetion->GetConnetionAddr())) == SOCKET_ERROR)
 		{
@@ -295,7 +295,7 @@ bool FSimpleTCPNetDrive::Init()
 		//客户端设置地址
 		MainConnetion->GetConnetionAddr().sin_family = AF_INET;//IPV4互联网协议族
 		MainConnetion->GetConnetionAddr().sin_addr.S_un.S_addr = inet_addr("127.0.0.1");//0.0.0.0 所以地址、
-		MainConnetion->GetConnetionAddr().sin_port = htons(98592);
+		MainConnetion->GetConnetionAddr().sin_port = htons(u_short(98592));
 
 		if (connect(
 			MainConnetion->GetSocket(),

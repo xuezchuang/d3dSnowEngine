@@ -28,8 +28,8 @@ namespace simple_cpp_string_algorithm
 		std::vector<std::string>& in_array,
 		const char* parse_string)
 	{
-		int string_content_len = strlen(string_content);
-		int parse_string_len = strlen(parse_string);
+		int string_content_len = static_cast<int>(strlen(string_content));
+		int parse_string_len = static_cast<int>(strlen(parse_string));
 
 		fframe_buffer_index frame_buffer;
 		int pos = find_string(string_content, parse_string, frame_buffer.strat_pos);
@@ -72,7 +72,7 @@ namespace simple_cpp_string_algorithm
 			}
 		}
 	}
-	bool index_valid(int in_size, int index)
+	bool index_valid(size_t in_size, int index)
 	{
 		if (index < in_size &&
 			index >= 0)

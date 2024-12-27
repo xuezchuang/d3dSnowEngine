@@ -86,7 +86,7 @@ unsigned int get_file_size_by_filename(const char *filename);
 unsigned int get_file_size(FILE *file_handle);
 
 //这个是以二进制方式存储，不会遇到像0自动截断的情况
-bool save_data_to_disk(const char* path, char* buf, int buf_size);
+bool save_data_to_disk(const char* path, char* buf, size_t buf_size);
 //宽字符和窄字符
 // 
 //宽字符转窄字符

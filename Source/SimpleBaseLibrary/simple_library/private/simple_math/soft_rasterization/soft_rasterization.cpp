@@ -308,9 +308,9 @@ namespace soft_rasterization
 				if (is_inside_triangles(triangles, x, y, my_color))
 				{
 					//BGR bmp
-					data[number_rows + j] = my_color.x;			//B
-					data[number_rows + j + 1] = my_color.y;		//G
-					data[number_rows + j + 2] = my_color.z;		//R
+					data[number_rows + j] = (int)my_color.x;			//B
+					data[number_rows + j + 1] = (int)my_color.y;		//G
+					data[number_rows + j + 2] = (int)my_color.z;		//R
 				}
 				else
 				{

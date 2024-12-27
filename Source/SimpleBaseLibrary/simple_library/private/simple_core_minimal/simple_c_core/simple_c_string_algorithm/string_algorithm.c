@@ -261,7 +261,7 @@ int get_printf(char *buf, const char *format, ...)
 
 	for (int i = 0; param_char != '\0'; i++)
 	{
-		if (param_char != '\%' && *(format - 1) != '\%')
+		if (param_char != '%' && *(format - 1) != '%')
 		{
 			buf[i] = param_char;
 		}
@@ -345,7 +345,7 @@ int get_printf_s_s(int buffer_size, char *out_buf, const char *format, ...)
 
 char *string_mid(const char *int_buf, char *out_buf, int start, int count)
 {
-	char *p = &int_buf[start];
+	const char *p = &int_buf[start];
 	memcpy_s(out_buf,count,p, count);
 
 	return out_buf;
@@ -463,7 +463,7 @@ void wreplace_string_inline(
 	int sub_char_a_size = wcslen(sub_char_a);
 	int sub_char_b_size = wcslen(sub_char_b);
 
-	int index = wfind_string(str, sub_char_a, 0);
+	int index = wfind_string(str, sub_char_a);
 	if (index != -1)
 	{
 		wchar_t buff1[8196] = { 0 };
@@ -490,7 +490,7 @@ int wget_printf(wchar_t *buf, const wchar_t *format, ...)
 
 	for (int i = 0; param_char != L'\0'; i++)
 	{
-		if (param_char != L'\%' && *(format - 1) != L'\%')
+		if (param_char != L'%' && *(format - 1) != L'%')
 		{
 			buf[i] = param_char;
 		}
@@ -549,7 +549,7 @@ int wget_printf(wchar_t *buf, const wchar_t *format, ...)
 
 int wget_printf_s(wchar_t *out_buf,const wchar_t *format, ...)
 {
-	wchar_t *buf[SIMPLE_C_BUFF_SIZE] = { 0 };
+	wchar_t buf[SIMPLE_C_BUFF_SIZE] = { 0 };
 	wmemset(buf, 0, sizeof(wchar_t) * SIMPLE_C_BUFF_SIZE);
 	va_list args;
 	va_start(args, format);
@@ -579,7 +579,7 @@ int wget_printf_s_s(int buffer_size, wchar_t *out_buf, const wchar_t *format, ..
 
 wchar_t *wstring_mid(const wchar_t *int_buf, wchar_t *out_buf, int start, int count)
 {
-	wchar_t *p = &int_buf[start];
+	const wchar_t *p = &int_buf[start];
 	wmemcpy_s(out_buf, count, p, count);
 
 	return out_buf;
