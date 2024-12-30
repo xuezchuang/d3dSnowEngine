@@ -1,4 +1,4 @@
-#include "ThirdPartyLibrary/FBX/include/fbxsdk.h"
+#include "fbxsdk.h"
 #include "FBXAssist.h"
 
 //#pragma comment(lib, "libfbxsdk.lib")

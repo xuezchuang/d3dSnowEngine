@@ -10,7 +10,7 @@ struct FDirectXRootSignature :public IDirectXDeviceInterfece_Struct
 
 	virtual void BuildRootSignature(UINT InTextureNum = 1);
 
-	virtual void PreDraw(float DeltaTime);
+	virtual void SetGraphicsRootSignature();
 	virtual void Draw(float DeltaTime);
 	virtual void PostDraw(float DeltaTime);
 

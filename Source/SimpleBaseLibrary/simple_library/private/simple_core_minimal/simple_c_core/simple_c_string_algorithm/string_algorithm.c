@@ -474,7 +474,7 @@ void wreplace_string_inline(
 
 		memset(&str[index], 0, end_size * sizeof(wchar_t));
 
-		wget_printf_s(buff2, L"%s%s%s", str, sub_char_b, buff1);
+		wget_printf_s(buff2, L"%s%s", sub_char_b, buff1);
 
 		memset(str, 0, str_size * sizeof(wchar_t));
 
@@ -550,10 +550,10 @@ int wget_printf(wchar_t *buf, const wchar_t *format, ...)
 int wget_printf_s(wchar_t *out_buf,const wchar_t *format, ...)
 {
 	wchar_t buf[SIMPLE_C_BUFF_SIZE] = { 0 };
-	wmemset(buf, 0, sizeof(wchar_t) * SIMPLE_C_BUFF_SIZE);
+	//wmemset(buf, 0, sizeof(wchar_t) * SIMPLE_C_BUFF_SIZE);
 	va_list args;
 	va_start(args, format);
-	_vsnwprintf_s(buf, SIMPLE_C_BUFF_SIZE - 1, SIMPLE_C_BUFF_SIZE, format, args);
+	_vsnwprintf_s(buf, SIMPLE_C_BUFF_SIZE - 1, SIMPLE_C_BUFF_SIZE-1, format, args);
 	va_end(args);
 	buf[SIMPLE_C_BUFF_SIZE - 1] = 0;
 

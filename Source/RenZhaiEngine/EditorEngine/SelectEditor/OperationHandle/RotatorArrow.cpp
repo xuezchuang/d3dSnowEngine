@@ -648,7 +648,7 @@ void GRotatorArrow::OnLeftMouseButtonUp(int X, int Y)
 
 void GRotatorArrow::OnCaptureKeyboardInfor(const FInputKey& InKey)
 {
-	if (SelectObject)
+	if (SelectObject!= nullptr)
 	{
 		if (InKey.KeyName == "E")
 		{

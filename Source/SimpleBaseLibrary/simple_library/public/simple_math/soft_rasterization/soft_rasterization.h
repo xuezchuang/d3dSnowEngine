@@ -6,7 +6,7 @@ namespace soft_rasterization
 {
 	////////////////////////////对象
 	//万物皆为对象
-	class SIMPLE_LIBRARY_API fobject
+	class fobject
 	{
 		friend class fengine;
 	public:
@@ -36,7 +36,7 @@ namespace soft_rasterization
 	};
 
 	//组件基类
-	class SIMPLE_LIBRARY_API fcomponent : public fobject
+	class fcomponent : public fobject
 	{
 	public:
 		fcomponent* parent;
@@ -44,7 +44,7 @@ namespace soft_rasterization
 	};
 
 	//位移组件
-	class SIMPLE_LIBRARY_API ftransform_component :public fcomponent
+	class ftransform_component :public fcomponent
 	{
 	public:
 		ftransform_component();
@@ -78,14 +78,14 @@ namespace soft_rasterization
 	};
 
 	//Mesh组件
-	class SIMPLE_LIBRARY_API fmesh_component :public ftransform_component
+	class fmesh_component :public ftransform_component
 	{
 	public:
 		std::vector<fvector_3d> vertex_data;
 	};
 
 	//能看到的基类
-	class SIMPLE_LIBRARY_API factor :public fobject
+	class factor :public fobject
 	{
 		VARIABLE(category = actor, visibleanywhere, blueprintreadonly, meta = (allowprivateaccess = "true"))
 		ftransform_component* transform;//root component
@@ -101,7 +101,7 @@ namespace soft_rasterization
 	};
 
 	//摄像机
-	class SIMPLE_LIBRARY_API fcamera :public factor
+	class fcamera :public factor
 	{
 	public:
 	};
@@ -120,7 +120,7 @@ namespace soft_rasterization
 	};
 
 	//视口配置
-	struct SIMPLE_LIBRARY_API fviewport_config
+	struct fviewport_config
 	{
 		fviewport_config()
 			:viewport_size(1920, 1080)
@@ -139,7 +139,7 @@ namespace soft_rasterization
 		float far_z;
 	};
 	////////////////////////////要渲染的数据
-	struct SIMPLE_LIBRARY_API frender_data_3d
+	struct frender_data_3d
 	{
 		std::vector<fvector_3d> vertex_data;
 		std::vector<uint16_t> index_data;
@@ -147,14 +147,14 @@ namespace soft_rasterization
 		fmatrix_4x4 matrix;
 	};
 
-	struct SIMPLE_LIBRARY_API frender_data_2d
+	struct frender_data_2d
 	{
 		std::vector<fvector_2d> vertex_data;
 		std::vector<uint16_t> index_data;
 	};
 
 	////////////////////////////引擎
-	class SIMPLE_LIBRARY_API fengine
+	class fengine
 	{
 	public:
 		virtual void init(float in_time);
@@ -162,7 +162,7 @@ namespace soft_rasterization
 		virtual void exit();
 	};
 
-	class SIMPLE_LIBRARY_API frender_engine :public fengine
+	class frender_engine :public fengine
 	{
 		typedef fengine super;
 
@@ -195,7 +195,7 @@ namespace soft_rasterization
 		int index;//
 	};
 
-	class SIMPLE_LIBRARY_API fengine_factory
+	class fengine_factory
 	{
 	public:
 		template<class t>

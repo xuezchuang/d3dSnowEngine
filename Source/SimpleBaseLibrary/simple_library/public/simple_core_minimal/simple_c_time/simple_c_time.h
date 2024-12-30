@@ -26,7 +26,7 @@ time_t tm_to_time_t(struct tm *const t_b);
 
 char *tm_to_string(const struct tm *t);
 
-char *time_t_to_string(etime_type type, const time_t *t);
+char *time_t_to_string(etime_type type, time_t * const t);
 
 clock_t get_clock();
 

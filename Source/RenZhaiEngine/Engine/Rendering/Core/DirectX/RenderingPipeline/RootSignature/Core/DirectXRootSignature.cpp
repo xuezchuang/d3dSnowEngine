@@ -10,7 +10,7 @@ void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
    
 }
 
-void FDirectXRootSignature::PreDraw(float DeltaTime)
+void FDirectXRootSignature::SetGraphicsRootSignature()
 {
     GetGraphicsCommandList()->SetGraphicsRootSignature(RootSignature.Get());
 }

@@ -88,10 +88,12 @@ public:
 		return *this;
 	}
 
-	fvector_4d& operator*(const float& a)
+	fvector_4d& operator*=(const float& a)
 	{
-		*this = *this * a;
-
+		x *= a;
+		y *= a;
+		z *= a;
+		w *= a;
 		return *this;
 	}
 

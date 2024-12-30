@@ -26,6 +26,7 @@ public:
 	virtual void OnResetSize(int InWidth, int InHeight);
 
 	void BuildPipeline();
+	void BuildUIPipeline();
 
 	virtual void PreDraw(float DeltaTime);
 	virtual void Draw(float DeltaTime);
@@ -33,6 +34,7 @@ public:
 
 public:
 	FRenderLayerManage* GetRenderLayer() const { return const_cast<FRenderLayerManage*>(&RenderLayer); }
+	FIMGUIPipeline* GetUIPipeline() { return &UIPipeline; }
 protected:
 
 	//‰÷»æ≤„º∂

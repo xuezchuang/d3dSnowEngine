@@ -5,7 +5,7 @@ struct FDirectXDescriptorHeap :public IDirectXDeviceInterfece_Struct
 {
 	void Build(UINT InNumDescriptor);
 
-	void PreDraw(float DeltaTime);
+	void SetDescriptorHeaps();
 
 	ID3D12DescriptorHeap* GetHeap()const { return CBVHeap.Get(); }
 protected:

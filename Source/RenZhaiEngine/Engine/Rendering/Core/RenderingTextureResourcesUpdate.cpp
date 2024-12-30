@@ -1,7 +1,7 @@
 #include "RenderingTextureResourcesUpdate.h"
 
 const wchar_t DDS[] = L".dds";
-const wchar_t Asset[] = L"/Asset/";
+const wchar_t Asset[] = L"/Content/";
 const wchar_t Project[] = L"/Project/";
 
 FRenderingTextureResourcesUpdate::FRenderingTextureResourcesUpdate()

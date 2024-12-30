@@ -119,7 +119,7 @@ struct FGeometryMap :public IDirectXDeviceInterfece_Struct
 	FGeometryMap();
 	~FGeometryMap();
 
-	void PreDraw(float DeltaTime);
+	void SetDescriptorHeaps();
 	void Draw(float DeltaTime);
 	void PostDraw(float DeltaTime);
 

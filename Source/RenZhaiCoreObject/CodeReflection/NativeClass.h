@@ -1,9 +1,11 @@
 #pragma once
-#include <map>
 #include <string>
 #include "CoreMacro.h"
 #include <map>
 #include <vector>
+#include <RenZhaiCoreObjectMacro.h>
+//#include <cstddef>
+//std::byte b = std::byte{0x01}; // 明确使用 std::byte
 
 class CCoreMinimalObject;
 class CFunctionObject;
@@ -13,14 +15,13 @@ class FArchive;
 
 enum EPropertyType;
 
-using namespace std;
 
-struct FNativeClass
+class RENZHAICOREOBJECT_API FNativeClass
 {
 	friend class CCoreMinimalObject;
 public:
 	FNativeClass();
-
+	virtual ~FNativeClass();
 	bool RemoveTopProperty();
 
 	bool RemoveAllProperty();
@@ -36,7 +37,7 @@ public:
 		int InElementSize,
 		void* InData,
 		EPropertyType InPropertyType,
-		const string& InDefaultValue);
+		const std::string& InDefaultValue);
 
 	CPropertyObject* AddMapProperty(
 		const std::string& PropertyName,
@@ -49,7 +50,7 @@ public:
 		int InElementSize,
 		void* InData,
 		EPropertyType InPropertyType,
-		const string& InDefaultValue);
+		const std::string& InDefaultValue);
 
 	template<class T>
 	T* AddProperty(const std::string& PropertyName,
@@ -57,7 +58,7 @@ public:
 		int InElementSize,
 		void* InData,
 		EPropertyType InPropertyType,
-		const string& InDefaultValue);
+		const std::string& InDefaultValue);
 
 	CPropertyObject* AddProperty(
 		const std::string& PropertyName,
@@ -65,7 +66,7 @@ public:
 		int InElementSize,
 		void* InData,
 		EPropertyType InPropertyType,
-		const string& InDefaultValue);
+		const std::string& InDefaultValue);
 
 	void AddClassType(const std::string& InType);
 
@@ -78,31 +79,31 @@ public:
 	void Deserialization(FArchive& InArchive);
 
 public:
-	CFunctionObject* AddStaticFunction(const string& InFunctionName);
-	CFunctionObject* AddFunction(const string& InFunctionName);
+	CFunctionObject* AddStaticFunction(const std::string& InFunctionName);
+	CFunctionObject* AddFunction(const std::string& InFunctionName);
 
-	CFunctionObject* FindStaticFunction(const string& InFunctionName, const string& InClassName);
-	CFunctionObject* FindFunction(const string& InFunctionName);
-	CFunctionObject* FindFunction(const string& InFunctionName, const string& InClassName);
+	CFunctionObject* FindStaticFunction(const std::string& InFunctionName, const std::string& InClassName);
+	CFunctionObject* FindFunction(const std::string& InFunctionName);
+	CFunctionObject* FindFunction(const std::string& InFunctionName, const std::string& InClassName);
 
-	static string ResolvePackageName(const string& InClassName);
+	static std::string ResolvePackageName(const std::string& InClassName);
 protected:
 	static void AddList(CFieldObject*& InList, CFieldObject* InAddObject);
 
 protected:
-	static CFunctionObject* FindFunction_Interior(CFunctionObject*& InList, const string& InClassName, const string& InFunctionName);
-	static CFunctionObject* AddFunction_Interior(CFieldObject*& InList, CCoreMinimalObject* InOuter, const string& InFunctionName);
+	static CFunctionObject* FindFunction_Interior(CFunctionObject*& InList, const std::string& InClassName, const std::string& InFunctionName);
+	static CFunctionObject* AddFunction_Interior(CFieldObject*& InList, CCoreMinimalObject* InOuter, const std::string& InFunctionName);
 #if EDITOR_ENGINE
 public:
 	bool IsExitFields(const std::string& InField);
-	int FindFields(const std::string &InField);
-	std::string *FindMetas(const std::string& InKey);
+	int FindFields(const std::string& InField);
+	std::string* FindMetas(const std::string& InKey);
 public:
 	void AddMetas(const std::string& InKeyString, const std::string& InValue);
-	void AddMetas(const string& InPropertyName, const string& InKeyString, const string& InValue);
+	void AddMetas(const std::string& InPropertyName, const std::string& InKeyString, const std::string& InValue);
 
-	void AddFields(const string& InPropertyName, const string& InFields);
-	void AddFields(const string& InFields);
+	void AddFields(const std::string& InPropertyName, const std::string& InFields);
+	void AddFields(const std::string& InFields);
 #endif // 0
 public:
 	CFunctionObject* FunctionList;

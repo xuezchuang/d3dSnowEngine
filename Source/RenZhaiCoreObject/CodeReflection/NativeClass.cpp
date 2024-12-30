@@ -1,3 +1,4 @@
+
 #include "NativeClass.h"
 #include "../CoreObject/FunctionObject.h"
 #include "../CoreObject/PropertyObject.h"
@@ -7,12 +8,15 @@
 
 CFunctionObject* FNativeClass::StaticFunctionList = nullptr;
 
+
 FNativeClass::FNativeClass()
 	:Outer(NULL)
 {
 	FunctionList = nullptr;
 	Property = nullptr;
 }
+
+FNativeClass::~FNativeClass() = default;
 
 bool FNativeClass::RemoveTopProperty()
 {
@@ -96,7 +100,7 @@ CPropertyObject* FNativeClass::AddArrayProperty(
 	int InElementSize,
 	void* InData,
 	EPropertyType InPropertyType,
-	const string& InDefaultValue)
+	const std::string& InDefaultValue)
 {
 	if (CArrayPropertyObject* ArrayProperty = AddProperty<CArrayPropertyObject>(
 		PropertyName,
@@ -125,7 +129,7 @@ CPropertyObject* FNativeClass::AddMapProperty(
 	int InElementSize,
 	void* InData,
 	EPropertyType InPropertyType,
-	const string& InDefaultValue)
+	const std::string& InDefaultValue)
 {
 	if (CMapPropertyObject* MapProperty = AddProperty<CMapPropertyObject>(
 		PropertyName,
@@ -154,7 +158,7 @@ inline T* FNativeClass::AddProperty(
 	int InElementSize,
 	void* InData,
 	EPropertyType InPropertyType,
-	const string& InDefaultValue)
+	const std::string& InDefaultValue)
 {
 	FCreateObjectParam Param;
 	Param.Outer = Outer;
@@ -185,7 +189,7 @@ CPropertyObject* FNativeClass::AddProperty(
 	int InElementSize,
 	void* InData,
 	EPropertyType InPropertyType,
-	const string& InDefaultValue)
+	const std::string& InDefaultValue)
 {
 	return AddProperty<CPropertyObject>(
 		PropertyName,
@@ -321,7 +325,7 @@ void FNativeClass::Deserialization(FArchive& InArchive)
 	//...
 }
 
-CFunctionObject* FNativeClass::AddStaticFunction(const string& InFunctionName)
+CFunctionObject* FNativeClass::AddStaticFunction(const std::string& InFunctionName)
 {
 	CFieldObject* Field = StaticFunctionList;
 	CFunctionObject* InFunction = AddFunction_Interior(Field, Outer, InFunctionName);
@@ -333,7 +337,7 @@ CFunctionObject* FNativeClass::AddStaticFunction(const string& InFunctionName)
 	return InFunction;
 }
 
-CFunctionObject* FNativeClass::AddFunction(const string& InFunctionName)
+CFunctionObject* FNativeClass::AddFunction(const std::string& InFunctionName)
 {
 	CFieldObject* Field = FunctionList;
 	CFunctionObject* InFunction = AddFunction_Interior(Field, Outer, InFunctionName);
@@ -345,22 +349,22 @@ CFunctionObject* FNativeClass::AddFunction(const string& InFunctionName)
 	return InFunction;
 }
 
-CFunctionObject* FNativeClass::FindStaticFunction(const string& InFunctionName, const string& InClassName)
+CFunctionObject* FNativeClass::FindStaticFunction(const std::string& InFunctionName, const std::string& InClassName)
 {
 	return FindFunction_Interior(StaticFunctionList, ResolvePackageName(InClassName),InFunctionName);
 }
 
-CFunctionObject* FNativeClass::FindFunction(const string& InFunctionName)
+CFunctionObject* FNativeClass::FindFunction(const std::string& InFunctionName)
 {
 	return FindFunction_Interior(FunctionList, Outer->GetName(), InFunctionName);
 }
 
-CFunctionObject* FNativeClass::FindFunction(const string& InFunctionName, const string& InClassName)
+CFunctionObject* FNativeClass::FindFunction(const std::string& InFunctionName, const std::string& InClassName)
 {
 	return FindFunction_Interior(FunctionList, ResolvePackageName(InClassName), InFunctionName);
 }
 
-string FNativeClass::ResolvePackageName(const string& InClassName)
+string FNativeClass::ResolvePackageName(const std::string& InClassName)
 {
 	string ClassName = InClassName;
 
@@ -407,7 +411,7 @@ void FNativeClass::AddList(CFieldObject*& InList, CFieldObject* InAddObject)
 	}
 }
 
-CFunctionObject* FNativeClass::FindFunction_Interior(CFunctionObject*& InList, const string& InClassName, const string& InFunctionName)
+CFunctionObject* FNativeClass::FindFunction_Interior(CFunctionObject*& InList, const std::string& InClassName, const std::string& InFunctionName)
 {
 	CFunctionObject* StartPtr = InList;
 	while (StartPtr)
@@ -427,7 +431,7 @@ CFunctionObject* FNativeClass::FindFunction_Interior(CFunctionObject*& InList, c
 CFunctionObject* FNativeClass::AddFunction_Interior(
 	CFieldObject*& InList, 
 	CCoreMinimalObject* InOuter, 
-	const string& InFunctionName)
+	const std::string& InFunctionName)
 {
 	FCreateObjectParam Param;
 	Param.Outer = InOuter;
@@ -478,7 +482,7 @@ void FNativeClass::AddMetas(const std::string& InKeyString, const std::string& I
 	}
 }
 
-void FNativeClass::AddMetas(const string& InPropertyName, const string& InKeyString, const string& InValue)
+void FNativeClass::AddMetas(const std::string& InPropertyName, const std::string& InKeyString, const std::string& InValue)
 {
 	if (InKeyString.length() != 0 && InValue.length() != 0)
 	{
@@ -497,7 +501,7 @@ void FNativeClass::AddMetas(const string& InPropertyName, const string& InKeyStr
 	}
 }
 
-void FNativeClass::AddFields(const string& InPropertyName, const string& InFields)
+void FNativeClass::AddFields(const std::string& InPropertyName, const std::string& InFields)
 {
 	if (InFields.length() != 0)
 	{
@@ -516,7 +520,7 @@ void FNativeClass::AddFields(const string& InPropertyName, const string& InField
 	}
 }
 
-void FNativeClass::AddFields(const string& InFields)
+void FNativeClass::AddFields(const std::string& InFields)
 {
 	if (InFields.length() != 0)
 	{

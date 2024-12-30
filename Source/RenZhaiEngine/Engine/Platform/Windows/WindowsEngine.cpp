@@ -89,6 +89,12 @@ int CWindowsEngine::Init(FWinMainCommandParameters InParameters)
 
 	Engine_Log("Engine initialization complete.");
 
+	//显示窗口
+	ShowWindow(MianWindowsHandle, SW_SHOW);
+
+	//窗口是脏的，刷新一下
+	UpdateWindow(MianWindowsHandle);
+
 	return 0;
 }
 
@@ -281,11 +287,11 @@ bool CWindowsEngine::InitWindows(FWinMainCommandParameters InParameters)
 		return false;
 	}
 
-	//显示窗口
-	ShowWindow(MianWindowsHandle, SW_SHOW);
+	////显示窗口
+	//ShowWindow(MianWindowsHandle, SW_SHOW);
 
-	//窗口是脏的，刷新一下
-	UpdateWindow(MianWindowsHandle);
+	////窗口是脏的，刷新一下
+	//UpdateWindow(MianWindowsHandle);
 
 	Engine_Log("InitWindows complete.");
 

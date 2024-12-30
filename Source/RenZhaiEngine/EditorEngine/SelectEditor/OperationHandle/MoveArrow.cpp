@@ -109,7 +109,7 @@ void GMoveArrow::OnLeftMouseButtonUp(int X, int Y)
 
 void GMoveArrow::OnCaptureKeyboardInfor(const FInputKey& InKey)
 {
-	if (SelectObject)
+	if (SelectObject != nullptr)
 	{
 		if (!bPressRightMouse)
 		{

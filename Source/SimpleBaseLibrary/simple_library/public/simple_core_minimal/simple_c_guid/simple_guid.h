@@ -1,5 +1,6 @@
 #pragma once
 #include "simple_library/public/simple_core_minimal/simple_c_core/simple_core_minimal.h"
+#include "../../simple_library_macro.h"
 
 _CRT_BEGIN_C_HEADER
 typedef struct
@@ -14,17 +15,17 @@ bool is_guid_valid(simple_c_guid* c_guid);
 
 bool is_guid_valid_str(const char* c_guid);
 
-void normalization_guid(simple_c_guid* c_guid);
+void SIMPLE_LIBRARY_API normalization_guid(simple_c_guid* c_guid);
 
-void create_guid(simple_c_guid* c_guid);
+void SIMPLE_LIBRARY_API create_guid(simple_c_guid* c_guid);
 
 void create_guid_str(char* c_guid);
 
-void guid_to_string(char *buf, const simple_c_guid * c_guid);
+void SIMPLE_LIBRARY_API guid_to_string(char *buf, const simple_c_guid * c_guid);
 
-void string_to_guid(const char* buf, simple_c_guid* c_guid);
+SIMPLE_LIBRARY_API void string_to_guid(const char* buf, simple_c_guid* c_guid);
 
-bool guid_equal(const simple_c_guid * c_guid_a, const simple_c_guid * c_guid_b);
+SIMPLE_LIBRARY_API bool guid_equal(const simple_c_guid * c_guid_a, const simple_c_guid * c_guid_b);
 
 bool guid_equal_str(const char *guid_string, const simple_c_guid * c_guid);
  _CRT_END_C_HEADER

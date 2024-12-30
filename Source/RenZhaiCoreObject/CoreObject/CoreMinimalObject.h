@@ -14,7 +14,7 @@ struct FFrame;
 class CClassObject;
 
 //提供核心对象
-class RENZHAICOREOBJECT_API CCoreMinimalObject :public IGuidInterface
+class  RENZHAICOREOBJECT_API CCoreMinimalObject :public IGuidInterface
 {
 public:
 	virtual void InitMinimalObject();//内部调用
@@ -34,11 +34,11 @@ public:
 	virtual void Destroy();
 
 	FORCEINLINE CCoreMinimalObject* GetOuter() const { return Outer; }
-	FORCEINLINE std::string GetName() const { return Name; }
+	std::string GetName() const;
 	std::string GetDefaultObjectName();//模板的对象的名字
 
 	void SetOuter(CCoreMinimalObject* InNewOuter) {Outer = InNewOuter;}
-	void Rename(const std::string& InName) { Name = InName; }
+	void Rename(const std::string& InName);
 	void SetFlag(unsigned char InNewFlag) { Flag = InNewFlag; }
 
 	//编辑器API
@@ -83,13 +83,15 @@ protected:
 
 protected:
 	bool bTick;
-
+	FNativeClass NativeClass;
 	//就是外层是谁
 	CCoreMinimalObject* Outer;
-	std::string Name;
+	
 	unsigned char Flag;
-protected:
-	FNativeClass NativeClass;
+	std::string Name;
+
+	//class Impl;
+	//std::unique_ptr<Impl> pImpl;
 };
 
 extern RENZHAICOREOBJECT_API vector<CCoreMinimalObject*> GObjects;

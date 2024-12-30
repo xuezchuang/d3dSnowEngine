@@ -8,6 +8,16 @@
 
 vector<CCoreMinimalObject*> GObjects;
 
+//class CCoreMinimalObject::Impl
+//{
+//public:
+//	//Impl()
+//	//{
+//	//};
+//	//virtual ~Impl() = default;
+//	std::string Name; // 实际的 std::string 成员变量
+//};
+
 CCoreMinimalObject::CCoreMinimalObject()
 {
 	bTick = true;
@@ -60,6 +70,11 @@ void CCoreMinimalObject::Destroy()
 	Flag = ECoreObjectFlag::DeletedPeriod;
 }
 
+std::string CCoreMinimalObject::GetName() const
+{
+	return Name;
+}
+
 std::string CCoreMinimalObject::GetDefaultObjectName()
 {
 	if (CClassObject *InClass = Class())
@@ -71,6 +86,11 @@ std::string CCoreMinimalObject::GetDefaultObjectName()
 	}
 
 	return GetName();
+}
+
+void CCoreMinimalObject::Rename(const std::string& InName)
+{
+	Name = InName;
 }
 
 void CCoreMinimalObject::CallFunction(FFrame& Stack, void const* Data, CFunctionObject* Function)

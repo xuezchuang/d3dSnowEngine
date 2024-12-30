@@ -22,7 +22,7 @@ struct RENZHAICOREOBJECT_API FCreateObjectParam
 	CComponent* ParentComponent;
 };
 
-void RZ_UpdateClass(CClassObject* InClass, CCoreMinimalObject* InObject);
+void RENZHAICOREOBJECT_API RZ_UpdateClass(CClassObject* InClass, CCoreMinimalObject* InObject);
 
 template<class T>
 T* CreateObject(const FCreateObjectParam& InObjectParam, CCoreMinimalObject* NewObject)

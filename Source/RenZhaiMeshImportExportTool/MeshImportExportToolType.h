@@ -3,7 +3,7 @@
 #include "MeshImportExportToolSkinnedType.h"
 
 //参数 由上层传入
-struct MESHIMPORTEXPORTTOOL_API FIEParam
+struct FIEParam
 {
 	FIEParam()
 		:bOriginalCoordinate(true)
@@ -13,7 +13,7 @@ struct MESHIMPORTEXPORTTOOL_API FIEParam
 };
 
 //顶点数据
-struct MESHIMPORTEXPORTTOOL_API FIEVertex
+struct FIEVertex
 {
 	fvector_3d Position;
 	fvector_3d Color;
@@ -24,7 +24,7 @@ struct MESHIMPORTEXPORTTOOL_API FIEVertex
 };
 
 //我们提取的数据一定是三角形
-struct MESHIMPORTEXPORTTOOL_API FIETriangle
+struct FIETriangle
 {
 	FIETriangle()
 		:MaterialID(0)
@@ -35,7 +35,7 @@ struct MESHIMPORTEXPORTTOOL_API FIETriangle
 };
 
 //模型数据
-struct MESHIMPORTEXPORTTOOL_API FIEMesh
+struct FIEMesh
 {
 	FIEMesh()
 	{}
@@ -46,7 +46,7 @@ struct MESHIMPORTEXPORTTOOL_API FIEMesh
 };
 
 //材质名称
-struct MESHIMPORTEXPORTTOOL_API FIEMaterial
+struct FIEMaterial
 {
 	FIEMaterial()
 	{
@@ -74,7 +74,7 @@ public:
 };
 
 //Model
-struct MESHIMPORTEXPORTTOOL_API FIEModel
+struct FIEModel
 {
 	std::vector<FIEMesh> MeshData;
 	std::map<int, FIEMaterial> MaterialMap;
@@ -97,7 +97,7 @@ struct MESHIMPORTEXPORTTOOL_API FIEModel
 };
 
 //渲染数据
-struct MESHIMPORTEXPORTTOOL_API FIERenderData
+struct FIERenderData
 {
 	std::vector<FIEModel> ModelData;
 };

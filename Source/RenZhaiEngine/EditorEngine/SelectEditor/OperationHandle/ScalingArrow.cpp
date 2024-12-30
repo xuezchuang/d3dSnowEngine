@@ -122,7 +122,7 @@ void GScalingArrow::OnLeftMouseButtonUp(int X, int Y)
 
 void GScalingArrow::OnCaptureKeyboardInfor(const FInputKey& InKey)
 {
-	if (SelectObject)
+	if (SelectObject!= nullptr)
 	{
 		if (InKey.KeyName == "R")
 		{

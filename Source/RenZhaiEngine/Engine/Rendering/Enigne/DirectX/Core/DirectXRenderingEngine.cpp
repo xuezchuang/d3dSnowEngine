@@ -91,9 +91,10 @@ int CDirectXRenderingEngine::Init(FWinMainCommandParameters InParameters)
 
 	InitDirect3D();
 
+	MeshManage->Init();
+
 	PostInitDirect3D();
 
-	MeshManage->Init();
 
 	Engine_Log("DirectXRenderingEngine initialization complete.");
 
@@ -916,7 +917,7 @@ int CDirectXRenderingEngine::PostInit()
 	int nWidth = FEngineRenderConfig::GetRenderConfig()->ScrrenWidth;
 	int nHeight = FEngineRenderConfig::GetRenderConfig()->ScrrenHight;
 
-	OnResetSize(nWidth, nHeight, 0);
+	//OnResetSize(nWidth, nHeight, 0);
 	return 0;
 }
 
@@ -1262,6 +1263,8 @@ bool CDirectXRenderingEngine::InitDirect3D()
 
 	ANALYSIS_HRESULT(GraphicsCommandList->Close());
 
+	MeshManage->GetRenderingPipeline()->GetUIPipeline()->BuildDesciptorHeap();
+
 	//多重采样
 ////////////////////////////////////////////////////////////////////
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS QualityLevels;
@@ -1353,7 +1356,7 @@ void CDirectXRenderingEngine::PostInitDirect3D()
 	int WindowWidth = FEngineRenderConfig::GetRenderConfig()->ScrrenWidth;
 	int WindowHight = FEngineRenderConfig::GetRenderConfig()->ScrrenHight;
 
-	OnResetSize(WindowWidth,WindowHight,0);
+	//OnResetSize(WindowWidth,WindowHight,0);
 }
 
 #endif

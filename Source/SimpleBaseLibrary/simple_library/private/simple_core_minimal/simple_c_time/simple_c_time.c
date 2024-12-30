@@ -69,7 +69,7 @@ char * tm_to_string(const struct tm *t)
 	return asctime(t);
 }
 
-char * time_t_to_string(etime_type type, const time_t *t)
+char * time_t_to_string(etime_type type, time_t *const t)
 {
 	struct tm *p = time_t_to_tm(type, t);
 

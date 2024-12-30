@@ -43,9 +43,9 @@ FGeometryMap::~FGeometryMap()
 	MeshObjectCount = 0;
 }
 
-void FGeometryMap::PreDraw(float DeltaTime)
+void FGeometryMap::SetDescriptorHeaps()
 {
-	DescriptorHeap.PreDraw(DeltaTime);
+	DescriptorHeap.SetDescriptorHeaps();
 }
 
 void FGeometryMap::Draw(float DeltaTime)

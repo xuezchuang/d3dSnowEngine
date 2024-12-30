@@ -98,15 +98,6 @@ void FRenderingPipeline::BuildPipeline()
 
 	SSAO.BuildDescriptors();
 
-	//初始化我们的UI管线
-	UIPipeline.Init(
-		GeometryMap.GetHeap(),
-		GeometryMap.GetDrawTexture2DResourcesNumber() + //Texture2D
-		GeometryMap.GetDrawCubeMapResourcesNumber() + //静态Cube贴图
-		1 + //动态Cube贴图
-		1 + //Shadow
-		1);//ShadowCubeMap
-
 	//初始化CubeMap 摄像机
 	DynamicCubeMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
 
@@ -153,20 +144,25 @@ void FRenderingPipeline::BuildPipeline()
 	RenderLayer.BuildPSO();
 }
 
+void FRenderingPipeline::BuildUIPipeline()
+{
+	UIPipeline.Init();
+}
+
 void FRenderingPipeline::PreDraw(float DeltaTime)
 {
 	//需要一个PSO
 	DirectXPipelineState.PreDraw(DeltaTime);
 
-	GeometryMap.PreDraw(DeltaTime);
-	RootSignature.PreDraw(DeltaTime);
+	GeometryMap.SetDescriptorHeaps();
+	RootSignature.SetGraphicsRootSignature();
 
 	//渲染灯光材质贴图等(必须要放在 这个位置 否则天崩地裂)
 	GeometryMap.Draw(DeltaTime);
 
 	//渲染SSAO
 	//SSAO.Draw(DeltaTime);
-	RootSignature.PreDraw(DeltaTime);
+	RootSignature.SetGraphicsRootSignature();
 
 	//存储我们的SSAO到指定的buffer
 	SSAO.SaveToSSAOBuffer();
@@ -218,7 +214,7 @@ void FRenderingPipeline::Draw(float DeltaTime)
 	//渲染UI
 	UIPipeline.Draw(DeltaTime);
 
-	DirectXPipelineState.Draw(DeltaTime);
+	DirectXPipelineState.CaptureKeyboardKeys();
 }
 
 void FRenderingPipeline::PostDraw(float DeltaTime)

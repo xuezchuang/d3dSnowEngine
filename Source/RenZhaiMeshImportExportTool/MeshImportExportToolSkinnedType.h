@@ -12,7 +12,7 @@ struct FIEKeyValue
 };
 
 //动画相关
-struct MESHIMPORTEXPORTTOOL_API FIEKey
+struct FIEKey
 {
 	FIEKey()
 		:Scale(1.f)
@@ -25,7 +25,7 @@ struct MESHIMPORTEXPORTTOOL_API FIEKey
 	fvector_4d Rotation;//有可能是四元数 也有可能是欧拉角
 };
 
-struct MESHIMPORTEXPORTTOOL_API FIEBoneAnimation
+struct FIEBoneAnimation
 {
 	std::string Name;
 
@@ -34,13 +34,13 @@ struct MESHIMPORTEXPORTTOOL_API FIEBoneAnimation
 
 typedef std::vector<FIEBoneAnimation> FIEAnimationSequence;
 
-struct MESHIMPORTEXPORTTOOL_API FIEAnimationData
+struct FIEAnimationData
 {
 	std::map<string, FIEAnimationSequence> AnimationSequences;
 };
 
 //蒙皮网格相关
-struct MESHIMPORTEXPORTTOOL_API FIESkinnedWidget
+struct FIESkinnedWidget
 {
 	FIESkinnedWidget()
 		:LinkIndex(0)
@@ -65,7 +65,7 @@ struct MESHIMPORTEXPORTTOOL_API FIESkinnedWidget
 };
 
 //骨骼
-struct MESHIMPORTEXPORTTOOL_API FIEBone
+struct FIEBone
 {
 	FIEBone()
 		:bBindPose(false)
@@ -89,7 +89,7 @@ struct MESHIMPORTEXPORTTOOL_API FIEBone
 //骨架
 typedef std::vector<FIEBone> FIEBones;
 
-struct MESHIMPORTEXPORTTOOL_API FIESkeleton
+struct FIESkeleton
 {
 	FIEBones Bones;
 	vector<int> BoneInherits;//层次

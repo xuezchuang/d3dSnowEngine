@@ -11,7 +11,6 @@ public:
 	FDirectXPipelineState();
 
 	void PreDraw(float DeltaTime);
-	void Draw(float DeltaTime);
 	void PostDraw(float DeltaTime);
 
 	void ResetGPSDesc();
@@ -52,7 +51,7 @@ public:
 	void SaveGPSDescAsDefault();
 
 	//°´¼ü²¶»ñ
-private:
+public:
 	void CaptureKeyboardKeys();
 
 private:

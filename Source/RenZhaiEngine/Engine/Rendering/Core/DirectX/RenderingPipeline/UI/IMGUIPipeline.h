@@ -4,12 +4,18 @@ struct FIMGUIPipeline :public IDirectXDeviceInterfece_Struct
 {
 	FIMGUIPipeline();
 
-	void Init(ID3D12DescriptorHeap* InHeap, UINT InOffset);
+	void BuildDesciptorHeap();
+
+	void Init();
 
 	void Draw(float DeltaTime);
 
 	void Exit();
 
 protected:
+	
+
 	void Tick(float DeltaTime);
+
+	ID3D12DescriptorHeap* g_pd3dSrvDescHeap = nullptr;
 };

@@ -1,6 +1,7 @@
 // Copyright (C) RenZhai.2022.All Rights Reserved.
 #pragma once
 #include "simple_library/public/simple_core_minimal/simple_c_core/simple_core_minimal.h"
+#include "../simple_library_macro.h"
 
 _CRT_BEGIN_C_HEADER
 enum e_error
@@ -14,11 +15,11 @@ enum e_error
 const char *get_log_filename();
 const char *get_log_path();
 
-void init_log_system(const char *path);
+SIMPLE_LIBRARY_API void init_log_system(const char *path);
 
 //log
-bool log_wirte(enum e_error error, char *format, ...);
-char* get_error_str(enum e_error error, char* buff);
+SIMPLE_LIBRARY_API bool log_wirte(enum e_error error, char *format, ...);
+SIMPLE_LIBRARY_API char* get_error_str(enum e_error error, char* buff);
 int get_log_str(enum e_error error, char* buff,const char *content_buff);
 
 #define log_system(type,format,...) \

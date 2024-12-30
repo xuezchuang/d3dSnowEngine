@@ -14,12 +14,6 @@ void FDirectXPipelineState::PreDraw(float DeltaTime)
     GetGraphicsCommandList()->Reset(GetCommandAllocator().Get(), PSO[(int)PipelineState].Get());
 }
 
-void FDirectXPipelineState::Draw(float DeltaTime)
-{
-    //²¶»ñ¼üÅÌ°´¼ü
-    CaptureKeyboardKeys();
-}
-
 void FDirectXPipelineState::PostDraw(float DeltaTime)
 {
 

@@ -162,7 +162,7 @@ InParam->DefaultValue.c_str()));
 	{
 		if (simple_cpp_string_algorithm::index_valid(
 			ParamArray.size(),
-			ParamArray.size() - 1))
+			int(ParamArray.size() - 1)))
 		{
 			remove_char_end(
 				const_cast<char*>(ParamArray[ParamArray.size() - 1].c_str()),

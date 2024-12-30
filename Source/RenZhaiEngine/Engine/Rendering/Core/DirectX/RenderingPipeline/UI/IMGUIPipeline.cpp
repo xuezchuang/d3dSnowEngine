@@ -9,7 +9,7 @@ FIMGUIPipeline::FIMGUIPipeline()
 
 }
 
-void FIMGUIPipeline::Init(ID3D12DescriptorHeap* InHeap, UINT InOffset)
+void FIMGUIPipeline::Init()
 {
 	//版本检测
 	IMGUI_CHECKVERSION();
@@ -20,28 +20,23 @@ void FIMGUIPipeline::Init(ID3D12DescriptorHeap* InHeap, UINT InOffset)
 	//元件的颜色初始化
 	ImGui::StyleColorsDark();
 
+	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	ImGuiStyle& style = ImGui::GetStyle();
+	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
 	//win32初始化 加载对应的DLL和初始化时间等
 	ImGui_ImplWin32_Init(GetMianWindowsHandle());
-
-	UINT CBVDescriptorSize = GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
-
-	auto CPUDescriptor =
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			InHeap->GetCPUDescriptorHandleForHeapStart(),
-			InOffset, CBVDescriptorSize);
-
-	auto GPUDescriptor =
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(
-		InHeap->GetGPUDescriptorHandleForHeapStart(),
-		InOffset,
-		CBVDescriptorSize);
 
 	//初始化后台数据 注册对应的驱动和帧数
 	ImGui_ImplDX12_Init(
 		GetD3dDevice().Get(),1,
-		DXGI_FORMAT_R8G8B8A8_UNORM,InHeap,
-		CPUDescriptor, 
-		GPUDescriptor);
+		DXGI_FORMAT_R8G8B8A8_UNORM, g_pd3dSrvDescHeap,
+		g_pd3dSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
+		g_pd3dSrvDescHeap->GetGPUDescriptorHandleForHeapStart());
 
 #if EDITOR_ENGINE
 	GetEditorEngine()->BuildEditor();
@@ -76,8 +71,20 @@ void FIMGUIPipeline::Exit()
 	ImGui_ImplWin32_Shutdown();
 }
 
+void FIMGUIPipeline::BuildDesciptorHeap()
+{
+	D3D12_DESCRIPTOR_HEAP_DESC HeapDesc;
+	HeapDesc.NumDescriptors = 1;
+	HeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	HeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	HeapDesc.NodeMask = 0;
+
+	GetD3dDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&g_pd3dSrvDescHeap));
+}
+
 void FIMGUIPipeline::Tick(float DeltaTime)
 {
+	GetGraphicsCommandList()->SetDescriptorHeaps(1, &g_pd3dSrvDescHeap);
 #if EDITOR_ENGINE
 	GetEditorEngine()->DrawEditor(DeltaTime);
 #endif

@@ -22,7 +22,7 @@ public:
 
 	virtual FArchive& operator<<(const vector<unsigned char>& Value)
 	{
-		int Num = Value.size();
+		int Num = int(Value.size());
 		*this << Num;
 
 		Serialize((void*)Value.data(), Num * sizeof(unsigned char));
@@ -121,7 +121,7 @@ public:
 		Value = (char*)&ScriptBuffer[Pos];
 
 		//记录位置
-		Setp(Value.length() + 1);
+		Setp(int(Value.length() + 1));
 
 		return *this;
 	}
@@ -193,7 +193,7 @@ public:
 	template<class T>
 	void WriteArray(const vector<T>& Value)
 	{
-		int Num = Value.size();
+		int Num = int(Value.size());
 		*this << Num;
 
 		for (size_t i = 0; i < Num; i++)
@@ -205,7 +205,7 @@ public:
 	virtual void Serialize(void* Value, long long Length)
 	{
 		//获取Index
-		int Index = ScriptBuffer.size();
+		int Index = int(ScriptBuffer.size());
 
 		//扩充对等的数据
 		for (int i = 0; i < Length; i++)

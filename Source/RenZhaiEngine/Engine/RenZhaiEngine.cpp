@@ -140,7 +140,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int
 
 		//ÍË³ö
 		ReturnValue = Exit(Engine);
-		delete Engine;
+		//delete Engine;
 	}
 	else
 	{

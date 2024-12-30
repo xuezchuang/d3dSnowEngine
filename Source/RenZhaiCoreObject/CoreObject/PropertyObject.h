@@ -41,6 +41,10 @@ public:
 protected:
 	char* Data;
 	int ElementSize;
+	
+	
+	
+private:
 	string Type;
 	string DefaultValue;
 	EPropertyType PropertyType;

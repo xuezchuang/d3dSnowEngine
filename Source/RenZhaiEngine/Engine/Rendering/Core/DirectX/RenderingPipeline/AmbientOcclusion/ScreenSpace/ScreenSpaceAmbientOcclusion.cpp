@@ -52,7 +52,7 @@ void FScreenSpaceAmbientOcclusion::Draw(float DeltaTime)
 
 	//构建SSAO
 	//设置根签名
-	DirectXRootSignature.PreDraw(DeltaTime);
+	DirectXRootSignature.SetGraphicsRootSignature();
 
 	//渲染资源
 	DrawResources(DeltaTime);

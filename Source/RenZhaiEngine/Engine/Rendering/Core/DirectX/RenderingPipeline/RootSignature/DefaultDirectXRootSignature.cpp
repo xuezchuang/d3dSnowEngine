@@ -88,9 +88,9 @@ void FDefaultDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
         IID_PPV_ARGS(&RootSignature));
 }
 
-void FDefaultDirectXRootSignature::PreDraw(float DeltaTime)
+void FDefaultDirectXRootSignature::SetGraphicsRootSignature()
 {
-    Super::PreDraw(DeltaTime);
+    Super::SetGraphicsRootSignature();
 }
 
 void FDefaultDirectXRootSignature::Draw(float DeltaTime)
