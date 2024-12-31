@@ -1,0 +1,6 @@
+[submodule "Source/DirectX12Lib"]
+	path = Source/DirectX12Lib
+	url = git@github.com:xuezchuang/DirectX12Lib.git
+[submodule "Source/DirectXTex"]
+	path = Source/DirectXTex
+	url = git@github.com:xuezchuang/DirectXTex.git

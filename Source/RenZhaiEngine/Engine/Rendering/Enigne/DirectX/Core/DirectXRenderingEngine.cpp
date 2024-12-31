@@ -1067,8 +1067,8 @@ int CDirectXRenderingEngine::PostExit()
 {
 	FEngineRenderConfig::Destroy();
 	WaitGPUCommandQueueComplete();
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
+	//ImGui_ImplDX12_Shutdown();
+	//ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
 //#if defined(_DEBUG)

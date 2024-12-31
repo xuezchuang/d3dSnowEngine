@@ -1,5 +1,6 @@
 #pragma once
 
+//#define MESHIMPORTEXPORTTOOL_API
 #ifdef MESHIMPORTEXPORTTOOL_EXPORTS
 #define MESHIMPORTEXPORTTOOL_API __declspec(dllexport)
 #else

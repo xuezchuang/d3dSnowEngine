@@ -1,4 +1,5 @@
 #include "EnginePath.h"
+#include <simple_library/public/simple_core_minimal/simple_c_path/simple_path.h>
 
 std::string FEnginePathHelper::GetEngineRootPath()
 {

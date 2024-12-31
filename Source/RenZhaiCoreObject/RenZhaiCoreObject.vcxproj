@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -80,6 +80,7 @@
     <IntDir>$(SolutionDir)Intermediate\Other\$(ProjectName)\</IntDir>
     <IncludePath>$(SolutionDir)Source\RenZhaiCoreObject;$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\RenZhaiEngineCore\;$(SolutionDir)Intermediate\CodeReflection;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
+    <UseStructuredOutput>false</UseStructuredOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -116,7 +117,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;RENZHAICOREOBJECT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;RENZHAICOREOBJECT_EXPORTS;SIMPLE_LIBRARY_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BrowseInformation>true</BrowseInformation>

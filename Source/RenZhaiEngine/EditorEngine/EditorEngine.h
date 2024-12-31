@@ -1,6 +1,7 @@
 #pragma once
 #include "../Engine/Core/Engine.h"
 #include "Core/EditorBase.h"
+#include "imgui.h"
 
 class CEditorEngine :public CEngine,public FEditorBase
 {

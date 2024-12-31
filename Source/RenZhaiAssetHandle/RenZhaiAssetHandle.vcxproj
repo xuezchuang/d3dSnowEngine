@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -80,6 +80,7 @@
     <IntDir>$(SolutionDir)Intermediate\Other\$(ProjectName)\</IntDir>
     <IncludePath>$(SolutionDir)Source\SimpleBaseLibrary\;$(SolutionDir)Source\RenZhaiCoreObject\;$(SolutionDir)Source\RenZhaiEngineCore\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
+    <UseStructuredOutput>false</UseStructuredOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -162,5 +163,10 @@
     <ClInclude Include="RenZhaiAssetHandle.h" />
     <ClInclude Include="RenZhaiAssetHandleMacro.h" />
     <ClInclude Include="RenZhaiAssetHandleType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleBaseLibrary\SimpleBaseLibrary.vcxproj">
+      <Project>{746905f6-61f8-4e84-9232-7b8532685b7e}</Project>
+    </ProjectReference>
   </ItemGroup>
 </Project>

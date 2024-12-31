@@ -5,6 +5,9 @@
 #include "CoreObject/ClassObject.h"
 #include "CodeReflection/ClassManage.h"
 #include "Timer.h"
+#include "include/Game.h"
+#include "Core/mEngine.h"
+#include "include/ApplicationWin32.h"
 
 int Init(CEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
 {
@@ -93,60 +96,64 @@ int Exit(CEngine* InEngine)
 CEngine* Engine = NULL;
 std::unique_ptr<FTimer> Timer = std::make_unique<FTimer>();
 
-//hInstance 自己的实例
-//prevInstance 上次的实例
-//cmdLine 传递命令
-//showCmd 多少条cmd
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,PSTR cmdLine, int showCmd)
 {
-	int ReturnValue = 0;
+	//int ReturnValue = 0;
 
-	Engine = FEngineFactory::Instance();
-	if (Engine)
-	{
-		//初始化
-		Init(Engine, hInstance, prevInstance, cmdLine, showCmd);
+	//Engine = FEngineFactory::Instance();
+	//if (Engine)
+	//{
+	//	//初始化
+	//	Init(Engine, hInstance, prevInstance, cmdLine, showCmd);
 
-		MSG EngineMsg = { 0 };
+	//	MSG EngineMsg = { 0 };
 
-		Timer->Reset();
+	//	Timer->Reset();
 
-		//渲染出图
-		while (EngineMsg.message != WM_QUIT)
-		{
-			//PM_NOREMOVE 消息不从队列里除掉。
-			//PM_REMOVE   消息从队列里除掉。
-			//PM_NOYIELD  此标志使系统不释放等待调用程序空闲的线程
-			// 
-			//PM_QS_INPUT 处理鼠标和键盘消息。
-			//PM_QS_PAINT 处理画图消息。
-			//PM_QS_POSTMESSAGE 处理所有被寄送的消息，包括计时器和热键。
-			//PM_QS_SENDMESSAGE 处理所有发送消息。
-			if (PeekMessage(&EngineMsg,0,0,0, PM_REMOVE))
-			{
-				TranslateMessage(&EngineMsg);
-				DispatchMessage(&EngineMsg);
-			}
-			else
-			{
-				Timer->Tick();
+	//	//渲染出图
+	//	while (EngineMsg.message != WM_QUIT)
+	//	{
+	//		//PM_NOREMOVE 消息不从队列里除掉。
+	//		//PM_REMOVE   消息从队列里除掉。
+	//		//PM_NOYIELD  此标志使系统不释放等待调用程序空闲的线程
+	//		// 
+	//		//PM_QS_INPUT 处理鼠标和键盘消息。
+	//		//PM_QS_PAINT 处理画图消息。
+	//		//PM_QS_POSTMESSAGE 处理所有被寄送的消息，包括计时器和热键。
+	//		//PM_QS_SENDMESSAGE 处理所有发送消息。
+	//		if (PeekMessage(&EngineMsg,0,0,0, PM_REMOVE))
+	//		{
+	//			TranslateMessage(&EngineMsg);
+	//			DispatchMessage(&EngineMsg);
+	//		}
+	//		else
+	//		{
+	//			Timer->Tick();
 
-				Tick(Engine,Timer->GetDeltaTime());
+	//			Tick(Engine,Timer->GetDeltaTime());
 
-				//模拟电脑固定消耗
-				//Sleep(1);
-			}
-		}
+	//			//模拟电脑固定消耗
+	//			//Sleep(1);
+	//		}
+	//	}
 
-		//退出
-		ReturnValue = Exit(Engine);
-		//delete Engine;
-	}
-	else
-	{
-		ReturnValue = 1;
-	}
+	//	//退出
+	//	ReturnValue = Exit(Engine);
+	//	//delete Engine;
+	//}
+	//else
+	//{
+	//	ReturnValue = 1;
+	//}
 
-	Engine_Log("[%i]The engine has exited.", ReturnValue);
-	return ReturnValue;
+	//Engine_Log("[%i]The engine has exited.", ReturnValue);
+	//return ReturnValue;
+
+	GameDesc Desc;
+	Desc.Caption = L"Test";
+	mEngine tutorial(Desc);
+	ApplicationWin32::Get().Run(&tutorial);
+	CoUninitialize();
+
 }

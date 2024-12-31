@@ -248,19 +248,19 @@ void FGraphicBlueprintEditor::DrawBlueprintNode(float DeltaTime)
 
 void FGraphicBlueprintEditor::CheckKeyboard(float DeltaTime)
 {
-	for (ImGuiKey Key = 0; Key < ImGuiKey_COUNT; Key++)
+	for (int Key = 0; Key < ImGuiKey_COUNT; Key++)
 	{
 		if (Key < 512 && ImGui::GetIO().KeyMap[Key] != -1)
 		{
 			continue;
 		}
-		else if (ImGui::IsKeyDown(Key))
+		else if (ImGui::IsKeyDown(ImGuiKey(Key)))
 		{
-			if (ImGui::GetKeyName(Key) == "Delete")
+			if (ImGui::GetKeyName(ImGuiKey(Key)) == "Delete")
 			{
 				OnDelete();
 			}
-			else if(ImGui::GetKeyName(Key) == "F")
+			else if(ImGui::GetKeyName(ImGuiKey(Key)) == "F")
 			{
 				OnLookAt();
 			}

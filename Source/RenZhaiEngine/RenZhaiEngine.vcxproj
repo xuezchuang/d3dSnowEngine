@@ -148,6 +148,7 @@
     <ClCompile Include="Engine\Core\Construction\MeshConstruction.cpp" />
     <ClCompile Include="Engine\Core\Engine.cpp" />
     <ClCompile Include="Engine\Core\Level\Level.cpp" />
+    <ClCompile Include="Engine\Core\mEngine.cpp" />
     <ClCompile Include="Engine\Core\Viewport\ClientViewport.cpp" />
     <ClCompile Include="Engine\Core\Viewport\Viewport.cpp" />
     <ClCompile Include="Engine\Core\Viewport\ViewportInfo.cpp" />
@@ -251,14 +252,6 @@
     <ClCompile Include="Engine\Shader\Core\Shader.cpp" />
     <ClCompile Include="Engine\Shader\Core\ShaderType.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
-    <ClCompile Include="imgui\backends\imgui_impl_dx12.cpp" />
-    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_demo.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_tables.cpp" />
-    <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="imgui\libs\usynergy\uSynergy.c" />
     <ClCompile Include="LinkCodeReflection.build.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -399,6 +392,7 @@
     <ClInclude Include="Engine\Core\Construction\MeshConstruction.h" />
     <ClInclude Include="Engine\Core\Engine.h" />
     <ClInclude Include="Engine\Core\Level\Level.h" />
+    <ClInclude Include="Engine\Core\mEngine.h" />
     <ClInclude Include="Engine\Core\Viewport\ClientViewport.h" />
     <ClInclude Include="Engine\Core\Viewport\Viewport.h" />
     <ClInclude Include="Engine\Core\Viewport\ViewportInfo.h" />
@@ -506,17 +500,6 @@
     <ClInclude Include="Engine\Shader\Core\Shader.h" />
     <ClInclude Include="Engine\Shader\Core\ShaderType.h" />
     <ClInclude Include="Engine\Timer.h" />
-    <ClInclude Include="imgui\backends\imgui_impl_dx12.h" />
-    <ClInclude Include="imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="imgui\imconfig.h" />
-    <ClInclude Include="imgui\imgui.h" />
-    <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\imstb_rectpack.h" />
-    <ClInclude Include="imgui\imstb_textedit.h" />
-    <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="imgui\libs\glfw\include\GLFW\glfw3.h" />
-    <ClInclude Include="imgui\libs\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="imgui\libs\usynergy\uSynergy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shaders\BRDF.hlsl">
@@ -582,6 +565,26 @@
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DirectX12Lib\DirectX12Lib.vcxproj">
+      <Project>{c6a1ada3-33a3-4009-8e63-78fc5c792090}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\DirectXTex\DirectXTex\DirectXTex_Desktop_2022.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RenZhaiAssetHandle\RenZhaiAssetHandle.vcxproj">
+      <Project>{7640fd60-dcf5-498f-96d4-fce518951ea4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RenZhaiCoreObject\RenZhaiCoreObject.vcxproj">
+      <Project>{f96b09b2-f8eb-4f3b-8886-c721762c9b5e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RenZhaiEngineCore\RenZhaiEngineCore.vcxproj">
+      <Project>{31a06267-6c17-46a0-9c3e-0805f1301967}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleBaseLibrary\SimpleBaseLibrary.vcxproj">
+      <Project>{746905f6-61f8-4e84-9232-7b8532685b7e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -646,6 +649,7 @@
     <LibraryPath>$(SolutionDir)Binaries\Win64\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Win64\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\Other\$(ProjectName)\</IntDir>
+    <UseStructuredOutput>false</UseStructuredOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -688,14 +692,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;FBXSDK_EXPORTS;_CRT_SECURE_NO_WARNINGS;SIMPLE_LIBRARY_EXPORTS;CLOSE_DISABLE_DEBUG_INFOR;EDITOR_ENGINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;FBXSDK_EXPORTS;_CRT_SECURE_NO_WARNINGS;SIMPLE_LIBRARY_EXPORTS;CLOSE_DISABLE_DEBUG_INFOR;EDITOR_ENGINE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\DirectX12Lib\include\imgui\;$(SolutionDir)Source\DirectX12Lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -704,7 +709,9 @@
       <HeapCommitSize>10000000</HeapCommitSize>
       <StackReserveSize>10000000</StackReserveSize>
       <StackCommitSize>10000000</StackCommitSize>
-      <ShowProgress>LinkVerbose</ShowProgress>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalLibraryDirectories>$(SolutionDir)Binaries\Win64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTex.lib;DirectX12Lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>

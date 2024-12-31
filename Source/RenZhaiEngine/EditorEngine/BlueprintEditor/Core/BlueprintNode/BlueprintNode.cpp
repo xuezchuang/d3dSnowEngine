@@ -2,6 +2,7 @@
 #include "BlueprintPin.h"
 #include "../../BlueprintConfigInfo.h"
 #include "CoreObject/PropertyObject.h"
+#include <algorithm>
 
 FBlueprintNode::FBlueprintNode()
 {
@@ -198,11 +199,11 @@ void FBlueprintNode::BuildPinsNameLenBasedPixels()
         {
         case Pin_Input:
         case Pin_ParamInput:
-            InputNameMaxLen = max(Tmp->GetName().length(), InputNameMaxLen);
+            InputNameMaxLen = std::max(int(Tmp->GetName().length()), InputNameMaxLen);
             break;
         case Pin_Output:
         case Pin_ParamOutput:
-            OutputNameMaxLen = max(Tmp->GetName().length(), OutputNameMaxLen);
+            OutputNameMaxLen = std::max(int(Tmp->GetName().length()), OutputNameMaxLen);
             break;
         }
     }

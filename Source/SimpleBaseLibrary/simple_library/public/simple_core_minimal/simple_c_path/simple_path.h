@@ -10,7 +10,7 @@ void SIMPLE_LIBRARY_API normalization_path(char *path_buf);
 void SIMPLE_LIBRARY_API get_path_clean_filename(char *buf, const char *path_buf);
 void normalization_directory(char *buf, const char *path_buf);
 
-SIMPLE_LIBRARY_API char* get_full_path(char* in_path_buf, int in_buff_len,const char *in_path);
+char* get_full_path(char* in_path_buf, int in_buff_len,const char *in_path);
 
 SIMPLE_LIBRARY_API void get_path_clean_filename_w(wchar_t* buf, const wchar_t* path_buf);
 
