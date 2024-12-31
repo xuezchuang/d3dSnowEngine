@@ -889,7 +889,7 @@ int CDirectXRenderingEngine::PostInit()
 			InPlaneMesh->SetRotation(fvector_3d(90.f, 0.f, 0.f));
 			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
 			{
-				InMaterial->SetMaterialType(ShadowTexture);
+				InMaterial->SetMaterialType(EMaterialType::ShadowTexture);
 			}
 		}
 

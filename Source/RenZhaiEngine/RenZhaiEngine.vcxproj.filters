@@ -1776,9 +1776,6 @@
     <ClInclude Include="Engine\Rendering\Core\RenderingTextureResourcesUpdate.h">
       <Filter>Engine\Rendering\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\d3dx12.h">
-      <Filter>Engine\Rendering\DirectX12</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Rendering\DirectX12\DDSTextureLoader.h">
       <Filter>Engine\Rendering\DirectX12</Filter>
     </ClInclude>

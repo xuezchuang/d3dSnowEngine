@@ -1,6 +1,6 @@
 #pragma once
 
-enum EMaterialType
+enum class EMaterialType
 {
 	//局部光照模型
 	Lambert = 0,			//纸张

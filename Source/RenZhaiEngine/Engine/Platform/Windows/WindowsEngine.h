@@ -11,6 +11,7 @@ class CMeshManage;
 class CWindowsEngine :public CEngine
 {
 	friend class IDirectXDeviceInterfece;
+	friend class mEngine;
 public:
 	CWindowsEngine();
 	~CWindowsEngine();

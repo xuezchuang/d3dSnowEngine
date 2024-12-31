@@ -142,7 +142,7 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 				MaterialConstantBuffer.Refraction = InMaterial->GetRefractiveValue();
 
 				//类型输入
-				MaterialConstantBuffer.MaterialType = InMaterial->GetMaterialType();
+				MaterialConstantBuffer.MaterialType = (int)InMaterial->GetMaterialType();
 
 				//F0输入
 				fvector_3d F0 = InMaterial->GetFresnelF0();

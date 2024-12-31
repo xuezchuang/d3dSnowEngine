@@ -93,7 +93,7 @@ int Exit(CEngine* InEngine)
 	return ReturnValue;
 }
 
-CEngine* Engine = NULL;
+//CEngine* Engine = NULL;
 std::unique_ptr<FTimer> Timer = std::make_unique<FTimer>();
 
 

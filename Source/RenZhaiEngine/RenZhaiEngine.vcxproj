@@ -488,7 +488,6 @@
     <ClInclude Include="Engine\Rendering\Core\Rendering.h" />
     <ClInclude Include="Engine\Rendering\Core\RenderingResourcesUpdate.h" />
     <ClInclude Include="Engine\Rendering\Core\RenderingTextureResourcesUpdate.h" />
-    <ClInclude Include="Engine\Rendering\DirectX12\d3dx12.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\DDSTextureLoader.h" />
     <ClInclude Include="Engine\Rendering\Enigne\Core\RenderingEngine.h" />
     <ClInclude Include="Engine\Rendering\Enigne\DirectX\Core\DirectXRenderingEngine.h" />
