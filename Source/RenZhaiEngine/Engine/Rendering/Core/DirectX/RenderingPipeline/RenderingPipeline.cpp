@@ -144,11 +144,6 @@ void FRenderingPipeline::BuildPipeline()
 	RenderLayer.BuildPSO();
 }
 
-void FRenderingPipeline::BuildUIPipeline()
-{
-	UIPipeline.Init();
-}
-
 void FRenderingPipeline::PreDraw(float DeltaTime)
 {
 	//需要一个PSO
@@ -211,10 +206,7 @@ void FRenderingPipeline::Draw(float DeltaTime)
 	////渲染操作手柄
 	//RenderLayer.Draw(RENDERLAYER_OPERATION_HANDLE, DeltaTime);
 
-	//渲染UI
-	UIPipeline.Draw(DeltaTime);
-
-	DirectXPipelineState.CaptureKeyboardKeys();
+	//DirectXPipelineState.CaptureKeyboardKeys();
 }
 
 void FRenderingPipeline::PostDraw(float DeltaTime)

@@ -13,67 +13,67 @@ FRenderingTextureResourcesUpdate::FRenderingTextureResourcesUpdate()
 
 void FRenderingTextureResourcesUpdate::LoadTextureResources(const wstring& InFilename)
 {
-	unique_ptr<FRenderingTexture> MyTexture = std::make_unique<FRenderingTexture>();
-	MyTexture->Filename = InFilename;
+	//unique_ptr<FRenderingTexture> MyTexture = std::make_unique<FRenderingTexture>();
+	//MyTexture->Filename = InFilename;
 
-	//sd.txt
-	wchar_t Filename[1024] = { 0 };
-	get_path_clean_filename_w(Filename, MyTexture->Filename.c_str());
-	wremove_string_start(Filename, DDS);
+	////sd.txt
+	//wchar_t Filename[1024] = { 0 };
+	//get_path_clean_filename_w(Filename, MyTexture->Filename.c_str());
+	//wremove_string_start(Filename, DDS);
 
-	MyTexture->Name = Filename;
+	//MyTexture->Name = Filename;
 
-	//读取DDS数据
-	CreateDDSTextureFromFile12(
-		GetD3dDevice().Get(),
-		GetGraphicsCommandList().Get(),
-		MyTexture->Filename.c_str(),
-		MyTexture->Data,
-		MyTexture->UploadBuffer);
+	////读取DDS数据
+	//CreateDDSTextureFromFile12(
+	//	GetD3dDevice().Get(),
+	//	GetGraphicsCommandList().Get(),
+	//	MyTexture->Filename.c_str(),
+	//	MyTexture->Data,
+	//	MyTexture->UploadBuffer);
 
-	MyTexture->RenderingTextureID = TexturesMapping.size();
+	//MyTexture->RenderingTextureID = TexturesMapping.size();
 
-	//Texture'/Project/Texture/Hello.Hello'
-	wchar_t AssetFilenameBuff[1024] = { 0 };
-	{
-		wchar_t AssetFilenameBuff1[1024] = { 0 };
-		wchar_t* AssetFilenamePtr = const_cast<wchar_t*>(MyTexture->Filename.c_str());
+	////Texture'/Project/Texture/Hello.Hello'
+	//wchar_t AssetFilenameBuff[1024] = { 0 };
+	//{
+	//	wchar_t AssetFilenameBuff1[1024] = { 0 };
+	//	wchar_t* AssetFilenamePtr = const_cast<wchar_t*>(MyTexture->Filename.c_str());
 
-		int Pos = wfind_string(AssetFilenamePtr, Asset);
+	//	int Pos = wfind_string(AssetFilenamePtr, Asset);
 
-		wchar_t* Value = wstring_mid(AssetFilenamePtr, AssetFilenameBuff1, Pos, wcslen(AssetFilenamePtr));
-	
-		wreplace_string_inline(Value, Asset, Project);
-		wreplace_string_inline(Value, DDS, (L"." + MyTexture->Name).c_str());
+	//	wchar_t* Value = wstring_mid(AssetFilenamePtr, AssetFilenameBuff1, Pos, wcslen(AssetFilenamePtr));
+	//
+	//	wreplace_string_inline(Value, Asset, Project);
+	//	wreplace_string_inline(Value, DDS, (L"." + MyTexture->Name).c_str());
 
-		wget_printf_s(AssetFilenameBuff, L"Texture'%s'", Value);
-	}
+	//	wget_printf_s(AssetFilenameBuff, L"Texture'%s'", Value);
+	//}
 
-	MyTexture->AssetFilename = AssetFilenameBuff;
+	//MyTexture->AssetFilename = AssetFilenameBuff;
 
-	TexturesMapping[MyTexture->Name] = std::move(MyTexture);
+	//TexturesMapping[MyTexture->Name] = std::move(MyTexture);
 }
 
 void FRenderingTextureResourcesUpdate::BuildTextureConstantBuffer(ID3D12DescriptorHeap* InHeap, int Offset)
 {
-	UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	
+	//UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//
 
 
-	for (auto &Tmp : TexturesMapping)
-	{
-		//根据类型初始化对应贴图
-		ResetTextureByType(&Tmp.second);
+	//for (auto &Tmp : TexturesMapping)
+	//{
+	//	//根据类型初始化对应贴图
+	//	ResetTextureByType(&Tmp.second);
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE Handle(InHeap->GetCPUDescriptorHandleForHeapStart());
-		Handle.Offset(Offset + Tmp.second->RenderingTextureID, DescriptorOffset);
+	//	CD3DX12_CPU_DESCRIPTOR_HANDLE Handle(InHeap->GetCPUDescriptorHandleForHeapStart());
+	//	Handle.Offset(Offset + Tmp.second->RenderingTextureID, DescriptorOffset);
 
-		GetD3dDevice()->CreateShaderResourceView(
-			Tmp.second->Data.Get(),
-			&ShaderResourceViewDesc, Handle);
+	//	GetD3dDevice()->CreateShaderResourceView(
+	//		Tmp.second->Data.Get(),
+	//		&ShaderResourceViewDesc, Handle);
 
-		//Handle.Offset(1,DescriptorOffset);
-	}
+	//	//Handle.Offset(1,DescriptorOffset);
+	//}
 }
 
 void FRenderingTextureResourcesUpdate::BuildParam()

@@ -5,6 +5,9 @@
 #include "../Platform/Windows/WindowsEngine.h"
 #include "../EditorEngine/EditorEngine.h"
 #include "../EngineFactory.h"
+#include "../Rendering/Enigne/DirectX/Core/DirectXRenderingEngine.h"
+#include <CodeReflection/ClassManage.h>
+#include <CoreObject/ClassObject.h>
 
 
 CEngine* Engine = NULL;
@@ -12,11 +15,25 @@ CEngine* Engine = NULL;
 void mEngine::OnStartup()
 {
 	tStart = std::chrono::high_resolution_clock::now();
+
+	//m_EditorEngine = new CEditorEngine();
+	//m_RenderingEngine = new CDirectXRenderingEngine();
+	//m_RenderingEngine->PostInit();
 	Engine = FEngineFactory::Instance();
+	//Engine->PreExit();
+	//Engine->Init();
+	//Engine->PostInit();
+	for(int i = 0; i < FClassManage::GetNum(); i++)
+	{
+		if(CClassObject* InObjectClass = FClassManage::GetClassByIndex(i))
+		{
+			InObjectClass->GetDefaultObject();
+		}
+	}
+//
 #if EDITOR_ENGINE
 	GetEditorEngine()->BuildEditor();
 #endif
-//if (Engine)
 }
 
 void mEngine::OnUpdate()
@@ -45,6 +62,8 @@ void mEngine::OnRender()
 
 	CommandContext.SetRenderTargets(1, &BackBuffer.GetRTV());
 
+	OnTest(CommandContext);
+
 	OnGUI(CommandContext);
 	CommandContext.TransitionResource(BackBuffer, D3D12_RESOURCE_STATE_PRESENT);
 	CommandContext.Finish(true);
@@ -58,11 +77,25 @@ void mEngine::OnGUI(FCommandContext& CommandContext)
 
 	float delta = std::chrono::duration<float, std::milli>(tEnd - tStart).count();
 
+	//GetEngine()->Dra
 #if EDITOR_ENGINE
 	GetEditorEngine()->DrawEditor(delta);
 #endif
-
 	ImguiManager::Get().Render(CommandContext, RenderWindow::Get());
+}
+
+void mEngine::OnTest(FCommandContext& CommandContext)
+{
+
+}
+
+CDirectXRenderingEngine* mEngine::GetDirectRenderingEngine()const
+{
+	if(CWindowsEngine* InEngine = dynamic_cast<CWindowsEngine*>(Engine))
+	{
+		return InEngine->RenderingEngine;
+	}
+	return nullptr;
 }
 
 #if EDITOR_ENGINE
@@ -75,3 +108,4 @@ CEditorEngine* mEngine::GetEditorEngine() const
 	return nullptr;
 }
 #endif
+

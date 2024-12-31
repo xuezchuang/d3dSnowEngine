@@ -24,7 +24,6 @@ CMeshManage::CMeshManage()
 
 void CMeshManage::Init()
 {
-	RenderingPipeline.BuildUIPipeline();
 }
 
 void CMeshManage::BuildMesh()

@@ -89,85 +89,85 @@ void FRenderLayer::PostDraw(float DeltaTime)
 
 void FRenderLayer::DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
 {
-	if (InWeakRenderingData.expired())//弱指针是不是被释放了
-	{
-		return;
-	}
+	//if (InWeakRenderingData.expired())//弱指针是不是被释放了
+	//{
+	//	return;
+	//}
 
-	if (std::shared_ptr<FRenderingData> InRenderingData = InWeakRenderingData.lock())
-	{
-		auto GetRenderingConditions = [&]() -> bool
-		{
-			if (InRenderingData->Mesh->IsVisible())
-			{
-				switch (RC)
-				{
-					case RC_Shadow:
-					{
-						return InRenderingData->Mesh->IsCastShadow();
-					}
-				}
+	//if (std::shared_ptr<FRenderingData> InRenderingData = InWeakRenderingData.lock())
+	//{
+	//	auto GetRenderingConditions = [&]() -> bool
+	//	{
+	//		if (InRenderingData->Mesh->IsVisible())
+	//		{
+	//			switch (RC)
+	//			{
+	//				case RC_Shadow:
+	//				{
+	//					return InRenderingData->Mesh->IsCastShadow();
+	//				}
+	//			}
 
-				return true;
-			}
+	//			return true;
+	//		}
 
-			return false;
-		};
+	//		return false;
+	//	};
 
-		if (GetRenderingConditions())
-		{
-			UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
+	//	if (GetRenderingConditions())
+	//	{
+	//		UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
 
-			D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetVertexBufferView(InRenderingData->GeometryKey);
-			D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetIndexBufferView(InRenderingData->GeometryKey);
+	//		D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetVertexBufferView(InRenderingData->GeometryKey);
+	//		D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetIndexBufferView(InRenderingData->GeometryKey);
 
-			D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
-			//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
+	//		D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
+	//		//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
 
-			GetGraphicsCommandList()->IASetIndexBuffer(&IBV);
-			//	GetGraphicsCommandList()->OMSetBlendFactor();
-				//绑定渲染流水线上的输入槽，可以在输入装配器阶段传入顶点数据
-			GetGraphicsCommandList()->IASetVertexBuffers(
-				0,//起始输入槽 0-15 
-				1,//k k+1 ... k+n-1 
-				&VBV);
+	//		GetGraphicsCommandList()->IASetIndexBuffer(&IBV);
+	//		//	GetGraphicsCommandList()->OMSetBlendFactor();
+	//			//绑定渲染流水线上的输入槽，可以在输入装配器阶段传入顶点数据
+	//		GetGraphicsCommandList()->IASetVertexBuffers(
+	//			0,//起始输入槽 0-15 
+	//			1,//k k+1 ... k+n-1 
+	//			&VBV);
 
-			//定义我们要绘制的哪种图元 点 线 面
-			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
-			GetGraphicsCommandList()->IASetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
+	//		//定义我们要绘制的哪种图元 点 线 面
+	//		EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
+	//		GetGraphicsCommandList()->IASetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
 
-			//模型起始地址偏移
-			//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
-			//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
+	//		//模型起始地址偏移
+	//		//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
+	//		//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
 
-			if (InRenderingData->GetMeshType() == ERenderingMeshType::SKINNED_MESH_TYPE)
-			{
-				GeometryMap->UpdateSkinned(DeltaTime, InRenderingData->Mesh);
+	//		if (InRenderingData->GetMeshType() == ERenderingMeshType::SKINNED_MESH_TYPE)
+	//		{
+	//			GeometryMap->UpdateSkinned(DeltaTime, InRenderingData->Mesh);
 
-				GeometryMap->DrawSkinned(DeltaTime,InRenderingData->SkinnedMeshObjectIndex);
-			}
-			else
-			{
-				GeometryMap->DrawEmptySkinned(DeltaTime);
-			}
+	//			GeometryMap->DrawSkinned(DeltaTime,InRenderingData->SkinnedMeshObjectIndex);
+	//		}
+	//		else
+	//		{
+	//			GeometryMap->DrawEmptySkinned(DeltaTime);
+	//		}
 
-			for (auto& Tmp : InRenderingData->Sections)
-			{
-				//每个对象相对首地址的偏移
-				D3D12_GPU_VIRTUAL_ADDRESS VAddress =FirstVirtualMeshAddress + Tmp.MeshObjectIndex * MeshOffset;
+	//		for (auto& Tmp : InRenderingData->Sections)
+	//		{
+	//			//每个对象相对首地址的偏移
+	//			D3D12_GPU_VIRTUAL_ADDRESS VAddress =FirstVirtualMeshAddress + Tmp.MeshObjectIndex * MeshOffset;
 
-				GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(Signature_Object, VAddress);
+	//			GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(Signature_Object, VAddress);
 
-				//真正的绘制
-				GetGraphicsCommandList()->DrawIndexedInstanced(
-					Tmp.IndexSize,//顶点数量
-					1,//绘制实例数量
-					Tmp.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
-					InRenderingData->VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
-					0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
-			}
-		}
-	}
+	//			//真正的绘制
+	//			GetGraphicsCommandList()->DrawIndexedInstanced(
+	//				Tmp.IndexSize,//顶点数量
+	//				1,//绘制实例数量
+	//				Tmp.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
+	//				InRenderingData->VertexOffsetPosition,//GPU 从索引缓冲区读取的第一个索引的位置。
+	//				0);//在从顶点缓冲区读取每个实例数据之前添加到每个索引的值。
+	//		}
+	//	}
+	//}
 }
 
 void FRenderLayer::FindObjectDraw(float DeltaTime, const CMeshComponent* InKey)

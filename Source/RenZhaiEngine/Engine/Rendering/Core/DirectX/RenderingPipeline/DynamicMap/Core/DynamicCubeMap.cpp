@@ -53,7 +53,7 @@ void FDynamicCubeMap::BuildViewport(const fvector_3d& InCenterPoint)
 
 void FDynamicCubeMap::BuildDepthStencil()
 {
-	D3D12_RESOURCE_DESC ResourceDesc;
+	/*D3D12_RESOURCE_DESC ResourceDesc;
 	ResourceDesc.Width = Width;
 	ResourceDesc.Height = Height;
 	ResourceDesc.Alignment = 0;
@@ -85,7 +85,7 @@ void FDynamicCubeMap::BuildDepthStencil()
 		D3D12_RESOURCE_STATE_COMMON,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
-	GetGraphicsCommandList()->ResourceBarrier(1, &Barrier);
+	GetGraphicsCommandList()->ResourceBarrier(1, &Barrier);*/
 }
 
 void FDynamicCubeMap::BuildRenderTargetDescriptor()

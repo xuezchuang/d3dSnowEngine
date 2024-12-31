@@ -44,10 +44,10 @@ void FSSAOBilateralRenderLayer::ResetPSO()
 
 void FSSAOBilateralRenderLayer::Draw(float DeltaTime)
 {
-	DirectXPipelineState->ResetPSO(State_SSAO_Bilateral);
-	
-	GetGraphicsCommandList()->IASetIndexBuffer(nullptr);
-	GetGraphicsCommandList()->IASetVertexBuffers(0, 0, nullptr);
-	GetGraphicsCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	GetGraphicsCommandList()->DrawInstanced(6, 1, 0, 0);
+	//DirectXPipelineState->ResetPSO(State_SSAO_Bilateral);
+	//
+	//GetGraphicsCommandList()->IASetIndexBuffer(nullptr);
+	//GetGraphicsCommandList()->IASetVertexBuffers(0, 0, nullptr);
+	//GetGraphicsCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//GetGraphicsCommandList()->DrawInstanced(6, 1, 0, 0);
 }

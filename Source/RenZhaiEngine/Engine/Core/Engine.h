@@ -11,17 +11,9 @@ class CEngine :public CCoreMinimalObject
 public:
 	CEngine();
 
-	virtual int PreInit(
-#if defined(_WIN32)
-		FWinMainCommandParameters InParameters
-#endif // 1
-	) = 0;
+	virtual int PreInit() = 0;
 
-	virtual int Init(
-#if defined(_WIN32)
-		FWinMainCommandParameters InParameters
-#endif // 1
-	) = 0;
+	virtual int Init() = 0;
 	virtual int PostInit() = 0;
 
 	virtual void Tick(float DeltaTime) {};

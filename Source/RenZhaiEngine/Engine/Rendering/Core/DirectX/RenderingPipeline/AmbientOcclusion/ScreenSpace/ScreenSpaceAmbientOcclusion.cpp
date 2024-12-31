@@ -67,37 +67,37 @@ void FScreenSpaceAmbientOcclusion::Draw(float DeltaTime)
 void FScreenSpaceAmbientOcclusion::DrawSSAO(float DeltaTime)
 {
 	//主SSAO渲染
-	if (FBufferRenderTarget* InRenderTarget = dynamic_cast<FBufferRenderTarget*>(AmbientBuffer.GetRenderTarget().get()))
-	{
-		auto RenderTargetViewport = InRenderTarget->GetViewport();
-		auto RenderTargetScissorRect = InRenderTarget->GetScissorRect();
+	//if (FBufferRenderTarget* InRenderTarget = dynamic_cast<FBufferRenderTarget*>(AmbientBuffer.GetRenderTarget().get()))
+	//{
+	//	auto RenderTargetViewport = InRenderTarget->GetViewport();
+	//	auto RenderTargetScissorRect = InRenderTarget->GetScissorRect();
 
-		GetGraphicsCommandList()->RSSetViewports(1, &RenderTargetViewport);
-		GetGraphicsCommandList()->RSSetScissorRects(1, &RenderTargetScissorRect);
+	//	GetGraphicsCommandList()->RSSetViewports(1, &RenderTargetViewport);
+	//	GetGraphicsCommandList()->RSSetScissorRects(1, &RenderTargetScissorRect);
 
-		//指向哪个资源 转换其状态
-		CD3DX12_RESOURCE_BARRIER ResourceBarrierPresent = CD3DX12_RESOURCE_BARRIER::Transition(
-			InRenderTarget->GetRenderTarget(),
-			D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
-		GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresent);
+	//	//指向哪个资源 转换其状态
+	//	CD3DX12_RESOURCE_BARRIER ResourceBarrierPresent = CD3DX12_RESOURCE_BARRIER::Transition(
+	//		InRenderTarget->GetRenderTarget(),
+	//		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	//	GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresent);
 
-		const float ClearColor[] = { 1.f,1.f,1.f,1.f };
-		GetGraphicsCommandList()->ClearRenderTargetView(
-			InRenderTarget->GetCPURenderTargetView(),
-			ClearColor, 0, nullptr);
+	//	const float ClearColor[] = { 1.f,1.f,1.f,1.f };
+	//	GetGraphicsCommandList()->ClearRenderTargetView(
+	//		InRenderTarget->GetCPURenderTargetView(),
+	//		ClearColor, 0, nullptr);
 
-		GetGraphicsCommandList()->OMSetRenderTargets(1,
-			&InRenderTarget->GetCPURenderTargetView(),
-			true, nullptr);
+	//	GetGraphicsCommandList()->OMSetRenderTargets(1,
+	//		&InRenderTarget->GetCPURenderTargetView(),
+	//		true, nullptr);
 
-		//渲染SSAOPSO
-		RenderLayer->Draw(RENDERLAYER_SSAO, DeltaTime);
+	//	//渲染SSAOPSO
+	//	RenderLayer->Draw(RENDERLAYER_SSAO, DeltaTime);
 
-		CD3DX12_RESOURCE_BARRIER ResourceBarrierPresentRenderTarget = CD3DX12_RESOURCE_BARRIER::Transition(
-			InRenderTarget->GetRenderTarget(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
-		GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
-	}
+	//	CD3DX12_RESOURCE_BARRIER ResourceBarrierPresentRenderTarget = CD3DX12_RESOURCE_BARRIER::Transition(
+	//		InRenderTarget->GetRenderTarget(),
+	//		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+	//	GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
+	//}
 }
 
 void FScreenSpaceAmbientOcclusion::DrawBilateralBlur(float DeltaTime, UINT InDrawNum)
@@ -142,42 +142,42 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE* FScreenSpaceAmbientOcclusion::GetDrawRTVResources
 
 void FScreenSpaceAmbientOcclusion::SetRoot32BitConstant(bool bHorizontal)
 {
-	GetGraphicsCommandList()->SetGraphicsRoot32BitConstant(Signature_SSAO_VerticalOrHorizontal, (UINT)bHorizontal, 0);
+	//GetGraphicsCommandList()->SetGraphicsRoot32BitConstant(Signature_SSAO_VerticalOrHorizontal, (UINT)bHorizontal, 0);
 }
 
 void FScreenSpaceAmbientOcclusion::DrawResources(float DeltaTime)
 {
-	//绑定SSAO常量缓冲区
-	GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(
-		Signature_SSAO_Viewport,
-		SSAOViewConstantBufferViews.GetBuffer()->GetGPUVirtualAddress());
+	////绑定SSAO常量缓冲区
+	//GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(
+	//	Signature_SSAO_Viewport,
+	//	SSAOViewConstantBufferViews.GetBuffer()->GetGPUVirtualAddress());
 
-	GetGraphicsCommandList()->SetGraphicsRoot32BitConstant(Signature_SSAO_VerticalOrHorizontal, 0, 0);
+	//GetGraphicsCommandList()->SetGraphicsRoot32BitConstant(Signature_SSAO_VerticalOrHorizontal, 0, 0);
 
-	GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(
-		Signature_SSAO_Blur,
-		SSAOBlurConstantBufferParam.GetBuffer()->GetGPUVirtualAddress());
+	//GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(
+	//	Signature_SSAO_Blur,
+	//	SSAOBlurConstantBufferParam.GetBuffer()->GetGPUVirtualAddress());
 
-	//Nor
-	if (std::shared_ptr<FRenderTarget> NormalRenderTarget = NormalBuffer.GetRenderTarget())
-	{
-		GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
-			Signature_SSAO_Normal,
-			NormalRenderTarget->GetGPUSRVOffset());
-	}
+	////Nor
+	//if (std::shared_ptr<FRenderTarget> NormalRenderTarget = NormalBuffer.GetRenderTarget())
+	//{
+	//	GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
+	//		Signature_SSAO_Normal,
+	//		NormalRenderTarget->GetGPUSRVOffset());
+	//}
 
-	//深度
-	GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
-		Signature_SSAO_Depth,
-		DepthBufferRenderTarget->GetGPUSRVOffset());
+	////深度
+	//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
+	//	Signature_SSAO_Depth,
+	//	DepthBufferRenderTarget->GetGPUSRVOffset());
 
-	//Noise
-	if (std::shared_ptr<FRenderTarget> NoiseRenderTarget = NoiseBuffer.GetRenderTarget())
-	{
-		GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
-			Signature_SSAO_Noise,
-			NoiseRenderTarget->GetGPUSRVOffset());
-	}
+	////Noise
+	//if (std::shared_ptr<FRenderTarget> NoiseRenderTarget = NoiseBuffer.GetRenderTarget())
+	//{
+	//	GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
+	//		Signature_SSAO_Noise,
+	//		NoiseRenderTarget->GetGPUSRVOffset());
+	//}
 }
 
 void FScreenSpaceAmbientOcclusion::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
@@ -370,64 +370,64 @@ void FScreenSpaceAmbientOcclusion::SaveToSSAOBuffer()
 	//	9,
 	//	DepthBufferRenderTarget->GetGPUSRVOffset());
 
-	//SSAO渲染到buffer
-	GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
-		Signature_SSAO,
-		AmbientBuffer.GetRenderTarget()->GetGPUSRVOffset());
+	////SSAO渲染到buffer
+	//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
+	//	Signature_SSAO,
+	//	AmbientBuffer.GetRenderTarget()->GetGPUSRVOffset());
 }
 
 void FScreenSpaceAmbientOcclusion::BuildDepthBuffer()
 {
-	DepthBuffer::BuildDepthBufferDescriptors(
-		GeometryMap->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
-		GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart(),
-		GetDescriptorHandleIncrementSizeByCBV_SRV_UAV(),
-		GetDepthBufferSRVOffset());
+	//DepthBuffer::BuildDepthBufferDescriptors(
+	//	GeometryMap->GetHeap()->GetCPUDescriptorHandleForHeapStart(),
+	//	GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart(),
+	//	GetDescriptorHandleIncrementSizeByCBV_SRV_UAV(),
+	//	GetDepthBufferSRVOffset());
 
-	DepthBuffer::CreateDepthBufferSRV(
-		GetD3dDevice().Get(),
-		GetDepthStencilBuffer());
+	//DepthBuffer::CreateDepthBufferSRV(
+	//	GetD3dDevice().Get(),
+	//	GetDepthStencilBuffer());
 }
 
 void FScreenSpaceAmbientOcclusion::DrawBlur(float DeltaTime, bool bHorizontal)
 {
-	//1.资源
-	//2.谁的SRV
-	//3.RTV
+	////1.资源
+	////2.谁的SRV
+	////3.RTV
 
-	//通知Shader那边
-	SetRoot32BitConstant(bHorizontal);
+	////通知Shader那边
+	//SetRoot32BitConstant(bHorizontal);
 
-	ID3D12Resource* InDrawResources = GetDrawResources(bHorizontal);
-	CD3DX12_CPU_DESCRIPTOR_HANDLE* InDrawResourcesRTV = GetDrawRTVResources(bHorizontal);
+	//ID3D12Resource* InDrawResources = GetDrawResources(bHorizontal);
+	//CD3DX12_CPU_DESCRIPTOR_HANDLE* InDrawResourcesRTV = GetDrawRTVResources(bHorizontal);
 
-	//指向哪个资源 转换其状态
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierPresent = CD3DX12_RESOURCE_BARRIER::Transition(
-		InDrawResources,
-		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresent);
+	////指向哪个资源 转换其状态
+	//CD3DX12_RESOURCE_BARRIER ResourceBarrierPresent = CD3DX12_RESOURCE_BARRIER::Transition(
+	//	InDrawResources,
+	//	D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	//GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresent);
 
-	const float ClearColor[] = { 1.f,1.f,1.f,1.f };
-	GetGraphicsCommandList()->ClearRenderTargetView(
-		*InDrawResourcesRTV,
-		ClearColor, 0, nullptr);
+	//const float ClearColor[] = { 1.f,1.f,1.f,1.f };
+	//GetGraphicsCommandList()->ClearRenderTargetView(
+	//	*InDrawResourcesRTV,
+	//	ClearColor, 0, nullptr);
 
-	GetGraphicsCommandList()->OMSetRenderTargets(1,
-		InDrawResourcesRTV,
-		true, nullptr);
+	//GetGraphicsCommandList()->OMSetRenderTargets(1,
+	//	InDrawResourcesRTV,
+	//	true, nullptr);
 
-	//绑定接受的缓冲区
-	GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
-		Signature_SSAO_Accept,
-		*GetDrawSRVResources(bHorizontal));
+	////绑定接受的缓冲区
+	//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(
+	//	Signature_SSAO_Accept,
+	//	*GetDrawSRVResources(bHorizontal));
 
-	//渲染SSAOPSO
-	RenderLayer->Draw(RENDERLAYER_SSAO_BILATERAL_BLUR, DeltaTime);
+	////渲染SSAOPSO
+	//RenderLayer->Draw(RENDERLAYER_SSAO_BILATERAL_BLUR, DeltaTime);
 
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierPresentRenderTarget = CD3DX12_RESOURCE_BARRIER::Transition(
-		InDrawResources,
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
-	GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
+	//CD3DX12_RESOURCE_BARRIER ResourceBarrierPresentRenderTarget = CD3DX12_RESOURCE_BARRIER::Transition(
+	//	InDrawResources,
+	//	D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+	//GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
 }
 
 UINT FScreenSpaceAmbientOcclusion::GetDepthBufferSRVOffset() const

@@ -16,20 +16,12 @@ CEditorEngine::CEditorEngine()
 	Editors.push_back(std::make_shared<FBrowseEditor>());
 }
 
-int CEditorEngine::PreInit(
-#if defined(_WIN32)
-	FWinMainCommandParameters InParameters
-#endif // 1
-)
+int CEditorEngine::PreInit()
 {
 	return 0;
 }
 
-int CEditorEngine::Init(
-#if defined(_WIN32)
-	FWinMainCommandParameters InParameters
-#endif
-)
+int CEditorEngine::Init()
 {
 	return 0;
 }

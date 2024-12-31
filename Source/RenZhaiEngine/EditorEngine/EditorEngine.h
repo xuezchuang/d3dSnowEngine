@@ -8,17 +8,9 @@ class CEditorEngine :public CEngine,public FEditorBase
 public:
 	CEditorEngine();
 
-	virtual int PreInit(
-#if defined(_WIN32)
-		FWinMainCommandParameters InParameters
-#endif // 1
-	);
+	virtual int PreInit();
 
-	virtual int Init(
-#if defined(_WIN32)
-		FWinMainCommandParameters InParameters
-#endif // 1
-	) ;
+	virtual int Init() ;
 	virtual int PostInit();
 
 	virtual void Tick(float DeltaTime) {};

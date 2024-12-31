@@ -70,11 +70,11 @@ void FSSAODirectXRootSignature::BuildRootSignature(UINT InTextureNum)
     }
 
     //´´½¨
-    GetD3dDevice()->CreateRootSignature(
-        0,
-        SerializeRootSignature->GetBufferPointer(),
-        SerializeRootSignature->GetBufferSize(),
-        IID_PPV_ARGS(&RootSignature));
+    //GetD3dDevice()->CreateRootSignature(
+    //    0,
+    //    SerializeRootSignature->GetBufferPointer(),
+    //    SerializeRootSignature->GetBufferSize(),
+    //    IID_PPV_ARGS(&RootSignature));
 }
 
 void FSSAODirectXRootSignature::SetGraphicsRootSignature()

@@ -85,8 +85,8 @@ void FIMGUIPipeline::BuildDesciptorHeap()
 
 void FIMGUIPipeline::Tick(float DeltaTime)
 {
-	GetGraphicsCommandList()->SetDescriptorHeaps(1, &g_pd3dSrvDescHeap);
-#if EDITOR_ENGINE
-	GetEditorEngine()->DrawEditor(DeltaTime);
-#endif
+//	GetGraphicsCommandList()->SetDescriptorHeaps(1, &g_pd3dSrvDescHeap);
+//#if EDITOR_ENGINE
+//	GetEditorEngine()->DrawEditor(DeltaTime);
+//#endif
 }

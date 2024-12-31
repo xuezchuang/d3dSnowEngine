@@ -68,86 +68,86 @@ void FDynamicShadowCubeMap::Init(
 //不一样 DynamicCubeMap
 void FDynamicShadowCubeMap::PreDraw(float DeltaTime)
 {
-	if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
-	{
-		int Index = 0;
-		for (int j = 0; j < GetLightManage()->GetLights().size(); j++)
-		{
-			CLightComponent* Tmp = GetLightManage()->GetLights()[j];
-			if (Tmp->GetLightType() == ELightType::PointLight)
-			{
-				//指向哪个资源 转换其状态
-				CD3DX12_RESOURCE_BARRIER ResourceBarrierPresent = CD3DX12_RESOURCE_BARRIER::Transition(
-					InRenderTarget->GetRenderTarget(),
-					D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	//if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
+	//{
+	//	int Index = 0;
+	//	for (int j = 0; j < GetLightManage()->GetLights().size(); j++)
+	//	{
+	//		CLightComponent* Tmp = GetLightManage()->GetLights()[j];
+	//		if (Tmp->GetLightType() == ELightType::PointLight)
+	//		{
+	//			//指向哪个资源 转换其状态
+	//			CD3DX12_RESOURCE_BARRIER ResourceBarrierPresent = CD3DX12_RESOURCE_BARRIER::Transition(
+	//				InRenderTarget->GetRenderTarget(),
+	//				D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-				GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresent);
+	//			GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresent);
 
-				//需要每帧执行
-				//绑定矩形框
-				auto RenderTargetViewport = InRenderTarget->GetViewport();
-				auto RenderTargetScissorRect = InRenderTarget->GetScissorRect();
-				GetGraphicsCommandList()->RSSetViewports(1, &RenderTargetViewport);
-				GetGraphicsCommandList()->RSSetScissorRects(1, &RenderTargetScissorRect);
+	//			//需要每帧执行
+	//			//绑定矩形框
+	//			auto RenderTargetViewport = InRenderTarget->GetViewport();
+	//			auto RenderTargetScissorRect = InRenderTarget->GetScissorRect();
+	//			GetGraphicsCommandList()->RSSetViewports(1, &RenderTargetViewport);
+	//			GetGraphicsCommandList()->RSSetScissorRects(1, &RenderTargetScissorRect);
 
-				UINT CBVSize = GeometryMap->GetViewportConstantBufferByteSize();
-				for (size_t i = 0; i < 6; i++)
-				{
-					//清除画布
-					GetGraphicsCommandList()->ClearRenderTargetView(
-						InRenderTarget->GetCPURenderTargetView(i),
-						DirectX::Colors::White,
-						0, nullptr);
+	//			UINT CBVSize = GeometryMap->GetViewportConstantBufferByteSize();
+	//			for (size_t i = 0; i < 6; i++)
+	//			{
+	//				//清除画布
+	//				GetGraphicsCommandList()->ClearRenderTargetView(
+	//					InRenderTarget->GetCPURenderTargetView(i),
+	//					DirectX::Colors::White,
+	//					0, nullptr);
 
-					//清除深度模板缓冲区
-					GetGraphicsCommandList()->ClearDepthStencilView(
-						DSVDes,
-						D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
-						1.f, 0, 0, NULL);
+	//				//清除深度模板缓冲区
+	//				GetGraphicsCommandList()->ClearDepthStencilView(
+	//					DSVDes,
+	//					D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+	//					1.f, 0, 0, NULL);
 
-					//输出的合并阶段
-					GetGraphicsCommandList()->OMSetRenderTargets(1,
-						&InRenderTarget->GetCPURenderTargetView(i),
-						true,
-						&DSVDes);
+	//				//输出的合并阶段
+	//				GetGraphicsCommandList()->OMSetRenderTargets(1,
+	//					&InRenderTarget->GetCPURenderTargetView(i),
+	//					true,
+	//					&DSVDes);
 
-					//更新6个摄像机 绑定6个摄像机
-					auto ViewprotAddr = GeometryMap->ViewportGPUVirtualAddress();
-					ViewprotAddr += (
-						1 + //主摄像机
-						GeometryMap->GetDynamicReflectionViewportNum() + //CubeMap 反射
-						1 + //Shadow 平行光 聚光灯
-						i + Index * 6 //
-						) * CBVSize;
+	//				//更新6个摄像机 绑定6个摄像机
+	//				auto ViewprotAddr = GeometryMap->ViewportGPUVirtualAddress();
+	//				ViewprotAddr += (
+	//					1 + //主摄像机
+	//					GeometryMap->GetDynamicReflectionViewportNum() + //CubeMap 反射
+	//					1 + //Shadow 平行光 聚光灯
+	//					i + Index * 6 //
+	//					) * CBVSize;
 
-					GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(Signature_Viewport, ViewprotAddr);
+	//				GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(Signature_Viewport, ViewprotAddr);
 
-					RenderLayer->ResetPSO(RENDERLAYER_SHADOW_RENDER, EPipelineState::VientianeShadow);
+	//				RenderLayer->ResetPSO(RENDERLAYER_SHADOW_RENDER, EPipelineState::VientianeShadow);
 
-					//各类层级渲染
-					RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_OPAQUE, ERenderingConditions::RC_Shadow);
-					RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_SKINNED_OPAQUE, ERenderingConditions::RC_Shadow);//渲染动画层
-					RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_TRANSPARENT, ERenderingConditions::RC_Shadow);
-					RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_OPAQUE_REFLECTOR, ERenderingConditions::RC_Shadow);
-				}
+	//				//各类层级渲染
+	//				RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_OPAQUE, ERenderingConditions::RC_Shadow);
+	//				RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_SKINNED_OPAQUE, ERenderingConditions::RC_Shadow);//渲染动画层
+	//				RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_TRANSPARENT, ERenderingConditions::RC_Shadow);
+	//				RenderLayer->DrawMesh(DeltaTime, RENDERLAYER_OPAQUE_REFLECTOR, ERenderingConditions::RC_Shadow);
+	//			}
 
-				CD3DX12_RESOURCE_BARRIER ResourceBarrierPresentRenderTarget = CD3DX12_RESOURCE_BARRIER::Transition(
-					RenderTarget->GetRenderTarget(),
-					D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+	//			CD3DX12_RESOURCE_BARRIER ResourceBarrierPresentRenderTarget = CD3DX12_RESOURCE_BARRIER::Transition(
+	//				RenderTarget->GetRenderTarget(),
+	//				D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-				GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
+	//			GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
 
-				//更新CubeMap
-				//Debug 看
-				//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(6, InRenderTarget->GetGPUSRVOffset());
+	//			//更新CubeMap
+	//			//Debug 看
+	//			//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(6, InRenderTarget->GetGPUSRVOffset());
 
-				//绘制到ShadowCubeMap
-				GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(Signature_ShadowCubeMap, InRenderTarget->GetGPUSRVOffset());
-			
-				Index++;
-			}
-		}
-	}
+	//			//绘制到ShadowCubeMap
+	//			GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(Signature_ShadowCubeMap, InRenderTarget->GetGPUSRVOffset());
+	//		
+	//			Index++;
+	//		}
+	//	}
+	//}
 }
 
 //不一样
@@ -159,62 +159,62 @@ void FDynamicShadowCubeMap::Draw(float DeltaTime)
 //偏移不一样
 void FDynamicShadowCubeMap::BuildDepthStencilDescriptor()
 {
-	UINT DescriptorHandleIncrementSize = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	//UINT DescriptorHandleIncrementSize = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	DSVDes = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-		GetDSVHeap()->GetCPUDescriptorHandleForHeapStart(),
-		3,
-		DescriptorHandleIncrementSize);
+	//DSVDes = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+	//	GetDSVHeap()->GetCPUDescriptorHandleForHeapStart(),
+	//	3,
+	//	DescriptorHandleIncrementSize);
 }
 
 //RenderTarget 偏移不一样
 void FDynamicShadowCubeMap::BuildRenderTargetRTV()
 {
-	UINT RTVDescriptorSize = GetDescriptorHandleIncrementSizeByRTV();
+	//UINT RTVDescriptorSize = GetDescriptorHandleIncrementSizeByRTV();
 
-	//RTV的起始
-	auto RTVDesHeapStart = GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
+	////RTV的起始
+	//auto RTVDesHeapStart = GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
 
-	if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
-	{
-		//偏移的地址记录
-		for (size_t i = 0; i < 6; i++)
-		{
-			InRenderTarget->GetCPURenderTargetView(i) = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-				RTVDesHeapStart,
-				FEngineRenderConfig::GetRenderConfig()->SwapChainCount
-				+ 6  //反射 CubeMap的摄像机
-				+ i,
-				RTVDescriptorSize);
-		}
-	}
+	//if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
+	//{
+	//	//偏移的地址记录
+	//	for (size_t i = 0; i < 6; i++)
+	//	{
+	//		InRenderTarget->GetCPURenderTargetView(i) = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+	//			RTVDesHeapStart,
+	//			FEngineRenderConfig::GetRenderConfig()->SwapChainCount
+	//			+ 6  //反射 CubeMap的摄像机
+	//			+ i,
+	//			RTVDescriptorSize);
+	//	}
+	//}
 }
 
 void FDynamicShadowCubeMap::BuildRenderTargetSRV()
 {
-	UINT CBVDescriptorSize = GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
+	//UINT CBVDescriptorSize = GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
 
-	auto CPUSRVDesHeapStart = GeometryMap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
-	auto GPUSRVDesHeapStart = GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart();
+	//auto CPUSRVDesHeapStart = GeometryMap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
+	//auto GPUSRVDesHeapStart = GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart();
 
-	int Offset =
-		GeometryMap->GetDrawTexture2DResourcesNumber() +
-		GeometryMap->GetDrawCubeMapResourcesNumber() +
-		1 + //反射cubemap
-		1;//shadop
+	//int Offset =
+	//	GeometryMap->GetDrawTexture2DResourcesNumber() +
+	//	GeometryMap->GetDrawCubeMapResourcesNumber() +
+	//	1 + //反射cubemap
+	//	1;//shadop
 
-	if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
-	{
-		InRenderTarget->GetCPUSRVOffset() =
-			CD3DX12_CPU_DESCRIPTOR_HANDLE(CPUSRVDesHeapStart,
-				Offset,
-				CBVDescriptorSize);
+	//if (FCubeMapRenderTarget* InRenderTarget = dynamic_cast<FCubeMapRenderTarget*>(RenderTarget.get()))
+	//{
+	//	InRenderTarget->GetCPUSRVOffset() =
+	//		CD3DX12_CPU_DESCRIPTOR_HANDLE(CPUSRVDesHeapStart,
+	//			Offset,
+	//			CBVDescriptorSize);
 
-		InRenderTarget->GetGPUSRVOffset() =
-			CD3DX12_GPU_DESCRIPTOR_HANDLE(GPUSRVDesHeapStart,
-				Offset,
-				CBVDescriptorSize);
-	}
+	//	InRenderTarget->GetGPUSRVOffset() =
+	//		CD3DX12_GPU_DESCRIPTOR_HANDLE(GPUSRVDesHeapStart,
+	//			Offset,
+	//			CBVDescriptorSize);
+	//}
 }
 
 FDynamicShadowCubeMap::FTmpViewportCapture::FTmpViewportCapture(const fvector_3d& InCenterPoint)

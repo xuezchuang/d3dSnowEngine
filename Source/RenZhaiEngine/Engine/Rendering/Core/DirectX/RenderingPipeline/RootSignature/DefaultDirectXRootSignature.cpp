@@ -80,12 +80,12 @@ void FDefaultDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
        Engine_Log_Error("%s", p);
     }
 
-    //创建
-    GetD3dDevice()->CreateRootSignature(
-        0,
-        SerializeRootSignature->GetBufferPointer(),
-        SerializeRootSignature->GetBufferSize(),
-        IID_PPV_ARGS(&RootSignature));
+    ////创建
+    //GetD3dDevice()->CreateRootSignature(
+    //    0,
+    //    SerializeRootSignature->GetBufferPointer(),
+    //    SerializeRootSignature->GetBufferSize(),
+    //    IID_PPV_ARGS(&RootSignature));
 }
 
 void FDefaultDirectXRootSignature::SetGraphicsRootSignature()

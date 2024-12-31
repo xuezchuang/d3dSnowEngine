@@ -40,7 +40,7 @@ void FDynamicMap::Draw(float DeltaTime)
 
 void FDynamicMap::BuildSRVOffset()
 {
-	UINT CBVDescriptorSize = GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
+	/*UINT CBVDescriptorSize = GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
 
 	auto CPUSRVDesHeapStart = GeometryMap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
 	auto GPUSRVDesHeapStart = GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart();
@@ -55,16 +55,16 @@ void FDynamicMap::BuildSRVOffset()
 	RenderTarget->GetGPUSRVOffset() =
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(GPUSRVDesHeapStart,
 			Offset,
-			CBVDescriptorSize);
+			CBVDescriptorSize);*/
 }
 
 void FDynamicMap::BuildRTVOffset()
 {
-	RenderTarget.get()->GetCPURenderTargetView() =
-		CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), 
-			GetRTVOffset(),
-			GetDescriptorHandleIncrementSizeByRTV());
+	//RenderTarget.get()->GetCPURenderTargetView() =
+	//	CD3DX12_CPU_DESCRIPTOR_HANDLE(
+	//		GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), 
+	//		GetRTVOffset(),
+	//		GetDescriptorHandleIncrementSizeByRTV());
 }
 
 void FDynamicMap::Init(int InWidth, int InHeight)

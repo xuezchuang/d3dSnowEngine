@@ -24,11 +24,7 @@ int Init(CEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd
 		}
 	}
 
-	int ReturnValue = InEngine->PreInit(
-#if defined(_WIN32)
-		WinMainParameters
-#endif 
-	);
+	int ReturnValue = InEngine->PreInit();
 
 	if (ReturnValue != 0)
 	{
@@ -36,11 +32,7 @@ int Init(CEngine* InEngine,HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmd
 		return ReturnValue;
 	}
 
-	ReturnValue = InEngine->Init(
-#if defined(_WIN32)
-		WinMainParameters
-#endif 
-	);
+	ReturnValue = InEngine->Init();
 	if (ReturnValue != 0)
 	{
 		Engine_Log_Error("[%i]Engine initialization error, please check the initialization problem.", ReturnValue);

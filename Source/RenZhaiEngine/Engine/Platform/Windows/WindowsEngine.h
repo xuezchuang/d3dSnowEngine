@@ -16,9 +16,9 @@ public:
 	CWindowsEngine();
 	~CWindowsEngine();
 
-	virtual int PreInit(FWinMainCommandParameters InParameters);
+	virtual int PreInit();
 
-	virtual int Init(FWinMainCommandParameters InParameters);
+	virtual int Init();
 	virtual int PostInit();
 
 	virtual void Tick(float DeltaTime);
@@ -35,13 +35,13 @@ public:
 public:
 	CMeshManage* GetMeshManage() const;
 	CWorld* GetWorld()const { return World; }
-public:
-
-	bool InitWindows(FWinMainCommandParameters InParameters);
-
-protected:
-	HWND MianWindowsHandle;//Ö÷windows¾ä±ú
-
+//public:
+//
+//	bool InitWindows(FWinMainCommandParameters InParameters);
+//
+//protected:
+//	HWND MianWindowsHandle;//Ö÷windows¾ä±ú
+//
 protected:
 	CDirectXRenderingEngine* RenderingEngine;
 #if EDITOR_ENGINE
@@ -49,7 +49,7 @@ protected:
 #endif
 	CWorld* World;
 
-private:
-	bool m_bPaused = false;
+//private:
+//	bool m_bPaused = false;
 };
 #endif
