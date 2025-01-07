@@ -48,7 +48,7 @@ void CMeshManage::PostDraw(float DeltaTime)
 
 void CMeshManage::Draw(float DeltaTime)
 {
-    RenderingPipeline.Draw(DeltaTime);
+    //RenderingPipeline.Draw(DeltaTime);
 }
 
 void CMeshManage::PreDraw(float DeltaTime)

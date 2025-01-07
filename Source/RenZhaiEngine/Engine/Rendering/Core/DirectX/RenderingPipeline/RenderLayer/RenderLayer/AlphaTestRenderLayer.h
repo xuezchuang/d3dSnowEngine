@@ -7,7 +7,7 @@ class FAlphaTestRenderLayer :public FRenderLayer
 public:
 	FAlphaTestRenderLayer();
 
-	virtual void Draw(float DeltaTime);
+	virtual void Draw(FCommandContext& context, float DeltaTime);
 
 	virtual void BuildShader();
 	virtual void BuildPSO();

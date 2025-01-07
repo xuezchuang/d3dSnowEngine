@@ -69,5 +69,5 @@ void FSelectRenderLayer::Draw(float DeltaTime)
 {
 	DirectXPipelineState->ResetPSO(Select);
 
-	Super::Draw(DeltaTime);
+	//Super::Draw(DeltaTime);
 }

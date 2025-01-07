@@ -822,7 +822,7 @@ void FGeometry::BuildMesh_Interior(
 		RenderingDatas.push_back(std::make_shared<FRenderingData>());
 		std::shared_ptr<FRenderingData> InRenderingData = RenderingDatas[RenderingDatas.size() - 1];
 
-		InRenderLayer->RenderDatas.push_back(InRenderingData);
+		InRenderLayer->Add(InRenderingData);
 
 		//¼ÆËãAABB
 		BuildBoundingBox(MeshData, InRenderingData->Bounds);

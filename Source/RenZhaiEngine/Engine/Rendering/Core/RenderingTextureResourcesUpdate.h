@@ -1,6 +1,7 @@
 #pragma once
 #include "../../EngineMinimal.h"
 #include "../../Interface/DirectXDeviceInterfece.h"
+#include "../Texture.h"
 
 struct FRenderingTexture
 {
@@ -8,8 +9,9 @@ struct FRenderingTexture
 		:RenderingTextureID(0)
 	{}
 
-	ComPtr<ID3D12Resource> UploadBuffer;
-	ComPtr<ID3D12Resource> Data;//资源
+	//ComPtr<ID3D12Resource> UploadBuffer;
+	//ComPtr<ID3D12Resource> Data;//资源
+	FTexture mTexture;
 
 	wstring Name;//贴图名称
 	wstring Filename;//路径
@@ -40,5 +42,5 @@ public:
 protected:
 	std::map<std::wstring, std::unique_ptr<FRenderingTexture>> TexturesMapping;
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC ShaderResourceViewDesc;
+	//D3D12_SHADER_RESOURCE_VIEW_DESC ShaderResourceViewDesc;
 };

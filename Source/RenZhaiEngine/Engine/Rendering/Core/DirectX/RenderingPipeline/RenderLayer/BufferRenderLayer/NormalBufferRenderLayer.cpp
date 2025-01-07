@@ -11,7 +11,7 @@ void FNormalBufferRenderLayer::Draw(float DeltaTime)
 {
 	ResetPSO();
 
-	Super::Draw(DeltaTime);
+	//Super::Draw(DeltaTime);
 }
 
 void FNormalBufferRenderLayer::BuildShader()

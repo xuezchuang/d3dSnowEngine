@@ -7,12 +7,12 @@ FOpaqueReflectorRenderLayer::FOpaqueReflectorRenderLayer()
 	RenderPriority = 2100;
 }
 
-void FOpaqueReflectorRenderLayer::Draw(float DeltaTime)
+void FOpaqueReflectorRenderLayer::Draw(FCommandContext& context, float DeltaTime)
 {
 	//重置当前的PSO
 	ResetPSO();
 
-	Super::Draw(DeltaTime);
+	//Super::Draw(DeltaTime);
 }
 
 void FOpaqueReflectorRenderLayer::BuildShader()

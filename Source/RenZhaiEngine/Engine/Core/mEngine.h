@@ -11,6 +11,7 @@
 
 class CEditorEngine;
 class CDirectXRenderingEngine;
+class FRenderingPipeline;
 
 class Atmospheric
 {
@@ -88,6 +89,7 @@ private:
 
 	CEditorEngine* GetEditorEngine()const;
 	CDirectXRenderingEngine* GetDirectRenderingEngine()const;
+	FRenderingPipeline* GetFRenderingPipeline()const;
 
 	Atmospheric m_Atmospheric;
 	FCamera m_Camera;

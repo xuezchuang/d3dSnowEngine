@@ -12,12 +12,12 @@ void FOpaqueSkinnedRenderLayer::Draw(float DeltaTime)
 	//重置当前的PSO
 	ResetPSO();
 
-	Super::Draw(DeltaTime);
+	//Super::Draw(DeltaTime);
 }
 
 void FOpaqueSkinnedRenderLayer::DrawObject(float DeltaTime, std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
 {
-	Super::DrawObject(DeltaTime, InWeakRenderingData, RC);
+	//Super::DrawObject(DeltaTime, InWeakRenderingData, RC);
 }
 
 void FOpaqueSkinnedRenderLayer::BuildShader()

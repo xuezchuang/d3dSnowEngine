@@ -1,23 +1,31 @@
 #include "OpaqueRenderLayer.h"
 #include "../../Geometry/GeometryMap.h"
 #include "../../PipelineState/DirectXPipelineState.h"
+#include "../RenderWindow.h"
 
 FOpaqueRenderLayer::FOpaqueRenderLayer()
 {
 	RenderPriority = 2000;
 }
 
-void FOpaqueRenderLayer::Draw(float DeltaTime)
+FOpaqueRenderLayer::~FOpaqueRenderLayer()
+{
+	RenderPriority = 2000;
+}
+
+void FOpaqueRenderLayer::Draw(FCommandContext& context, float DeltaTime)
 {
 	//重置当前的PSO
-	ResetPSO();
+	//ResetPSO();
 
-	Super::Draw(DeltaTime);
+	context.SetPipelineState(m_PSO);
+
+	Super::Draw(context,DeltaTime);
 }
 
 void FOpaqueRenderLayer::DrawObject(float DeltaTime, std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
 {
-	Super::DrawObject(DeltaTime, InWeakRenderingData, RC);
+	//Super::DrawObject(DeltaTime, InWeakRenderingData, RC);
 }
 
 void FOpaqueRenderLayer::BuildShader()
@@ -30,12 +38,9 @@ void FOpaqueRenderLayer::BuildShader()
 	vector<D3D_SHADER_MACRO> D3DShaderMacro;
 	ShaderType::ToD3DShaderMacro(ShaderMacro, D3DShaderMacro);
 
-	std::wstring ShaderPath = BuildShadersPaths(L"Hello");
-	VertexShader.BuildShaders(ShaderPath, "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
-	PixelShader.BuildShaders(ShaderPath, "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
-	DirectXPipelineState->BindShader(VertexShader, PixelShader);
+	m_ShaderVS = D3D12RHI::Get().CreateShader(getpath(L"Resources/Shit_Shaders/Hello.hlsl"), "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
+	m_ShaderPS = D3D12RHI::Get().CreateShader(getpath(L"Resources/Shit_Shaders/Hello.hlsl"), "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
 
-	//输入布局
 	InputElementDesc =
 	{
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
@@ -44,23 +49,29 @@ void FOpaqueRenderLayer::BuildShader()
 		{"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 52, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 	};
-	DirectXPipelineState->BindInputLayout(InputElementDesc.data(), InputElementDesc.size());
+
 }
 
 void FOpaqueRenderLayer::BuildPSO()
 {
 	Super::BuildPSO();
+	m_PSO.SetRootSignature(*DirectXPipelineState->GetRootSignature());
+	m_PSO.SetRasterizerState(FPipelineState::RasterizerDefault);
+	m_PSO.SetBlendState(FPipelineState::BlendDisable);
+	m_PSO.SetDepthStencilState(FPipelineState::DepthStateDisabled);
+	m_PSO.SetInputLayout(InputElementDesc.size(), InputElementDesc.data());
 
-	//构建固体
-	DirectXPipelineState->Build(GrayModel);
 
-	//构建我们的管线
-	//构建一遍线框模式
-	DirectXPipelineState->SetFillMode(true);
-	DirectXPipelineState->Build(Wireframe);
+	m_PSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	m_PSO.SetRenderTargetFormats(1, &RenderWindow::Get().GetColorFormat(), DXGI_FORMAT_UNKNOWN);
+
+	m_PSO.SetVertexShader(CD3DX12_SHADER_BYTECODE(m_ShaderVS.Get()));
+	m_PSO.SetPixelShader(CD3DX12_SHADER_BYTECODE(m_ShaderPS.Get()));
+	m_PSO.Finalize();
 }
 
-void FOpaqueRenderLayer::ResetPSO()
+void FOpaqueRenderLayer::ResetPSO(FCommandContext& context)
 {
-	DirectXPipelineState->ResetPSO();
+	//DirectXPipelineState->ResetPSO();
+	context.SetPipelineState(m_PSO);
 }

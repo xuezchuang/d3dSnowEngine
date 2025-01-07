@@ -11,7 +11,7 @@ void FOperationHandleRenderLayer::Draw(float DeltaTime)
 {
 	ResetPSO();
 
-	Super::Draw(DeltaTime);
+	//Super::Draw(DeltaTime);
 }
 
 void FOperationHandleRenderLayer::BuildShader()

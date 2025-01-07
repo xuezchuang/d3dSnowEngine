@@ -156,10 +156,10 @@ void FRenderLayerManage::Sort()
 
 void FRenderLayerManage::ResetPSO(int InLayer)
 {
-	if (auto InRenderLayer = FindByRenderLayer(InLayer))
-	{
-		InRenderLayer->ResetPSO();
-	}
+	//if (auto InRenderLayer = FindByRenderLayer(InLayer))
+	//{
+	//	InRenderLayer->ResetPSO();
+	//}
 }
 
 void FRenderLayerManage::ResetPSO(int InLayer, EPipelineState InPipelineState)
@@ -174,7 +174,7 @@ void FRenderLayerManage::DrawMesh(float DeltaTime, int InLayer, ERenderingCondit
 {
 	if (auto InRenderLayer = FindByRenderLayer(InLayer))
 	{
-		InRenderLayer->DrawMesh(DeltaTime, RC);
+		//InRenderLayer->DrawMesh(DeltaTime, RC);
 	}
 }
 
@@ -223,11 +223,11 @@ void FRenderLayerManage::PreDraw(float DeltaTime)
 	}
 }
 
-void FRenderLayerManage::Draw(float DeltaTime)
+void FRenderLayerManage::Draw(FCommandContext& context, float DeltaTime)
 {
 	for (auto& Tmp : RenderLayers)
 	{
-		Tmp->Draw(DeltaTime);
+		Tmp->Draw(context,DeltaTime);
 	}
 }
 
@@ -239,11 +239,11 @@ void FRenderLayerManage::PostDraw(float DeltaTime)
 	}
 }
 
-void FRenderLayerManage::Draw(int InLayer, float DeltaTime)
+void FRenderLayerManage::Draw(FCommandContext& context, int InLayer, float DeltaTime)
 {
 	if (auto InRenderLayer = FindByRenderLayer(InLayer))
 	{
-		InRenderLayer->Draw(DeltaTime);
+		InRenderLayer->Draw(context,DeltaTime);
 	}
 }
 

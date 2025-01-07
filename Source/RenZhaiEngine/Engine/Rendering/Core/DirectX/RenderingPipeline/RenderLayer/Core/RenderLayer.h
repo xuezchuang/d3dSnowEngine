@@ -5,6 +5,8 @@
 #include "../../Geometry/RenderingData.h"
 #include "../../../../../../Shader/Core/ShaderType.h"
 #include "../../RenderingPipelineType.h"
+#include "../PipelineState.h"
+#include "../CommandContext.h"
 
 struct FDirectXPipelineState;
 struct FGeometryMap;
@@ -30,10 +32,10 @@ public:
 	virtual void Init(FGeometryMap* InGeometryMap, FDirectXPipelineState* InDirectXPipelineState);
 
 	virtual void PreDraw(float DeltaTime);
-	virtual void Draw(float DeltaTime);
+	virtual void Draw(FCommandContext& context, float DeltaTime);
 	virtual void PostDraw(float DeltaTime);
 
-	virtual void DrawObject(float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData,ERenderingConditions RC = ERenderingConditions::RC_None);
+	virtual void DrawObject(FCommandContext& context,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData,ERenderingConditions RC = ERenderingConditions::RC_None);
 	virtual void FindObjectDraw(float DeltaTime, const CMeshComponent* InKey);
 
 	virtual void BuildPSO();
@@ -45,11 +47,11 @@ public:
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
 
 	//单独设置PSO
-	virtual void ResetPSO();
+	virtual void ResetPSO(FCommandContext& GfxContext);
 	virtual void ResetPSO(EPipelineState InPipelineState);
 
 	//渲染 不包含设置PSO
-	virtual void DrawMesh(float DeltaTime,ERenderingConditions RC = ERenderingConditions::RC_None);
+	virtual void DrawMesh(FCommandContext& context,float DeltaTime,ERenderingConditions RC = ERenderingConditions::RC_None);
 public:
 	std::wstring BuildShadersPaths(const std::wstring& InShadersHLSLName);
 public:
@@ -74,4 +76,7 @@ protected:
 
 	FGeometryMap* GeometryMap;
 	FDirectXPipelineState* DirectXPipelineState;
+protected:
+
+	FGraphicsPipelineState m_PSO;
 };

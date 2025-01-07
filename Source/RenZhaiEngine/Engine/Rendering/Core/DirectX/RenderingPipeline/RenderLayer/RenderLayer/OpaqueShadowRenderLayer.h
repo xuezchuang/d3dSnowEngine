@@ -7,7 +7,7 @@ class FOpaqueShadowRenderLayer :public FRenderLayer
 public:
 	FOpaqueShadowRenderLayer();
 
-	virtual void Draw(float DeltaTime);
+	virtual void Draw(FCommandContext& context, float DeltaTime);
 
 	virtual void BuildShader();
 

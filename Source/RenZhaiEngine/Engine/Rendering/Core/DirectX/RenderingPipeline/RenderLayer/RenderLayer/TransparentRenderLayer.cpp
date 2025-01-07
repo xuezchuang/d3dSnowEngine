@@ -11,7 +11,7 @@ void FTransparentRenderLayer::Draw(float DeltaTime)
 {
 	ResetPSO();
 
-	Super::Draw(DeltaTime);
+	//Super::Draw(DeltaTime);
 }
 
 void FTransparentRenderLayer::BuildShader()

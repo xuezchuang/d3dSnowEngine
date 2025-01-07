@@ -31,10 +31,16 @@ void FDirectXPipelineState::BindInputLayout(const D3D12_INPUT_ELEMENT_DESC* InIn
 	GPSDesc.InputLayout.NumElements = InSize;
 }
 
-void FDirectXPipelineState::BindRootSignature(ID3D12RootSignature* InRootSignature)
+void FDirectXPipelineState::BindRootSignature(FRootSignature* InRootSignature)
 {
     //°ó¶¨¸ùÇ©Ãû
-	GPSDesc.pRootSignature = InRootSignature;
+	//GPSDesc.pRootSignature = InRootSignature;
+	m_RootSignature = InRootSignature;
+}
+
+FRootSignature* FDirectXPipelineState::GetRootSignature()
+{
+	return m_RootSignature;
 }
 
 void FDirectXPipelineState::BindShader(const FShader& InVertexShader, const FShader& InPixelShader)

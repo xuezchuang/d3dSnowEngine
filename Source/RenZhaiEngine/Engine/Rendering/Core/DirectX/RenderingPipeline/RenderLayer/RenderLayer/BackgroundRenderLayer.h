@@ -7,7 +7,7 @@ class FBackgroundRenderLayer :public FRenderLayer
 public:
 	FBackgroundRenderLayer();
 
-	virtual void Draw(float DeltaTime);
+	virtual void Draw(FCommandContext& context, float DeltaTime);
 
 	virtual void BuildShader();
 	virtual void BuildPSO();

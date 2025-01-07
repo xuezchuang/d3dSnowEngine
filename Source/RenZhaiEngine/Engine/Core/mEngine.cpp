@@ -11,6 +11,7 @@
 #include "../Common.h"
 #include "../SamplerManager.h"
 #include "../CommandListManager.h"
+#include "../Mesh/Core/MeshManage.h"
 
 extern FCommandListManager g_CommandListManager;
 CEngine* Engine = NULL;
@@ -19,13 +20,7 @@ void mEngine::OnStartup()
 {
 	tStart = std::chrono::high_resolution_clock::now();
 
-	//m_EditorEngine = new CEditorEngine();
-	//m_RenderingEngine = new CDirectXRenderingEngine();
-	//m_RenderingEngine->PostInit();
 	Engine = FEngineFactory::Instance();
-	//Engine->PreExit();
-	//Engine->Init();
-	//Engine->PostInit();
 	for(int i = 0; i < FClassManage::GetNum(); i++)
 	{
 		if(CClassObject* InObjectClass = FClassManage::GetClassByIndex(i))
@@ -33,6 +28,9 @@ void mEngine::OnStartup()
 			InObjectClass->GetDefaultObject();
 		}
 	}
+	Engine->PreExit();
+	Engine->Init();
+	Engine->PostInit();
 //
 #if EDITOR_ENGINE
 	GetEditorEngine()->BuildEditor();
@@ -81,11 +79,15 @@ void mEngine::OnRender()
 	CommandContext.TransitionResource(BackBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	CommandContext.SetRenderTargets(1, &BackBuffer.GetRTV());
 	CommandContext.ClearColor(BackBuffer);
+
+	float delta = std::chrono::duration<float, std::milli>(tEnd - tStart).count();
+	GetFRenderingPipeline()->Draw(CommandContext, delta);
+
 	//CommandContext.FlushResourceBarriers();
 
 	//OnTest(CommandContext);
 
-	m_Atmospheric.OnRender(CommandContext);
+	//m_Atmospheric.OnRender(CommandContext);
 
 	OnGUI(CommandContext);
 	CommandContext.TransitionResource(BackBuffer, D3D12_RESOURCE_STATE_PRESENT);
@@ -117,6 +119,15 @@ CDirectXRenderingEngine* mEngine::GetDirectRenderingEngine()const
 	if(CWindowsEngine* InEngine = dynamic_cast<CWindowsEngine*>(Engine))
 	{
 		return InEngine->RenderingEngine;
+	}
+	return nullptr;
+}
+
+FRenderingPipeline* mEngine::GetFRenderingPipeline() const
+{
+	if(CWindowsEngine* InEngine = dynamic_cast<CWindowsEngine*>(Engine))
+	{
+		return InEngine->GetMeshManage()->GetRenderingPipeline();
 	}
 	return nullptr;
 }

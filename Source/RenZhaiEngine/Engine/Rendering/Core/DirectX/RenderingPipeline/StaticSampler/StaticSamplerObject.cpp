@@ -43,7 +43,7 @@ void FStaticSamplerObject::BuildStaticSampler()
 			D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE));
 
 }
-CD3DX12_STATIC_SAMPLER_DESC* FStaticSamplerObject::GetData()
+D3D12_STATIC_SAMPLER_DESC* FStaticSamplerObject::GetData()
 {
 	return SamplerDescs.data();
 }
