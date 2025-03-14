@@ -116,42 +116,48 @@ void FRenderLayer::DrawObject(FCommandContext& context,float DeltaTime,std::weak
 
 		if (GetRenderingConditions())
 		{
-			UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
+			//UINT MeshOffset = GeometryMap->MeshConstantBufferViews.GetConstantBufferByteSize();
 
 			D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetVertexBufferView(InRenderingData->GeometryKey);
 			D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetIndexBufferView(InRenderingData->GeometryKey);
 
-			D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
-			//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
-
 			context.SetIndexBuffer(IBV);
 			context.SetVertexBuffer(0, VBV);
+ 
+			//D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
+			//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
 
-			////定义我们要绘制的哪种图元 点 线 面
-			//EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
-			//GetGraphicsCommandList()->IASetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
+
+
+			//定义我们要绘制的哪种图元 点 线 面
+			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
+			context.SetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
 
 			//模型起始地址偏移
 			//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
 			//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);
 
-			//if (InRenderingData->GetMeshType() == ERenderingMeshType::SKINNED_MESH_TYPE)
-			//{
-			//	GeometryMap->UpdateSkinned(DeltaTime, InRenderingData->Mesh);
-
-			//	GeometryMap->DrawSkinned(DeltaTime,InRenderingData->SkinnedMeshObjectIndex);
-			//}
-			//else
-			//{
-			//	GeometryMap->DrawEmptySkinned(DeltaTime);
-			//}
-
-			for (auto& Tmp : InRenderingData->Sections)
+			if (InRenderingData->GetMeshType() == ERenderingMeshType::SKINNED_MESH_TYPE)
 			{
-				//每个对象相对首地址的偏移
-				D3D12_GPU_VIRTUAL_ADDRESS VAddress = FirstVirtualMeshAddress + Tmp.MeshObjectIndex * MeshOffset;
+				//GeometryMap->UpdateSkinned(DeltaTime, InRenderingData->Mesh);
+				////GeometryMap->DrawSkinned(DeltaTime, InRenderingData->SkinnedMeshObjectIndex);
+				//int ConstantBufferByteSize = SkinnedConstantBufferViews.GetConstantBufferByteSize();
+				//D3D12_GPU_VIRTUAL_ADDRESS SkinnedAddress =
+				//	SkinnedConstantBufferViews.GetBuffer()->GetGPUVirtualAddress() +
+				//	ConstantBufferByteSize * InSkinnedIndex;
 
-				context.SetConstantBuffer(Signature_Object, VAddress);
+
+				//context.SetDynamicConstantBufferView(Signature_ObjectSkinned, sizeof(FObjectTransformation), ObjectConstant);
+			}
+			else
+			{
+				//context.SetDynamicConstantBufferView(Signature_ObjectSkinned
+			}
+
+			for (FRenderingDataSection& Tmp : InRenderingData->Sections)
+			{
+				const FObjectTransformation& ObjectConstant = GeometryMap->MeshObjectConstant[Tmp.MeshObjectIndex];
+				context.SetDynamicConstantBufferView(Signature_Object, sizeof(FObjectTransformation), &ObjectConstant);
 
 				//真正的绘制
 				context.DrawIndexedInstanced(
@@ -232,21 +238,19 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 				XMVECTOR AATRIXWorldDeterminant = XMMatrixDeterminant(ATRIXWorld);
 				XMMATRIX NormalInverseMatrix = XMMatrixInverse(&AATRIXWorldDeterminant, ATRIXWorld);
 				
-				FObjectTransformation ObjectTransformation;
-				XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));
-				XMStoreFloat4x4(&ObjectTransformation.TextureTransformation, XMMatrixTranspose(ATRIXTextureTransform));
-				XMStoreFloat4x4(&ObjectTransformation.NormalTransformation, NormalInverseMatrix);
-				
 				//更新ObjectIndex
 				for (auto &Tmp : InRenderingData->Sections)
 				{
+					FObjectTransformation& ObjectTransformation = GeometryMap->MeshObjectConstant[Tmp.MeshObjectIndex];
+					XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));
+					XMStoreFloat4x4(&ObjectTransformation.TextureTransformation, XMMatrixTranspose(ATRIXTextureTransform));
+					XMStoreFloat4x4(&ObjectTransformation.NormalTransformation, NormalInverseMatrix);
+
 					//收集材质Index
 					if (auto& InMater = (*InRenderingData->Mesh->GetMaterials())[Tmp.MatrealIndex])
 					{
 						ObjectTransformation.MaterialIndex = InMater->GetMaterialIndex();
 					}
-
-					GeometryMap->MeshConstantBufferViews.Update(Tmp.MeshObjectIndex, &ObjectTransformation);
 				}
 			}
 		}

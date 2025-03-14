@@ -182,10 +182,10 @@ void FScreenSpaceAmbientOcclusion::DrawResources(float DeltaTime)
 
 void FScreenSpaceAmbientOcclusion::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
-	NormalBuffer.UpdateCalculations(DeltaTime, ViewportInfo);
-	AmbientBuffer.UpdateCalculations(DeltaTime, ViewportInfo);
-	NoiseBuffer.UpdateCalculations(DeltaTime, ViewportInfo);
-	BilateralBlur.UpdateCalculations(DeltaTime, ViewportInfo);
+	//NormalBuffer.UpdateCalculations(DeltaTime, ViewportInfo);
+	//AmbientBuffer.UpdateCalculations(DeltaTime, Viewport/*I*/nfo);
+	//NoiseBuffer.UpdateCalculations(DeltaTime, ViewportInfo);
+	//BilateralBlur.UpdateCalculations(DeltaTime, ViewportInfo);
 
 	DrawViewConstantBufferViews(DeltaTime, ViewportInfo);
 	DrawBlurConstantBufferViews(DeltaTime, ViewportInfo);

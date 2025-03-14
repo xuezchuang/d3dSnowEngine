@@ -31,9 +31,9 @@ bool FRenderingPipeline::FindMeshRenderingDataByHash(const size_t& InHash, std::
 
 void FRenderingPipeline::UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
-	SSAO.UpdateCalculations(DeltaTime, ViewportInfo);
-	GeometryMap.DynamicShadowCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
-	DynamicCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
+	//SSAO.UpdateCalculations(DeltaTime, ViewportInfo);
+	//GeometryMap.DynamicShadowCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
+	//DynamicCubeMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	GeometryMap.UpdateCalculations(DeltaTime, ViewportInfo);
 	RenderLayer.UpdateCalculations(DeltaTime, ViewportInfo);
 }
@@ -95,7 +95,7 @@ void FRenderingPipeline::BuildPipeline()
 	m_RootSignature[Signature_Viewport].InitAsBufferCBV(2);
 	m_RootSignature[Signature_Light].InitAsBufferCBV(3);
 	m_RootSignature[Signature_Fog].InitAsBufferCBV(4);
-
+	
 	m_RootSignature[Signature_Material].InitAsBufferSRV(0, 1);
 
 
@@ -110,8 +110,8 @@ void FRenderingPipeline::BuildPipeline()
 	m_RootSignature.Finalize(L"RootSignature", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	DirectXPipelineState.BindRootSignature(&m_RootSignature);
 
-	////构建模型
-	//GeometryMap.Build();
+	//构建模型
+	GeometryMap.Build();
 
 	////构建动态反射Mesh
 	//GeometryMap.BuildDynamicReflectionMesh();
@@ -136,8 +136,8 @@ void FRenderingPipeline::BuildPipeline()
 	////构建阴影
 	//GeometryMap.BuildShadow();
 
-	////构建常量缓冲区
-	//GeometryMap.BuildMeshConstantBuffer();
+	//构建常量缓冲区
+	GeometryMap.BuildMeshConstantBuffer();
 
 	////构建材质常量缓冲区
 	//GeometryMap.BuildMaterialShaderResourceView();
@@ -167,23 +167,20 @@ void FRenderingPipeline::BuildPipeline()
 	RenderLayer.BuildPSO();
 }
 
-void FRenderingPipeline::PreDraw(float DeltaTime)
+void FRenderingPipeline::PreDraw(FCommandContext& context, float DeltaTime)
 {
-	//需要一个PSO
-	DirectXPipelineState.PreDraw(DeltaTime);
+	//DirectXPipelineState.PreDraw(context, DeltaTime);
+	//GeometryMap.SetDescriptorHeaps();
+	//RootSignature.SetGraphicsRootSignature();
 
-	GeometryMap.SetDescriptorHeaps();
-	RootSignature.SetGraphicsRootSignature();
-
-	//渲染灯光材质贴图等(必须要放在 这个位置 否则天崩地裂)
 	GeometryMap.Draw(DeltaTime);
 
 	//渲染SSAO
 	//SSAO.Draw(DeltaTime);
-	RootSignature.SetGraphicsRootSignature();
+	//RootSignature.SetGraphicsRootSignature();
 
 	//存储我们的SSAO到指定的buffer
-	SSAO.SaveToSSAOBuffer();
+	//SSAO.SaveToSSAOBuffer();
 
 	//主视口清除画布
 	//ClearMainSwapChainCanvas();

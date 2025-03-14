@@ -13,6 +13,7 @@
 #include "../CommandListManager.h"
 #include "../Mesh/Core/MeshManage.h"
 
+
 extern FCommandListManager g_CommandListManager;
 CEngine* Engine = NULL;
 
@@ -21,9 +22,9 @@ void mEngine::OnStartup()
 	tStart = std::chrono::high_resolution_clock::now();
 
 	Engine = FEngineFactory::Instance();
-	for(int i = 0; i < FClassManage::GetNum(); i++)
+	for (int i = 0; i < FClassManage::GetNum(); i++)
 	{
-		if(CClassObject* InObjectClass = FClassManage::GetClassByIndex(i))
+		if (CClassObject* InObjectClass = FClassManage::GetClassByIndex(i))
 		{
 			InObjectClass->GetDefaultObject();
 		}
@@ -31,7 +32,7 @@ void mEngine::OnStartup()
 	Engine->PreExit();
 	Engine->Init();
 	Engine->PostInit();
-//
+
 #if EDITOR_ENGINE
 	GetEditorEngine()->BuildEditor();
 #endif
@@ -66,6 +67,16 @@ void mEngine::OnUpdate()
 	//}
 	//m_SizeX = curSizeX;
 	//m_SizeY = curSizeY;
+
+	float DeltaTime = std::chrono::duration<float, std::milli>(tEnd - tStart).count();
+
+	//GetDirectRenderingEngine()->UpdateCalculations(DeltaTime, ViewportInfo);
+	//GetDirectRenderingEngine()->Tick(DeltaTime);
+	if (CWindowsEngine* InEngine = dynamic_cast<CWindowsEngine*>(Engine))
+	{
+		InEngine->Tick(DeltaTime);
+	}
+
 	m_Atmospheric.OnUpdate();
 }
 
@@ -81,13 +92,14 @@ void mEngine::OnRender()
 	CommandContext.ClearColor(BackBuffer);
 
 	float delta = std::chrono::duration<float, std::milli>(tEnd - tStart).count();
+	GetFRenderingPipeline()->PreDraw(CommandContext, delta);
 	GetFRenderingPipeline()->Draw(CommandContext, delta);
 
-	//CommandContext.FlushResourceBarriers();
+	CommandContext.FlushResourceBarriers();
 
 	//OnTest(CommandContext);
 
-	//m_Atmospheric.OnRender(CommandContext);
+	m_Atmospheric.OnRender(CommandContext);
 
 	OnGUI(CommandContext);
 	CommandContext.TransitionResource(BackBuffer, D3D12_RESOURCE_STATE_PRESENT);

@@ -1,15 +1,14 @@
-// Copyright (C) RenZhai.2022.All Rights Reserved.
 #include "simple_library/public/simple_channel/simple_core/simple_connetion.h"
-#include "simple_library/public/simple_channel/simple_net_protocols.h"
-#include "simple_library/public/simple_c_log/simple_c_log.h"
-//#include "..\..\..\public\simple_channel\simple_core\simple_channel.h"
+#include "simple_library/public/simple_math/simple_math.h"
+//#include "simple_library\public\simple_channel\simple_core\simple_channel.h"
+//#include <simple_library/public/simple_channel/simple_net_protocols.h>
 
 FSimpleConnetion::FSimpleConnetion()
-    :ConnetionState(ESimpleConnetionState::FREE)
-	,ConnetionType(ESimpleConnetionType::CONNETION_LISTEN)
-	,DriveType(ESimpleDriveType::DRIVETYPE_LISTEN)
-	,bHeartBeat(false)
-	,HeartTime(0.0)
+	:ConnetionState(ESimpleConnetionState::FREE)
+	, ConnetionType(ESimpleConnetionType::CONNETION_LISTEN)
+	, DriveType(ESimpleDriveType::DRIVETYPE_LISTEN)
+	, bHeartBeat(false)
+	, HeartTime(0.0)
 {
 
 }
@@ -50,27 +49,27 @@ void FSimpleConnetion::Analysis()
 	{
 		if (GetDriveType() == ESimpleDriveType::DRIVETYPE_LISTEN)
 		{
-			switch (Head.Protocols)
-			{
-				case SP_HeartBeat:
-				{
-					ResetHeartBeat();
+			//switch (Head.Protocols)
+			//{
+			//	//case SP_HeartBeat:
+			//	//{
+			//	//	ResetHeartBeat();
 
-					log_log("[HeartBeat] Recv heartbeat. Client [%s]",GetAddrString().c_str());
-					
-					break;
-				}
-				case SP_Close:
-				{
-					Close();
-					break;
-				}
-				default:
-				{
-					//讲解反射再延
-					break;
-				}
-			}
+			//	//	log_log("[HeartBeat] Recv heartbeat. Client [%s]",GetAddrString().c_str());
+			//	//	
+			//	//	break;
+			//	//}
+			//	//case SP_Close:
+			//	//{
+			//	//	Close();
+			//	//	break;
+			//	//}
+			//	//default:
+			//	//{
+			//	//	//讲解反射再延
+			//	//	break;
+			//	//}
+			//}
 		}
 		else
 		{
@@ -231,12 +230,12 @@ void FSimpleConnetion::SendHeartBeat()
 {
 	if (FSimpleChannel *Channel = GetMainChannel())
 	{
-		if (1)
-		{
-			SIMPLE_PROTOCOLS_SEND(SP_HeartBeat);
+		//if (1)
+		//{
+		//	SIMPLE_PROTOCOLS_SEND(SP_HeartBeat);
 
-			log_log("[HeartBeat] Send heartbeat. Server [%s]",GetAddrString().c_str());
-		}
+		//	log_log("[HeartBeat] Send heartbeat. Server [%s]",GetAddrString().c_str());
+		//}
 	}
 }
 

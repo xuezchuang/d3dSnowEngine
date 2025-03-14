@@ -47,6 +47,8 @@ FRenderingDataSection::FRenderingDataSection()
 	:VertexOffsetPosition(0)
 	,IndexOffsetPosition(0)
 	,MeshObjectIndex(0)
+	,pData(nullptr)
+	,size(0)
 {
 
 }

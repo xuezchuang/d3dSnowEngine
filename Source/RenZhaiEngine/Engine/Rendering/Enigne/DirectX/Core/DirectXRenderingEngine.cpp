@@ -92,27 +92,26 @@ int CDirectXRenderingEngine::PostInit()
 
 	{
 #if EDITOR_ENGINE
-		
-		if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
-		{
-			InMoveArrow->CreateMesh();
+		//if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
+		//{
+		//	InMoveArrow->CreateMesh();
 
-			MoveArrow = InMoveArrow;
-		}
+		//	MoveArrow = InMoveArrow;
+		//}
 
-		if (GScalingArrow* InScalingArrow = World->CreateActorObject<GScalingArrow>())
-		{
-			InScalingArrow->CreateMesh();
+		//if (GScalingArrow* InScalingArrow = World->CreateActorObject<GScalingArrow>())
+		//{
+		//	InScalingArrow->CreateMesh();
 
-			ScalingArrow = InScalingArrow;
-		}
+		//	ScalingArrow = InScalingArrow;
+		//}
 
-		if (GRotatorArrow* InRotatorArrow = World->CreateActorObject<GRotatorArrow>())
-		{
-			InRotatorArrow->CreateMesh();
+		//if (GRotatorArrow* InRotatorArrow = World->CreateActorObject<GRotatorArrow>())
+		//{
+		//	InRotatorArrow->CreateMesh();
 
-			RotatorArrow = InRotatorArrow;
-		}
+		//	RotatorArrow = InRotatorArrow;
+		//}
 #endif
 		//¹¹½¨Mesh
 		/*if (GMesh* BoxMesh = MeshManage->CreateBoxMesh(4.f, 3.f, 1.5f))

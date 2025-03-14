@@ -113,36 +113,36 @@ int CWindowsEngine::PostInit()
 
 void CWindowsEngine::Tick(float DeltaTime)
 {
-	//if(m_bPaused)
+	//if (m_bPaused)
 	//{
 	//	Sleep(30);
 	//	return;
 	//}
-	//for(auto& Tmp : GObjects)
-	//{
-	//	if(Tmp->IsTick())
-	//	{
-	//		Tmp->Tick(DeltaTime);
-	//	}
-	//}
+	for (auto& Tmp : GObjects)
+	{
+		if (Tmp->IsTick())
+		{
+			Tmp->Tick(DeltaTime);
+		}
+	}
 
 	if(World)
 	{
-		//if(World->GetCamera())
-		//{
-		//	FViewportInfo ViewportInfo;
+		if (World->GetCamera())
+		{
+			FViewportInfo ViewportInfo;
 
-		//	XMFLOAT3 ViewPosition = World->GetCamera()->GetPosition();
-		//	ViewportInfo.ViewPosition = XMFLOAT4(ViewPosition.x, ViewPosition.y, ViewPosition.z, 1.f);
+			XMFLOAT3 ViewPosition = World->GetCamera()->GetPosition();
+			ViewportInfo.ViewPosition = XMFLOAT4(ViewPosition.x, ViewPosition.y, ViewPosition.z, 1.f);
 
-		//	ViewportInfo.ViewMatrix = World->GetCamera()->ViewMatrix;
+			ViewportInfo.ViewMatrix = World->GetCamera()->ViewMatrix;
 
-		//	ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectMatrix;
+			ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectMatrix;
 
-		//	RenderingEngine->UpdateCalculations(DeltaTime, ViewportInfo);
+			RenderingEngine->UpdateCalculations(DeltaTime, ViewportInfo);
 
-		//	RenderingEngine->Tick(DeltaTime);
-		//}
+			RenderingEngine->Tick(DeltaTime);
+		}
 	}
 }
 

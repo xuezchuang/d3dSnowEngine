@@ -6,7 +6,7 @@ struct FConstantBufferViews :public IDirectXDeviceInterfece_Struct
 {
 	void CreateConstant(UINT ObjectSize,UINT ObjectCount,bool bConstBuffer = true);
 
-	void Updgate(int Index, const void* InData);
+	void Update(int Index, const void* InData);
 
 	void BuildConstantBuffer(
 		CD3DX12_CPU_DESCRIPTOR_HANDLE InHandle,

@@ -9,9 +9,10 @@ FDirectXPipelineState::FDirectXPipelineState()
     PSO.insert(pair<int, ComPtr<ID3D12PipelineState>>(5, ComPtr<ID3D12PipelineState>()));//Shader
 }
 
-void FDirectXPipelineState::PreDraw(float DeltaTime)
+void FDirectXPipelineState::PreDraw(FCommandContext& context, float DeltaTime)
 {
     //GetGraphicsCommandList()->Reset(GetCommandAllocator().Get(), PSO[(int)PipelineState].Get());
+	//使用了microsoft的机制,commandAllocatior在每次context会reset
 }
 
 void FDirectXPipelineState::PostDraw(float DeltaTime)

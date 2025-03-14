@@ -124,6 +124,7 @@
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <DisableSpecificWarnings>4244;4311;4302;4267;4305;4133;4251;</DisableSpecificWarnings>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,9 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="simple_connetion.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_io_stream\simple_io_stream.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_channel\simple_channel.cpp" />
-    <ClCompile Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_udp.cpp" />
     <ClCompile Include="simple_library\private\simple_channel\simple_net_drive\simple_net_drive.cpp" />
@@ -212,7 +213,6 @@
     <ClInclude Include="simple_library\public\simple_channel\simple_core\simple_net_macro.h" />
     <ClInclude Include="simple_library\public\simple_channel\simple_core\simple_object.h" />
     <ClInclude Include="simple_library\public\simple_channel\simple_net_drive.h" />
-    <ClInclude Include="simple_library\public\simple_channel\simple_net_protocols.h" />
     <ClInclude Include="simple_library\public\simple_channel\simple_net_type.h" />
     <ClInclude Include="simple_library\public\simple_channel\simple_protocols_definition.h" />
     <ClInclude Include="simple_library\public\simple_core_minimal\simple_c_core\simple_core_minimal.h" />
@@ -261,5 +261,6 @@
     <ClInclude Include="simple_library\public\simple_math\transformation\vector\vector_color.h" />
     <ClInclude Include="simple_library\third_party_library\tinyxml\tinystr.h" />
     <ClInclude Include="simple_library\third_party_library\tinyxml\tinyxml.h" />
+    <ClInclude Include="simple_net_protocols.h" />
   </ItemGroup>
 </Project>

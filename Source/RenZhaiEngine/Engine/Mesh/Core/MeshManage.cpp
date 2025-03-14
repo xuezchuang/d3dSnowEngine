@@ -53,7 +53,7 @@ void CMeshManage::Draw(float DeltaTime)
 
 void CMeshManage::PreDraw(float DeltaTime)
 {
-    RenderingPipeline.PreDraw(DeltaTime);
+    //RenderingPipeline.PreDraw(DeltaTime);
 }
 
 CMeshComponent* CMeshManage::CreateSphereMeshComponent(const FCreateObjectParam& InObjectParam, float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision, bool bReverse)

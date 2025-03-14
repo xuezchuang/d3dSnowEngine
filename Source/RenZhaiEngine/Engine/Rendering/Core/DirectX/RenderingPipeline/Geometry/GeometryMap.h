@@ -7,6 +7,8 @@
 #include "../../../../../Core/Viewport/ViewportInfo.h"
 #include "../DynamicMap/ShadowMap/DynamicShadowMap.h"
 #include "../DynamicMap/ShadowMap/DynamicShadowCubeMap.h"
+#include "../Engine/Mesh/Core/ObjectTransformation.h"
+#include "../GpuBuffer.h"
 
 enum ERenderingMeshType;
 class CMaterial;
@@ -92,6 +94,9 @@ protected:
 
 	ComPtr<ID3D12Resource> GPUVertexBufferPtr;
 	ComPtr<ID3D12Resource> GPUIndexBufferPtr;
+
+	FGpuBuffer m_GPUVertexBufferPtr;
+	FGpuBuffer m_GPUIndexBufferPtr;
 
 	ComPtr<ID3D12Resource> VertexBufferTmpPtr;
 	ComPtr<ID3D12Resource> IndexBufferTmpPtr;
@@ -221,6 +226,9 @@ public:
 protected:
 	map<int, FGeometry> Geometrys;
 	FDirectXDescriptorHeap DescriptorHeap;
+
+	std::vector<FObjectTransformation> MeshObjectConstant;
+
 
 	FConstantBufferViews MeshConstantBufferViews;
 	FConstantBufferViews MaterialConstantBufferViews;

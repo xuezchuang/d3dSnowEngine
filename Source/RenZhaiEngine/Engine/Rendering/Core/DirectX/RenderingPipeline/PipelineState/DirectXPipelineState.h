@@ -12,7 +12,7 @@ struct FDirectXPipelineState :public IDirectXDeviceInterfece_Struct
 public:
 	FDirectXPipelineState();
 
-	void PreDraw(float DeltaTime);
+	void PreDraw(FCommandContext& context, float DeltaTime);
 	void PostDraw(float DeltaTime);
 
 	void ResetGPSDesc();

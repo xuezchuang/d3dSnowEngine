@@ -1,6 +1,5 @@
 #include "GeometryMap.h"
 #include "../../../Buffer/ConstructBuffer.h"
-#include "../../../../../Mesh/Core/ObjectTransformation.h"
 #include "../../../../../Core/Viewport/ViewportTransformation.h"
 #include "../../../../../Mesh/Core/Mesh.h"
 #include "../../../../../Mesh/Core/Material/MaterialConstantBuffer.h"
@@ -116,7 +115,7 @@ void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportIn
 	//拿到视口位置
 	ViewportTransformation.ViewportPosition = ViewportInfo.ViewPosition;
 
-	ViewportConstantBufferViews.Update(InConstantBufferOffset, &ViewportTransformation);
+	//ViewportConstantBufferViews.Update(InConstantBufferOffset, &ViewportTransformation);
 }
 
 void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FViewportInfo& ViewportInfo)
@@ -201,7 +200,7 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 				MaterialConstantBuffer.Param1 = InMaterial->GetFloatParam(1);
 				MaterialConstantBuffer.Param2 = InMaterial->GetFloatParam(2);
 
-				MaterialConstantBufferViews.Update(InMaterial->GetMaterialIndex(), &MaterialConstantBuffer);
+				//MaterialConstantBufferViews.Update(InMaterial->GetMaterialIndex(), &MaterialConstantBuffer);
 			}
 		}
 	}
@@ -341,7 +340,7 @@ void FGeometryMap::UpdateFog(float DeltaTime, const FViewportInfo& ViewportInfo)
 				FogConstantBuffer.FogTransparentCoefficient = Fog->GetFogTransparentCoefficient();
 			}
 
-			FogConstantBufferViews.Update(0, &FogConstantBuffer);
+			//FogConstantBufferViews.Update(0, &FogConstantBuffer);
 
 			Fog->SetDirty(false);
 		}
@@ -355,7 +354,7 @@ void FGeometryMap::UpdateSkinned(float DeltaTime, CComponent* InSkinComponent)
 		FSkinnedTransformation SkinnedTransformation;
 		InSkinnedMeshComponent->TickAnimation(DeltaTime, SkinnedTransformation);
 
-		SkinnedConstantBufferViews.Update(0,&SkinnedTransformation);
+		//SkinnedConstantBufferViews.Update(0,&SkinnedTransformation);
 	}
 }
 
@@ -508,8 +507,10 @@ void FGeometryMap::BuildDescriptorHeap()
 
 void FGeometryMap::BuildMeshConstantBuffer()
 {
+	MeshObjectConstant.clear();
+	MeshObjectConstant.resize(GetDrawMeshObjectNumber());
 	//创建常量缓冲区
-	MeshConstantBufferViews.CreateConstant(sizeof(FObjectTransformation), GetDrawMeshObjectNumber());
+	//MeshConstantBufferViews.CreateConstant(sizeof(FObjectTransformation), GetDrawMeshObjectNumber());
 
 	////Handle
 	//CD3DX12_CPU_DESCRIPTOR_HANDLE DesHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(GetHeap()->GetCPUDescriptorHandleForHeapStart());
@@ -1011,18 +1012,21 @@ void FGeometry::Build(int InType)
 		VertexDataPtr,
 		IndexDataPtr))
 	{
-		ANALYSIS_HRESULT(D3DCreateBlob(VertexSizeInBytes,&CPUVertexBufferPtr));
+		//ANALYSIS_HRESULT(D3DCreateBlob(VertexSizeInBytes,&CPUVertexBufferPtr));
 
-		memcpy(CPUVertexBufferPtr->GetBufferPointer(),VertexDataPtr, VertexSizeInBytes);
+		//memcpy(CPUVertexBufferPtr->GetBufferPointer(),VertexDataPtr, VertexSizeInBytes);
 
-		ANALYSIS_HRESULT(D3DCreateBlob(IndexSizeInBytes,&CPUIndexBufferPtr));
+		//ANALYSIS_HRESULT(D3DCreateBlob(IndexSizeInBytes,&CPUIndexBufferPtr));
 
-		memcpy(CPUIndexBufferPtr->GetBufferPointer(), IndexDataPtr, IndexSizeInBytes);
+		//memcpy(CPUIndexBufferPtr->GetBufferPointer(), IndexDataPtr, IndexSizeInBytes);
 
-		ConstructBuffer::FConstructBuffer ConstructBuffer;
-		GPUVertexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(VertexBufferTmpPtr,VertexDataPtr, VertexSizeInBytes);
+		//ConstructBuffer::FConstructBuffer ConstructBuffer;
+		//GPUVertexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(VertexBufferTmpPtr,VertexDataPtr, VertexSizeInBytes);
 
-		GPUIndexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(IndexBufferTmpPtr, IndexDataPtr, IndexSizeInBytes);
+		//GPUIndexBufferPtr = ConstructBuffer.ConstructDefaultBuffer(IndexBufferTmpPtr, IndexDataPtr, IndexSizeInBytes);
+
+		m_GPUVertexBufferPtr.Create(L"VertexStream", 1, VertexSizeInBytes, VertexDataPtr);
+		m_GPUIndexBufferPtr.Create(L"MeshIndexBuffer", 1, IndexSizeInBytes, IndexDataPtr);
 	}
 }
 
@@ -1060,48 +1064,53 @@ bool FGeometry::GetRenderingDataInfo(ERenderingMeshType InMeshType,UINT& VertexS
 
 D3D12_VERTEX_BUFFER_VIEW FGeometry::GetVertexBufferView(int InType)
 {
-	D3D12_VERTEX_BUFFER_VIEW VBV;
-	VBV.BufferLocation = GPUVertexBufferPtr->GetGPUVirtualAddress();
+	D3D12_VERTEX_BUFFER_VIEW VBV = m_GPUVertexBufferPtr.VertexBufferView();
+	//VBV.BufferLocation = GPUVertexBufferPtr->GetGPUVirtualAddress();
 
 	switch ((ERenderingMeshType)InType)
 	{
-		case MESH_TYPE:
+	case MESH_TYPE:
+	{
+		UINT SizeInBytes = MeshRenderingData.GetVertexSizeInBytes();
+		if (SizeInBytes != VBV.SizeInBytes)
 		{
-			VBV.SizeInBytes = MeshRenderingData.GetVertexSizeInBytes();
-			VBV.StrideInBytes = sizeof(FVertex);
-			break;
+			assert(FALSE);
 		}
-		case SKINNED_MESH_TYPE:
-		{
-			VBV.SizeInBytes = SkinnedMeshRenderingData.GetVertexSizeInBytes();
-			VBV.StrideInBytes = sizeof(FSkinnedVertex);
-			break;
-		}
+		VBV.StrideInBytes = sizeof(FVertex);
+		break;
 	}
-
+	case SKINNED_MESH_TYPE:
+	{
+		VBV.SizeInBytes = SkinnedMeshRenderingData.GetVertexSizeInBytes();
+		VBV.StrideInBytes = sizeof(FSkinnedVertex);
+		break;
+	}
+	}
 	return VBV;
 }
 
 D3D12_INDEX_BUFFER_VIEW FGeometry::GetIndexBufferView(int InType)
 {
-	D3D12_INDEX_BUFFER_VIEW IBV;
-	IBV.BufferLocation = GPUIndexBufferPtr->GetGPUVirtualAddress();
-	IBV.Format = DXGI_FORMAT_R16_UINT;
-
+	D3D12_INDEX_BUFFER_VIEW IBV = m_GPUIndexBufferPtr.IndexBufferView();
+	//IBV.BufferLocation = GPUIndexBufferPtr->GetGPUVirtualAddress();
+	//IBV.Format = DXGI_FORMAT_R16_UINT;
 	switch ((ERenderingMeshType)InType)
 	{
-		case MESH_TYPE:
+	case MESH_TYPE:
+	{
+		UINT SizeInBytes = MeshRenderingData.GetIndexSizeInBytes();
+		if (SizeInBytes != IBV.SizeInBytes)
 		{
-			IBV.SizeInBytes = MeshRenderingData.GetIndexSizeInBytes();
-			break;
+			assert(FALSE);
 		}
-		case SKINNED_MESH_TYPE:
-		{
-			IBV.SizeInBytes = SkinnedMeshRenderingData.GetIndexSizeInBytes();
-			break;
-		}
+		break;
 	}
-
+	case SKINNED_MESH_TYPE:
+	{
+		IBV.SizeInBytes = SkinnedMeshRenderingData.GetIndexSizeInBytes();
+		break;
+	}
+	}
 	return IBV;
 }
 

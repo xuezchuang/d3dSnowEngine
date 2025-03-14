@@ -12,6 +12,9 @@ struct FRenderingDataSection :public FMeshSection
 	UINT VertexOffsetPosition;//局部偏移
 	UINT IndexOffsetPosition;//Index偏移
 	int MeshObjectIndex;//Index
+
+	void* pData;
+	size_t size;
 };
 
 //提供渲染内容的接口

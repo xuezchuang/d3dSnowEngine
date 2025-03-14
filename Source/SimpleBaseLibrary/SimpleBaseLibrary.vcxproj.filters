@@ -207,9 +207,6 @@
     <ClCompile Include="simple_library\private\simple_channel\simple_net_channel\simple_channel.cpp">
       <Filter>simple_library\private\simple_channel\simple_net_channel</Filter>
     </ClCompile>
-    <ClCompile Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion.cpp">
-      <Filter>simple_library\private\simple_channel\simple_net_connetion</Filter>
-    </ClCompile>
     <ClCompile Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.cpp">
       <Filter>simple_library\private\simple_channel\simple_net_connetion</Filter>
     </ClCompile>
@@ -342,6 +339,9 @@
     <ClCompile Include="simple_library\third_party_library\tinyxml\tinyxmlparser.cpp">
       <Filter>simple_library\third_party_library\tinyxml</Filter>
     </ClCompile>
+    <ClCompile Include="simple_connetion.cpp">
+      <Filter>simple_library\private\simple_channel\simple_net_connetion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simple_library\private\simple_channel\simple_net_connetion\simple_connetion_tcp.h">
@@ -375,9 +375,6 @@
       <Filter>simple_library\public\simple_channel\simple_core</Filter>
     </ClInclude>
     <ClInclude Include="simple_library\public\simple_channel\simple_net_drive.h">
-      <Filter>simple_library\public\simple_channel</Filter>
-    </ClInclude>
-    <ClInclude Include="simple_library\public\simple_channel\simple_net_protocols.h">
       <Filter>simple_library\public\simple_channel</Filter>
     </ClInclude>
     <ClInclude Include="simple_library\public\simple_channel\simple_net_type.h">
@@ -523,6 +520,9 @@
     </ClInclude>
     <ClInclude Include="simple_library\third_party_library\tinyxml\tinyxml.h">
       <Filter>simple_library\third_party_library\tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="simple_net_protocols.h">
+      <Filter>simple_library\public\simple_channel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

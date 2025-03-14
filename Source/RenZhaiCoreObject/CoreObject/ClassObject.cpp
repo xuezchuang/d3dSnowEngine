@@ -6,6 +6,7 @@ CClassObject::CClassObject(int)
 	DefaultObject = nullptr;
 }
 
+
 CCoreMinimalObject* CClassObject::GetDefaultObject()
 {
 	if (!DefaultObject)

@@ -28,7 +28,7 @@ public:
 
 	void BuildPipeline();
 
-	virtual void PreDraw(float DeltaTime);
+	virtual void PreDraw(FCommandContext& context, float DeltaTime);
 	virtual void Draw(FCommandContext& context, float DeltaTime);
 	virtual void PostDraw(float DeltaTime);
 

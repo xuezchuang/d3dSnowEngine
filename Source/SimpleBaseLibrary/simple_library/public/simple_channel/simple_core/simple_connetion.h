@@ -22,7 +22,7 @@ public:
 	virtual BOOL Recv();
 	virtual BOOL Send();
 	void RecvBuffer(TArray<unsigned char>& InBuffer);
-	void SetBuffer(TArray<unsigned char> &InBuffer);
+	void SetBuffer(TArray<unsigned char>& InBuffer);
 
 	void StartSendHeartBeat();
 	void SendHeartBeat();
@@ -30,7 +30,7 @@ public:
 
 	void ResetHeartBeat();
 
-	void SetConnetionState(const ESimpleConnetionState &InNewConnetionState);
+	void SetConnetionState(const ESimpleConnetionState& InNewConnetionState);
 	void SetConnetionType(const ESimpleConnetionType& InSimpleConnetionType);
 	void SetDriveType(const ESimpleDriveType InDriveType);
 	FSimpleChannel* GetMainChannel();
@@ -38,12 +38,12 @@ public:
 
 	void GetChannelActiveID(std::vector<int>& InIDs);
 	std::string GetAddrString();
-	std::list<FSimpleChannel> *GetChannels();
+	std::list<FSimpleChannel>* GetChannels();
 
 	FORCEINLINE SOCKET& GetSocket() { return Socket; }
 	FORCEINLINE SOCKADDR_IN& GetConnetionAddr() { return ConnetAddr; }
 	FORCEINLINE const ESimpleConnetionState GetConnetionState()  const { return ConnetionState; }
-	FORCEINLINE FSimpleIOData &GetIOData() { return IOData; }
+	FORCEINLINE FSimpleIOData& GetIOData() { return IOData; }
 	FORCEINLINE const ESimpleDriveType& GetDriveType()  const { return DriveType; }
 	FORCEINLINE const ESimpleConnetionType& GetConnetionType()  const { return ConnetionType; }
 protected:
