@@ -72,6 +72,7 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	//变换到齐次剪辑空间
 	Out.Position = mul(Out.WorldPosition, ViewProjectionMatrix);
 
+	
 	if (MatConstBuffer.MaterialType == 13)
 	{
 		Out.Normal = MV.Normal;
@@ -81,7 +82,7 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 		//转法线
 		Out.Normal = mul(MV.Normal, (float3x3)NormalTransformation);
 	}
-
+	
 	//切线
 	Out.UTangent = mul(MV.UTangent, (float3x3)NormalTransformation);
 
@@ -109,7 +110,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 	//获取BaseColor
 	Material.BaseColor = GetMaterialBaseColor(MatConstBuffer, MVOut.TexCoord);
-
+	
 	//BaseColor
 	if (MatConstBuffer.MaterialType == 12)
 	{
