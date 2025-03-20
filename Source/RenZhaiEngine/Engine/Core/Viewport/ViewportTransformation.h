@@ -2,7 +2,7 @@
 #include "../../Core/Engine.h"
 #include "../../Math/EngineMath.h"
 
-struct FViewportTransformation
+__declspec(align(16)) struct FViewportTransformation
 {
 	FViewportTransformation();
 

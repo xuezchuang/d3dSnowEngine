@@ -11,9 +11,9 @@ class CEngine :public CCoreMinimalObject
 public:
 	CEngine();
 
-	virtual int PreInit() = 0;
+	virtual int PreInit(FWinMainCommandParameters InParameters) = 0;
 
-	virtual int Init() = 0;
+	virtual int Init(FWinMainCommandParameters InParameters) = 0;
 	virtual int PostInit() = 0;
 
 	virtual void Tick(float DeltaTime) {};

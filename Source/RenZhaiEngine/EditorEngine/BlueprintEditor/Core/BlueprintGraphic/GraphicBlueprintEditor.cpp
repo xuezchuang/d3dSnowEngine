@@ -256,14 +256,14 @@ void FGraphicBlueprintEditor::CheckKeyboard(float DeltaTime)
 		}
 		else if (ImGui::IsKeyDown(ImGuiKey(Key)))
 		{
-			if (ImGui::GetKeyName(ImGuiKey(Key)) == "Delete")
+			if (ImGuiKey(Key) == ImGuiKey_Delete)
 			{
 				OnDelete();
 			}
-			else if(ImGui::GetKeyName(ImGuiKey(Key)) == "F")
-			{
-				OnLookAt();
-			}
+			//else if(ImGuiKey(Key) == ImGuiKey_F)
+			//{
+			//	OnLookAt();
+			//}
 		}
 	}
 }

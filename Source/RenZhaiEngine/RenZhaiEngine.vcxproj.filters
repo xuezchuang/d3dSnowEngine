@@ -331,9 +331,6 @@
     <Filter Include="Engine\Rendering\Core\DirectX\RenderingPipeline\UI">
       <UniqueIdentifier>{E98266EA-08A9-4D24-A20B-0A882D1E47D3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Rendering\DirectX12">
-      <UniqueIdentifier>{ABCB890A-813F-4DE4-B503-22AA6EC51146}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Rendering\Enigne">
       <UniqueIdentifier>{00ADDA61-E7B7-4372-97CE-392AF4B1C07D}</UniqueIdentifier>
     </Filter>
@@ -378,6 +375,12 @@
     </Filter>
     <Filter Include="Engine\Core\Level">
       <UniqueIdentifier>{fcb536b5-2a16-478d-8528-a7a7fd6e57ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{a5d630fb-071f-4211-af93-3229b274ed98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\backends">
+      <UniqueIdentifier>{ba91b78f-4821-4aff-899b-6c0493347240}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1038,9 +1041,6 @@
     <ClCompile Include="Engine\Rendering\Core\RenderingTextureResourcesUpdate.cpp">
       <Filter>Engine\Rendering\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\DDSTextureLoader.cpp">
-      <Filter>Engine\Rendering\DirectX12</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Rendering\Enigne\Core\RenderingEngine.cpp">
       <Filter>Engine\Rendering\Enigne\Core</Filter>
     </ClCompile>
@@ -1080,6 +1080,27 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\mEngine.cpp">
       <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp">
+      <Filter>imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1776,9 +1797,6 @@
     <ClInclude Include="Engine\Rendering\Core\RenderingTextureResourcesUpdate.h">
       <Filter>Engine\Rendering\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\DDSTextureLoader.h">
-      <Filter>Engine\Rendering\DirectX12</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Rendering\Enigne\Core\RenderingEngine.h">
       <Filter>Engine\Rendering\Enigne\Core</Filter>
     </ClInclude>
@@ -1815,12 +1833,33 @@
     <ClInclude Include="Engine\Core\mEngine.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="imgui\backends\imgui_impl_win32.h">
+      <Filter>imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\backends\imgui_impl_dx12.h">
+      <Filter>imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Shaders\BRDF.hlsl">
-      <Filter>Engine\Rendering\Core\DirectX\shader</Filter>
-    </None>
-    <None Include="..\..\Shaders\Hello.hlsl">
       <Filter>Engine\Rendering\Core\DirectX\shader</Filter>
     </None>
     <None Include="..\..\Shaders\Light.hlsl">
@@ -1876,6 +1915,13 @@
     </None>
     <None Include="..\..\Shaders\AO\SSAOBilateralBlur.hlsl">
       <Filter>Engine\Rendering\Core\DirectX\shader\AO</Filter>
+    </None>
+    <None Include="..\..\Shaders\Hello.hlsl">
+      <Filter>Engine\Rendering\Core\DirectX\shader</Filter>
+    </None>
+    <None Include="packages.config" />
+    <None Include="..\..\Shaders\Test.hlsl">
+      <Filter>Engine\Rendering\Core\DirectX\shader</Filter>
     </None>
   </ItemGroup>
 </Project>

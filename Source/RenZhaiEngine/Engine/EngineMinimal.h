@@ -26,9 +26,9 @@
 //#pragma comment(lib, "dxgi.lib")
 
 //#include <wrl.h>//
-#include "include/d3dx12.h"
-#include "include/D3D12RHI.h"
-#include "Rendering/DirectX12/DDSTextureLoader.h"//
+#include "d3dx12.h"
+//#include "include/D3D12RHI.h"
+//#include "Rendering/DirectX12/DDSTextureLoader.h"//
 #include <D3Dcompiler.h>//
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>

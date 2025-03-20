@@ -223,7 +223,7 @@ void FRenderLayerManage::PreDraw(float DeltaTime)
 	}
 }
 
-void FRenderLayerManage::Draw(FCommandContext& context, float DeltaTime)
+void FRenderLayerManage::Draw(GraphicsContext& context, float DeltaTime)
 {
 	for (auto& Tmp : RenderLayers)
 	{
@@ -239,7 +239,7 @@ void FRenderLayerManage::PostDraw(float DeltaTime)
 	}
 }
 
-void FRenderLayerManage::Draw(FCommandContext& context, int InLayer, float DeltaTime)
+void FRenderLayerManage::Draw(GraphicsContext& context, int InLayer, float DeltaTime)
 {
 	if (auto InRenderLayer = FindByRenderLayer(InLayer))
 	{

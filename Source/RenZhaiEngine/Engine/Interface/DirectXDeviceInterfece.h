@@ -4,7 +4,7 @@
 #if defined(_WIN32)
 class CWindowsEngine;
 #else
-class CEngine;
+//class CEngine;
 #endif
 class CLightManage;
 class CMeshManage;
@@ -55,7 +55,7 @@ public:
 #if defined(_WIN32)
 	CWindowsEngine* GetEngine()const;
 #else
-	CEngine* GetEngine();
+	//CEngine* GetEngine();
 #endif
 
 #if EDITOR_ENGINE
@@ -97,11 +97,11 @@ public:
 //#else
 //	CEngine* GetEngine()const;
 //#endif
-//
-//#if EDITOR_ENGINE
-//	class CEditorEngine* GetEditorEngine()const;
-//#endif // 0
-//
-//private:
-//	IDirectXDeviceInterfece Interfece;
+
+#if EDITOR_ENGINE
+	class CEditorEngine* GetEditorEngine()const;
+#endif // 0
+
+private:
+	IDirectXDeviceInterfece Interfece;
 };

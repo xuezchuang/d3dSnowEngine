@@ -8,7 +8,10 @@
 #include "../DynamicMap/ShadowMap/DynamicShadowMap.h"
 #include "../DynamicMap/ShadowMap/DynamicShadowCubeMap.h"
 #include "../Engine/Mesh/Core/ObjectTransformation.h"
-#include "../GpuBuffer.h"
+#include "GpuBuffer.h"
+#include "TextureManager.h"
+#include "../Engine/Mesh/Core/Material/MaterialConstantBuffer.h"
+#include "../Engine/Core/Viewport/ViewportTransformation.h"
 
 enum ERenderingMeshType;
 class CMaterial;
@@ -95,8 +98,8 @@ protected:
 	ComPtr<ID3D12Resource> GPUVertexBufferPtr;
 	ComPtr<ID3D12Resource> GPUIndexBufferPtr;
 
-	FGpuBuffer m_GPUVertexBufferPtr;
-	FGpuBuffer m_GPUIndexBufferPtr;
+	ByteAddressBuffer m_GPUVertexBufferPtr;
+	ByteAddressBuffer m_GPUIndexBufferPtr;
 
 	ComPtr<ID3D12Resource> VertexBufferTmpPtr;
 	ComPtr<ID3D12Resource> IndexBufferTmpPtr;
@@ -125,7 +128,7 @@ struct FGeometryMap :public IDirectXDeviceInterfece_Struct
 	~FGeometryMap();
 
 	void SetDescriptorHeaps();
-	void Draw(float DeltaTime);
+	void Draw(GraphicsContext& gfxContext, float DeltaTime);
 	void PostDraw(float DeltaTime);
 
 	virtual void OnResetSize(int InWidth, int InHeight);
@@ -194,16 +197,9 @@ struct FGeometryMap :public IDirectXDeviceInterfece_Struct
 	//构建我们的贴图SRV视图
 	void BuildTextureConstantBuffer();
 
-	//构建我们的视口常量缓冲区视图
-	void BuildViewportConstantBufferView(UINT InViewportOffset = 0);
-
 public:
 	UINT GetDynamicReflectionMeshComponentsSize();
 	CMeshComponent* GetDynamicReflectionMeshComponents(int Index);
-public:
-	UINT GetViewportConstantBufferByteSize();
-public:
-	D3D12_GPU_VIRTUAL_ADDRESS ViewportGPUVirtualAddress();
 public:
 	bool IsStartUPFog();
 
@@ -212,10 +208,7 @@ public:
 public:
 	void DrawShadow(float DeltaTime);
 	void DrawLight(float DeltaTime);
-	void DrawViewport(float DeltaTime);
 	void DrawMesh(float DeltaTime);
-	void DrawMaterial(float DeltaTime);
-	void Draw2DTexture(float DeltaTime);
 	void DrawCubeMapTexture(float DeltaTime);
 	void DrawFog(float DeltaTime);
 	void DrawSkinned(float DeltaTime, int InSkinnedIndex = 0);
@@ -228,11 +221,11 @@ protected:
 	FDirectXDescriptorHeap DescriptorHeap;
 
 	std::vector<FObjectTransformation> MeshObjectConstant;
-
+	FViewportTransformation ViewportTransformation;
 
 	FConstantBufferViews MeshConstantBufferViews;
-	FConstantBufferViews MaterialConstantBufferViews;
-	FConstantBufferViews ViewportConstantBufferViews;
+	//FConstantBufferViews MaterialConstantBufferViews;
+	//FConstantBufferViews ViewportConstantBufferViews;
 	FConstantBufferViews FogConstantBufferViews;
 	FConstantBufferViews LightConstantBufferViews;
 	FConstantBufferViews SkinnedConstantBufferViews;
@@ -245,4 +238,8 @@ protected:
 
 	FDynamicShadowMap DynamicShadowMap;
 	FDynamicShadowCubeMap DynamicShadowCubeMap;
+	std::vector<TextureRef> m_Textures;
+	//D3D12_CPU_DESCRIPTOR_HANDLE* m_TexturesDesHandle;
+	std::unique_ptr<D3D12_CPU_DESCRIPTOR_HANDLE[]> m_TexturesDesHandle;
+	std::vector<FMaterialConstantBuffer> m_MaterialConstantBufferViews;
 };

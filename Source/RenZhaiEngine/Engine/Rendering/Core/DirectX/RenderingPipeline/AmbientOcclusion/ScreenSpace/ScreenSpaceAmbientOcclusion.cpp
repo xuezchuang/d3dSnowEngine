@@ -343,7 +343,7 @@ void FScreenSpaceAmbientOcclusion::BindBuildPSO()
 
 void FScreenSpaceAmbientOcclusion::BuildPSO(D3D12_GRAPHICS_PIPELINE_STATE_DESC& OutPSODesc)
 {
-	OutPSODesc.pRootSignature = DirectXRootSignature.GetRootSignature();
+	OutPSODesc.pRootSignature = DirectXRootSignature.GetRootSignature()->GetSignature();
 }
 
 void FScreenSpaceAmbientOcclusion::BuildSSAOViewConstantBuffer()

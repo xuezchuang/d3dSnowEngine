@@ -8,9 +8,9 @@ class CEditorEngine :public CEngine,public FEditorBase
 public:
 	CEditorEngine();
 
-	virtual int PreInit();
+	virtual int PreInit(FWinMainCommandParameters InParameters);
 
-	virtual int Init() ;
+	virtual int Init(FWinMainCommandParameters InParameters) ;
 	virtual int PostInit();
 
 	virtual void Tick(float DeltaTime) {};

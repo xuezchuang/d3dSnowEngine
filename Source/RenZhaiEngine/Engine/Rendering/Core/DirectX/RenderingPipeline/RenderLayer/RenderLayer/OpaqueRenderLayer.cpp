@@ -1,7 +1,9 @@
 #include "OpaqueRenderLayer.h"
 #include "../../Geometry/GeometryMap.h"
 #include "../../PipelineState/DirectXPipelineState.h"
-#include "../RenderWindow.h"
+#include "BufferManager.h"
+#include "Display.h"
+//#include "../RenderWindow.h"
 
 FOpaqueRenderLayer::FOpaqueRenderLayer()
 {
@@ -13,7 +15,7 @@ FOpaqueRenderLayer::~FOpaqueRenderLayer()
 	RenderPriority = 2000;
 }
 
-void FOpaqueRenderLayer::Draw(FCommandContext& context, float DeltaTime)
+void FOpaqueRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
 {
 	//重置当前的PSO
 	//ResetPSO();
@@ -38,8 +40,9 @@ void FOpaqueRenderLayer::BuildShader()
 	vector<D3D_SHADER_MACRO> D3DShaderMacro;
 	ShaderType::ToD3DShaderMacro(ShaderMacro, D3DShaderMacro);
 
-	m_ShaderVS = D3D12RHI::Get().CreateShader(getpath(L"Resources/Shit_Shaders/Hello.hlsl"), "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
-	m_ShaderPS = D3D12RHI::Get().CreateShader(getpath(L"Resources/Shit_Shaders/Hello.hlsl"), "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
+	std::wstring ShaderPath = BuildShadersPaths(L"Hello");
+	VertexShader.BuildShaders(ShaderPath, "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
+	PixelShader.BuildShaders(ShaderPath, "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
 
 	InputElementDesc =
 	{
@@ -50,27 +53,42 @@ void FOpaqueRenderLayer::BuildShader()
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 52, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 	};
 
+	//std::wstring ShaderPath = BuildShadersPaths(L"Test");
+	//VertexShader.BuildShaders(ShaderPath, "VS", "vs_5_1");
+	//PixelShader.BuildShaders(ShaderPath, "PS", "ps_5_1");
+
+	//InputElementDesc =
+	//{
+	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	//	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	//};
 }
 
 void FOpaqueRenderLayer::BuildPSO()
 {
 	Super::BuildPSO();
 	m_PSO.SetRootSignature(*DirectXPipelineState->GetRootSignature());
-	m_PSO.SetRasterizerState(FPipelineState::RasterizerDefault);
-	m_PSO.SetBlendState(FPipelineState::BlendDisable);
-	m_PSO.SetDepthStencilState(FPipelineState::DepthStateDisabled);
+	m_PSO.SetRasterizerState(Graphics::RasterizerDefaultCw);
+	m_PSO.SetBlendState(Graphics::BlendDisable);
+	
+	m_PSO.SetDepthStencilState(Graphics::DepthStateReadWrite);
 	m_PSO.SetInputLayout(InputElementDesc.size(), InputElementDesc.data());
 
 
 	m_PSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-	m_PSO.SetRenderTargetFormats(1, &RenderWindow::Get().GetColorFormat(), DXGI_FORMAT_UNKNOWN);
 
-	m_PSO.SetVertexShader(CD3DX12_SHADER_BYTECODE(m_ShaderVS.Get()));
-	m_PSO.SetPixelShader(CD3DX12_SHADER_BYTECODE(m_ShaderPS.Get()));
+	DXGI_FORMAT ColorFormat = Graphics::g_SceneColorBuffer.GetFormat();
+	//DXGI_FORMAT ColorFormat = Graphics::GetColorBuffer()->GetFormat();
+	DXGI_FORMAT DepthFormat = Graphics::g_SceneDepthBuffer.GetFormat();
+
+	m_PSO.SetRenderTargetFormats(1, &ColorFormat, DepthFormat);
+
+	m_PSO.SetVertexShader(VertexShader.GetBufferPointer(), VertexShader.GetBufferSize());
+	m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());
 	m_PSO.Finalize();
 }
 
-void FOpaqueRenderLayer::ResetPSO(FCommandContext& context)
+void FOpaqueRenderLayer::ResetPSO(GraphicsContext& context)
 {
 	//DirectXPipelineState->ResetPSO();
 	context.SetPipelineState(m_PSO);

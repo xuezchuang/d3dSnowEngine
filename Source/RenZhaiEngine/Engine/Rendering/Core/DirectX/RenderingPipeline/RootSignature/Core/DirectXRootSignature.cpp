@@ -5,10 +5,10 @@ FDirectXRootSignature::FDirectXRootSignature()
 
 }
 
-void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
-{
-   
-}
+//void FDirectXRootSignature::BuildRootSignature(UINT InTextureNum)
+//{
+//   
+//}
 
 void FDirectXRootSignature::SetGraphicsRootSignature()
 {

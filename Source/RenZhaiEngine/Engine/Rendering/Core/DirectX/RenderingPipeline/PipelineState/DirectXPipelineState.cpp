@@ -9,7 +9,7 @@ FDirectXPipelineState::FDirectXPipelineState()
     PSO.insert(pair<int, ComPtr<ID3D12PipelineState>>(5, ComPtr<ID3D12PipelineState>()));//Shader
 }
 
-void FDirectXPipelineState::PreDraw(FCommandContext& context, float DeltaTime)
+void FDirectXPipelineState::PreDraw(GraphicsContext& context, float DeltaTime)
 {
     //GetGraphicsCommandList()->Reset(GetCommandAllocator().Get(), PSO[(int)PipelineState].Get());
 	//使用了microsoft的机制,commandAllocatior在每次context会reset
@@ -32,14 +32,14 @@ void FDirectXPipelineState::BindInputLayout(const D3D12_INPUT_ELEMENT_DESC* InIn
 	GPSDesc.InputLayout.NumElements = InSize;
 }
 
-void FDirectXPipelineState::BindRootSignature(FRootSignature* InRootSignature)
+void FDirectXPipelineState::BindRootSignature(RootSignature* InRootSignature)
 {
     //绑定根签名
 	//GPSDesc.pRootSignature = InRootSignature;
 	m_RootSignature = InRootSignature;
 }
 
-FRootSignature* FDirectXPipelineState::GetRootSignature()
+RootSignature* FDirectXPipelineState::GetRootSignature()
 {
 	return m_RootSignature;
 }

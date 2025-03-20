@@ -1,5 +1,6 @@
 #include "RenderingTextureResourcesUpdate.h"
 
+
 const wchar_t DDS[] = L".dds";
 const wchar_t Asset[] = L"/Content/";
 const wchar_t Project[] = L"/Project/";
@@ -30,7 +31,8 @@ void FRenderingTextureResourcesUpdate::LoadTextureResources(const wstring& InFil
 	//	MyTexture->Filename.c_str(),
 	//	MyTexture->Data,
 	//	MyTexture->UploadBuffer);
-	MyTexture->mTexture.LoadFromFile(InFilename, true);
+
+	MyTexture->mTexture = TextureManager::LoadDDSFromFile(InFilename);
 
 	MyTexture->RenderingTextureID = TexturesMapping.size();
 

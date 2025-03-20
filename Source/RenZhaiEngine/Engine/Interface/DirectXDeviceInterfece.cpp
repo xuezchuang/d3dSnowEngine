@@ -201,14 +201,13 @@ int IDirectXDeviceInterfece::GetVieportHeight() const
 
 HWND IDirectXDeviceInterfece::GetMianWindowsHandle()const
 {
-//	if (CWindowsEngine* InEngine = GetEngine())
-//	{
-//		if (InEngine->GetRenderingEngine())
-//		{
-//			return InEngine->MianWindowsHandle;
-//		}
-//	}
-//
+	if (CWindowsEngine* InEngine = GetEngine())
+	{
+		if (InEngine->GetRenderingEngine())
+		{
+			return InEngine->MianWindowsHandle;
+		}
+	}
 	return HWND();
 }
 
@@ -252,10 +251,10 @@ CWindowsEngine* IDirectXDeviceInterfece::GetEngine() const
 	return dynamic_cast<CWindowsEngine*>(Engine);
 }
 #else
-CEngine* IDirectXDeviceInterfece::GetEngine()
-{
-	return Engine;
-}
+//CEngine* IDirectXDeviceInterfece::GetEngine()
+//{
+//	return Engine;
+//}
 
 #endif
 
@@ -324,7 +323,7 @@ CEngine* IDirectXDeviceInterfece::GetEngine()
 //{
 //	return Interfece.GetDescriptorHandleIncrementSizeByCBV_SRV_UAV();
 //}
-//
+
 //UINT64 IDirectXDeviceInterfece_Struct::GetCurrentFenceIndex()const
 //{
 //	return Interfece.GetCurrentFenceIndex();
@@ -332,8 +331,7 @@ CEngine* IDirectXDeviceInterfece::GetEngine()
 //
 HWND IDirectXDeviceInterfece_Struct::GetMianWindowsHandle()const
 {
-	return NULL;
-	//return Interfece.GetMianWindowsHandle();
+	return Interfece.GetMianWindowsHandle();
 }
 //
 //FRenderingPipeline* IDirectXDeviceInterfece_Struct::GetRenderingPipeline() const
@@ -359,25 +357,25 @@ HWND IDirectXDeviceInterfece_Struct::GetMianWindowsHandle()const
 //
 //#endif
 //
-//#if EDITOR_ENGINE
-//#include "../../EditorEngine/EditorEngine.h"
-//CEditorEngine* IDirectXDeviceInterfece::GetEditorEngine()const
-//{
-//	if (CWindowsEngine* InEngine = GetEngine())
-//	{
-//		return InEngine->EditorEngine;
-//	}
-//
-//	return NULL;
-//}
-//
+#if EDITOR_ENGINE
+#include "../../EditorEngine/EditorEngine.h"
+CEditorEngine* IDirectXDeviceInterfece::GetEditorEngine()const
+{
+	if (CWindowsEngine* InEngine = GetEngine())
+	{
+		return InEngine->EditorEngine;
+	}
+
+	return NULL;
+}
+
 //ID3D12Resource* IDirectXDeviceInterfece_Struct::GetDepthStencilBuffer()
 //{
 //	return Interfece.GetDepthStencilBuffer();
 //}
 //
-//CEditorEngine* IDirectXDeviceInterfece_Struct::GetEditorEngine()const
-//{
-//	return Interfece.GetEditorEngine();
-//}
-//#endif
+CEditorEngine* IDirectXDeviceInterfece_Struct::GetEditorEngine()const
+{
+	return Interfece.GetEditorEngine();
+}
+#endif

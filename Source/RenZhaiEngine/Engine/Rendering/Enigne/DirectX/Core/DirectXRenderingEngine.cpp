@@ -72,22 +72,28 @@ CDirectXRenderingEngine::~CDirectXRenderingEngine()
 	delete LightManage;
 }
 
-int CDirectXRenderingEngine::PreInit()
+int CDirectXRenderingEngine::PreInit(FWinMainCommandParameters InParameters)
 {
 	Engine_Log("DirectXRenderingEngine pre initialization complete.");
 	return 0;
 }
 
 
-int CDirectXRenderingEngine::Init()
+int CDirectXRenderingEngine::Init(FWinMainCommandParameters InParameters)
 {
+	InitDirect3D();
+
 	MeshManage->Init();
+
+	PostInitDirect3D();
+
 	Engine_Log("DirectXRenderingEngine initialization complete.");
 	return 0;
 }
 
 int CDirectXRenderingEngine::PostInit()
 {
+#include "CommandContext.h"
 	Engine_Log("Engine post initialization complete.");
 
 	{
@@ -121,13 +127,13 @@ int CDirectXRenderingEngine::PostInit()
 		}*/
 
 		//灯光生成
-		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
+		/*if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		{
 			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
 			ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
 			ParallelLight->SetScale(fvector_3d(1));
 			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
-		}
+		}*/
 		//点灯光生成
 		//if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
 		//{
@@ -152,7 +158,7 @@ int CDirectXRenderingEngine::PostInit()
 		//	SpotLight->SetConicalOuterCorner(60.f);
 		//}	
 
-		//
+		
 		if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 		{
 			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
@@ -160,24 +166,24 @@ int CDirectXRenderingEngine::PostInit()
 			InBoxMesh->SetScale(fvector_3d(1));
 			if(CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
 			{
-				//	InMaterial->SetBaseColor(fvector_4d(0.5f));
+				//InMaterial->SetBaseColor(fvector_4d(0.5f));
 				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
 				InMaterial->SetBaseColor("stone"); 
 			}
 		}
 
-		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
-		{
-			InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
-			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
-			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
-			InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
-			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
-			{
-				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-				InMaterial->SetBaseColor("tile");
-			}
-		}
+		//if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
+		//{
+		//	InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
+		//	InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
+		//	InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
+		//	InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
+		//	if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+		//	{
+		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+		//		InMaterial->SetBaseColor("tile");
+		//	}
+		//}
 
 		goto FINIAL;
 
@@ -900,124 +906,24 @@ void CDirectXRenderingEngine::UpdateCalculations(float DeltaTime, const FViewpor
 
 void CDirectXRenderingEngine::Tick(float DeltaTime)
 {
-	//重置录制相关的内存，为下一帧做准备
+	//GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Update");
 
-	MeshManage->PreDraw(DeltaTime);
+	//MeshManage->PreDraw(gfxContext,DeltaTime);
 
-	StartSetMainViewportRenderTarget();
+	////MeshManage->Draw(gfxContext,DeltaTime);
 
-	MeshManage->Draw(DeltaTime);
-	//MeshManage->PostDraw(DeltaTime);
-
-	EndSetMainViewportRenderTarget();
-
-	////录入完成
-	//ANALYSIS_HRESULT(GraphicsCommandList->Close());
-
-	//////提交命令
-	//ID3D12CommandList* CommandList[] = { GraphicsCommandList.Get() };
-	//CommandQueue->ExecuteCommandLists(_countof(CommandList), CommandList);
-
-	////交换两个buff缓冲区
-	//ANALYSIS_HRESULT(SwapChain->Present(1, 0));
-	////CurrentSwapBuffIndex = (CurrentSwapBuffIndex + 1) % FEngineRenderConfig::GetRenderConfig()->SwapChainCount;
-	//CurrentSwapBuffIndex = !(bool)CurrentSwapBuffIndex;
-
-	////CPU等GPU
-	//WaitGPUCommandQueueComplete();
+	//gfxContext.Finish();
 }
 
 void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight, int wParam)
 {
-	//if (D3dDevice)
-	//{
-	//	//同步
-	//	WaitGPUCommandQueueComplete();
+}
 
-	//	ANALYSIS_HRESULT(GraphicsCommandList->Reset(CommandAllocator.Get(), NULL));
-
-	//	for (int i = 0; i < FEngineRenderConfig::GetRenderConfig()->SwapChainCount; i++)
-	//	{
-	//		SwapChainBuffer[i].Reset();
-	//	}
-	//	DepthStencilBuffer.Reset();
-
-	//	//自适应屏幕变大
-	//	SwapChain->ResizeBuffers(
-	//		FEngineRenderConfig::GetRenderConfig()->SwapChainCount,
-	//		InWidth,
-	//		InHeight,
-	//		BackBufferFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
-
-	//	CurrentSwapBuffIndex = 0;
-
-	//	//拿到描述size
-	//	RTVDescriptorSize = D3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	//	CD3DX12_CPU_DESCRIPTOR_HANDLE HeapHandle(RTVHeap->GetCPUDescriptorHandleForHeapStart());
-	//	for (int i = 0; i < FEngineRenderConfig::GetRenderConfig()->SwapChainCount; i++)
-	//	{
-	//		SwapChain->GetBuffer(i, IID_PPV_ARGS(&SwapChainBuffer[i]));
-	//		D3dDevice->CreateRenderTargetView(SwapChainBuffer[i].Get(), nullptr, HeapHandle);
-	//		HeapHandle.Offset(1, RTVDescriptorSize);
-	//	}
-
-	//	D3D12_RESOURCE_DESC ResourceDesc;
-	//	ResourceDesc.Width = InWidth;
-	//	ResourceDesc.Height = InHeight;
-	//	ResourceDesc.Alignment = 0;
-	//	ResourceDesc.MipLevels = 1;
-	//	ResourceDesc.DepthOrArraySize = 1;
-	//	ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-
-	//	ResourceDesc.SampleDesc.Count = bMSAA4XEnabled ? 4 : 1;
-	//	ResourceDesc.SampleDesc.Quality = bMSAA4XEnabled ? (M4XQualityLevels - 1) : 0;
-	//	ResourceDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-	//	ResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-	//	ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-
-	//	D3D12_CLEAR_VALUE ClearValue;
-	//	ClearValue.DepthStencil.Depth = 1.f;
-	//	ClearValue.DepthStencil.Stencil = 0;
-	//	ClearValue.Format = DepthStencilFormat;
-
-	//	CD3DX12_HEAP_PROPERTIES Properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	//	D3dDevice->CreateCommittedResource(
-	//		&Properties,
-	//		D3D12_HEAP_FLAG_NONE, &ResourceDesc,
-	//		D3D12_RESOURCE_STATE_COMMON, &ClearValue,
-	//		IID_PPV_ARGS(DepthStencilBuffer.GetAddressOf()));
-
-	//	D3D12_DEPTH_STENCIL_VIEW_DESC DSVDesc;
-	//	DSVDesc.Format = DepthStencilFormat;
-	//	DSVDesc.Texture2D.MipSlice = 0;
-	//	DSVDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	//	DSVDesc.Flags = D3D12_DSV_FLAG_NONE;
-	//	D3dDevice->CreateDepthStencilView(DepthStencilBuffer.Get(), &DSVDesc, DSVHeap->GetCPUDescriptorHandleForHeapStart());
-
-	//	CD3DX12_RESOURCE_BARRIER Barrier = CD3DX12_RESOURCE_BARRIER::Transition(DepthStencilBuffer.Get(),
-	//		D3D12_RESOURCE_STATE_COMMON,
-	//		D3D12_RESOURCE_STATE_DEPTH_WRITE);
-
-	//	GraphicsCommandList->ResourceBarrier(1, &Barrier);
-
-	//	GraphicsCommandList->Close();
-
-	//	ID3D12CommandList* CommandList[] = { GraphicsCommandList.Get() };
-	//	CommandQueue->ExecuteCommandLists(_countof(CommandList), CommandList);
-
-	//	WaitGPUCommandQueueComplete();
-
-	//	//摄像机自适应
-	//	if (World &&
-	//		World->GetCamera())
-	//	{
-	//		World->GetCamera()->OnResetSize(InWidth, InHeight);
-	//	}
-
-	//	//模型自适应
-	//	//MeshManage->OnResetSize(InWidth, InHeight);
-	//}
+void CDirectXRenderingEngine::RenderScene(float DeltaTime)
+{
+	GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Render");
+	MeshManage->Draw(gfxContext,DeltaTime);
+	gfxContext.Finish();
 }
 
 int CDirectXRenderingEngine::PreExit()
@@ -1038,19 +944,16 @@ int CDirectXRenderingEngine::PostExit()
 {
 	FEngineRenderConfig::Destroy();
 	//WaitGPUCommandQueueComplete();
-	//ImGui_ImplDX12_Shutdown();
-	//ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 
-//#if defined(_DEBUG)
-//	// 假设你已经创建了ID3D12Device对象d3dDevice
-//	IDXGIDebug1* dxgiDebug;
-//	if(SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
-//	{
-//		dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_FLAGS(DXGI_DEBUG_RLO_SUMMARY | DXGI_DEBUG_RLO_IGNORE_INTERNAL));
-//		dxgiDebug->Release();
-//	}
-//#endif
+#if defined(_DEBUG)
+	// 假设你已经创建了ID3D12Device对象d3dDevice
+	IDXGIDebug1* dxgiDebug;
+	if(SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
+	{
+		dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_FLAGS(DXGI_DEBUG_RLO_SUMMARY | DXGI_DEBUG_RLO_IGNORE_INTERNAL));
+		dxgiDebug->Release();
+	}
+#endif
 
 
 	Engine_Log("Engine post exit complete.");
@@ -1116,6 +1019,8 @@ bool CDirectXRenderingEngine::InitDirect3D()
 
 void CDirectXRenderingEngine::PostInitDirect3D()
 {
+	int WindowWidth = FEngineRenderConfig::GetRenderConfig()->ScrrenWidth;
+	int WindowHight = FEngineRenderConfig::GetRenderConfig()->ScrrenHight;
 }
 
 #endif

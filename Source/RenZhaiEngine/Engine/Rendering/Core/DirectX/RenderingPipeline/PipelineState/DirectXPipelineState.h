@@ -3,8 +3,9 @@
 #include "../../../RenderingResourcesUpdate.h"
 #include "../../../../../Shader/Core/Shader.h"
 #include "../RenderingPipelineType.h"
+#include "CommandContext.h"
 
-class FRootSignature;
+class RootSignature;
 
 //提供渲染内容的接口
 struct FDirectXPipelineState :public IDirectXDeviceInterfece_Struct
@@ -12,7 +13,7 @@ struct FDirectXPipelineState :public IDirectXDeviceInterfece_Struct
 public:
 	FDirectXPipelineState();
 
-	void PreDraw(FCommandContext& context, float DeltaTime);
+	void PreDraw(GraphicsContext& context, float DeltaTime);
 	void PostDraw(float DeltaTime);
 
 	void ResetGPSDesc();
@@ -21,8 +22,8 @@ public:
 	void BindInputLayout(const D3D12_INPUT_ELEMENT_DESC* InInputElementDescs, UINT InSize);
 	
 	//绑定根签名
-	void BindRootSignature(FRootSignature* InRootSignature);
-	FRootSignature* GetRootSignature();
+	void BindRootSignature(RootSignature* InRootSignature);
+	RootSignature* GetRootSignature();
 	//绑定顶点着色器和像素着色器
 	void BindShader(const FShader& InVertexShader, const FShader& InPixelShader);
 
@@ -63,5 +64,5 @@ private:
 
 	EPipelineState PipelineState;
 private:
-	FRootSignature* m_RootSignature;
+	RootSignature* m_RootSignature;
 };

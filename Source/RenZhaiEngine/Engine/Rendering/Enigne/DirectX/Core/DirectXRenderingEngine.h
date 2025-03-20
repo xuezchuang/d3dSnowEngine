@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Core/RenderingEngine.h"
 #include "../../../../Core/Viewport/ViewportInfo.h"
+#include "CommandContext.h"
 
 class CLightManage;
 class CMeshManage;
@@ -13,14 +14,16 @@ public:
 	CDirectXRenderingEngine();
 	~CDirectXRenderingEngine();
 
-	virtual int PreInit();
+	virtual int PreInit(FWinMainCommandParameters InParameters);
 
-	virtual int Init();
+	virtual int Init(FWinMainCommandParameters InParameters);
 	virtual int PostInit();
 
 	virtual void UpdateCalculations(float DeltaTime,const FViewportInfo &ViewportInfo);
 	virtual void Tick(float DeltaTime);
 	virtual void OnResetSize(int InWidth, int InHeight, int wParam);
+
+	void RenderScene(float DeltaTime);
 
 	virtual int PreExit();
 	virtual int Exit();

@@ -16,12 +16,12 @@ CEditorEngine::CEditorEngine()
 	Editors.push_back(std::make_shared<FBrowseEditor>());
 }
 
-int CEditorEngine::PreInit()
+int CEditorEngine::PreInit(FWinMainCommandParameters InParameters)
 {
 	return 0;
 }
 
-int CEditorEngine::Init()
+int CEditorEngine::Init(FWinMainCommandParameters InParameters)
 {
 	return 0;
 }
@@ -55,7 +55,7 @@ void CEditorEngine::BuildEditor()
 	ImGuiIO& IO = ImGui::GetIO();
 	IO.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-	for (auto &Tmp : Editors)
+	for (auto& Tmp : Editors)
 	{
 		Tmp->BuildEditor();
 	}
@@ -120,5 +120,4 @@ void CEditorEngine::DrawLayer(float DeltaTime)
 	}
 
 	ImGui::End();
-
 }

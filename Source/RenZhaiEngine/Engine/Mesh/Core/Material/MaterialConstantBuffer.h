@@ -16,11 +16,14 @@ struct FMaterialConstantBuffer
 	float Param2;//×Ô¶¨Òå
 
 	XMFLOAT4 BaseColor;	
+
 	XMFLOAT3 SpecularColor;
 	float Refraction;
+
 	XMFLOAT3 FresnelF0;
 	float Transparency;
 	XMFLOAT4X4 TransformInformation;
+
 	XMFLOAT3 Metallicity;
 	float xxx5;
 };

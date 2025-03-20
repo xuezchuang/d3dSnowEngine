@@ -41,6 +41,7 @@ bool FOperationHandleSelectManage::IsCaptureMouseNotOnUI()
 {
 	ImGuiIO& IO = ImGui::GetIO();
 	return !IO.WantCaptureMouseUnlessPopupClose;
+	return false;
 }
 
 void FOperationHandleSelectManage::AllOperationHandleHide()

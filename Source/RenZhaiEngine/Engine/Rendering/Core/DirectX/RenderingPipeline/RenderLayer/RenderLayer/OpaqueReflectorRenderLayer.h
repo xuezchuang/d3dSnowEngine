@@ -7,7 +7,7 @@ class FOpaqueReflectorRenderLayer :public FRenderLayer
 public:
 	FOpaqueReflectorRenderLayer();
 
-	virtual void Draw(FCommandContext& context, float DeltaTime);
+	virtual void Draw(GraphicsContext& context, float DeltaTime);
 
 	virtual void BuildShader();
 

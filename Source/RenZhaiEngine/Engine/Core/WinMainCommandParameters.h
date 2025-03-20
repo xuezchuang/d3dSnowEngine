@@ -5,6 +5,7 @@
 class FWinMainCommandParameters
 {
 public:
+	FWinMainCommandParameters(){}
 	FWinMainCommandParameters(HINSTANCE InhInstance, HINSTANCE InprevInstance, PSTR IncmdLine, int InshowCmd);
 
 	HINSTANCE HInstance;

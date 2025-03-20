@@ -199,11 +199,11 @@ void FBlueprintNode::BuildPinsNameLenBasedPixels()
         {
         case Pin_Input:
         case Pin_ParamInput:
-            InputNameMaxLen = std::max(int(Tmp->GetName().length()), InputNameMaxLen);
+            InputNameMaxLen = max(int(Tmp->GetName().length()), InputNameMaxLen);
             break;
         case Pin_Output:
         case Pin_ParamOutput:
-            OutputNameMaxLen = std::max(int(Tmp->GetName().length()), OutputNameMaxLen);
+            OutputNameMaxLen = max(int(Tmp->GetName().length()), OutputNameMaxLen);
             break;
         }
     }

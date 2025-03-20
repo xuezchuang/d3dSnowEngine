@@ -7,7 +7,7 @@ FOpaqueShadowRenderLayer::FOpaqueShadowRenderLayer()
 	RenderPriority = 1280;
 }
 
-void FOpaqueShadowRenderLayer::Draw(FCommandContext& context, float DeltaTime)
+void FOpaqueShadowRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
 {
 	//重置当前的PSO
 	DirectXPipelineState->ResetPSO();

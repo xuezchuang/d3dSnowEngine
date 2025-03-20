@@ -9,7 +9,7 @@
 #include "RenderLayer/RenderLayerManage.h"
 #include "UI/IMGUIPipeline.h"
 #include "AmbientOcclusion/ScreenSpace/ScreenSpaceAmbientOcclusion.h"
-#include "../RootSignature.h"
+//#include "RootSignature.h"
 
 class CMeshComponent;
 //提供渲染内容的接口
@@ -28,8 +28,8 @@ public:
 
 	void BuildPipeline();
 
-	virtual void PreDraw(FCommandContext& context, float DeltaTime);
-	virtual void Draw(FCommandContext& context, float DeltaTime);
+	virtual void PreDraw(GraphicsContext& gfxContext, float DeltaTime);
+	virtual void Draw(GraphicsContext& gfxContext, float DeltaTime);
 	virtual void PostDraw(float DeltaTime);
 
 public:
@@ -44,8 +44,12 @@ protected:
 	FGeometryMap GeometryMap;
 
 	FDynamicReflectionCubeMap DynamicCubeMap;
+	
 
 	FScreenSpaceAmbientOcclusion SSAO;
-protected:
-	FRootSignature m_RootSignature;
+
+	D3D12_VIEWPORT m_Viewport;
+	D3D12_RECT m_Scissor;
+//protected:
+	//RootSignature m_RootSignature;
 };

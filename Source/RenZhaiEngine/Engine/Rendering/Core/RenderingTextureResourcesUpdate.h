@@ -1,8 +1,7 @@
 #pragma once
 #include "../../EngineMinimal.h"
 #include "../../Interface/DirectXDeviceInterfece.h"
-#include "../Texture.h"
-
+#include "TextureManager.h"
 struct FRenderingTexture
 {
 	FRenderingTexture()
@@ -11,7 +10,7 @@ struct FRenderingTexture
 
 	//ComPtr<ID3D12Resource> UploadBuffer;
 	//ComPtr<ID3D12Resource> Data;//资源
-	FTexture mTexture;
+	TextureRef mTexture;
 
 	wstring Name;//贴图名称
 	wstring Filename;//路径

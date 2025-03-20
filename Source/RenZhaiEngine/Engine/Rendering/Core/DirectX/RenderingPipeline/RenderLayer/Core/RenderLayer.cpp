@@ -61,7 +61,7 @@ void FRenderLayer::PreDraw(float DeltaTime)
 
 }
 
-void FRenderLayer::Draw(FCommandContext& context, float DeltaTime)
+void FRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
 {
 	//模型构建
 	DrawMesh(context,DeltaTime);
@@ -87,12 +87,13 @@ void FRenderLayer::PostDraw(float DeltaTime)
 	}
 }
 
-void FRenderLayer::DrawObject(FCommandContext& context,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
+void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
 {
 	if (InWeakRenderingData.expired())//弱指针是不是被释放了
 	{
 		return;
 	}
+
 
 	if (std::shared_ptr<FRenderingData> InRenderingData = InWeakRenderingData.lock())
 	{
@@ -123,11 +124,9 @@ void FRenderLayer::DrawObject(FCommandContext& context,float DeltaTime,std::weak
 
 			context.SetIndexBuffer(IBV);
 			context.SetVertexBuffer(0, VBV);
- 
+
 			//D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
 			//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
-
-
 
 			//定义我们要绘制的哪种图元 点 线 面
 			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
@@ -158,6 +157,7 @@ void FRenderLayer::DrawObject(FCommandContext& context,float DeltaTime,std::weak
 			{
 				const FObjectTransformation& ObjectConstant = GeometryMap->MeshObjectConstant[Tmp.MeshObjectIndex];
 				context.SetDynamicConstantBufferView(Signature_Object, sizeof(FObjectTransformation), &ObjectConstant);
+
 
 				//真正的绘制
 				context.DrawIndexedInstanced(
@@ -257,7 +257,7 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 	}
 }
 
-void FRenderLayer::ResetPSO(FCommandContext& GfxContext)
+void FRenderLayer::ResetPSO(GraphicsContext& GfxContext)
 {
 	
 }
@@ -267,7 +267,7 @@ void FRenderLayer::ResetPSO(EPipelineState InPipelineState)
 
 }
 
-void FRenderLayer::DrawMesh(FCommandContext& context,float DeltaTime, ERenderingConditions RC)
+void FRenderLayer::DrawMesh(GraphicsContext& context,float DeltaTime, ERenderingConditions RC)
 {
 	for (auto& InRenderingData : RenderDatas)
 	{

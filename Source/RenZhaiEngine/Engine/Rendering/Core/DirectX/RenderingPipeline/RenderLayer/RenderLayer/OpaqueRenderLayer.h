@@ -7,7 +7,7 @@ class FOpaqueRenderLayer :public FRenderLayer
 public:
 	FOpaqueRenderLayer();
 	virtual ~FOpaqueRenderLayer();
-	virtual void Draw(FCommandContext& context, float DeltaTime);
+	virtual void Draw(GraphicsContext& context, float DeltaTime);
 	virtual void DrawObject(float DeltaTime, std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC = ERenderingConditions::RC_None);
 	
 	virtual void BuildShader();
@@ -16,7 +16,7 @@ public:
 
 	virtual void BuildPSO();
 
-	virtual void ResetPSO(FCommandContext& GfxContext);
+	virtual void ResetPSO(GraphicsContext& GfxContext);
 private:
 	ComPtr<ID3DBlob> m_ShaderVS;
 	ComPtr<ID3DBlob> m_ShaderPS;

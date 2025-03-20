@@ -3,6 +3,9 @@
 #include "../../../../Config/EngineRenderConfig.h"
 #include "RootSignature/DirectXRootSignatureType.h"
 #include "StaticSampler/StaticSamplerObject.h"
+#include "CommandContext.h"
+#include "BufferManager.h"
+#include "Display.h"
 
 FRenderingPipeline::FRenderingPipeline()
 {
@@ -86,29 +89,8 @@ void FRenderingPipeline::BuildPipeline()
 	//	&RenderLayer);
 
 	//构建根签名
-	//他原来只会一个一个绑定??? 一种类型的可以一起绑定...+
-	FStaticSamplerObject StaticSamplerObject;
-	StaticSamplerObject.BuildStaticSampler();
-	m_RootSignature.Reset(11, StaticSamplerObject.SamplerDescs.size());
-	m_RootSignature[Signature_Object].InitAsBufferCBV(0);
-	m_RootSignature[Signature_ObjectSkinned].InitAsBufferCBV(1);
-	m_RootSignature[Signature_Viewport].InitAsBufferCBV(2);
-	m_RootSignature[Signature_Light].InitAsBufferCBV(3);
-	m_RootSignature[Signature_Fog].InitAsBufferCBV(4);
-	
-	m_RootSignature[Signature_Material].InitAsBufferSRV(0, 1);
-
-
-	m_RootSignature[Signature_Texture2D].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, GeometryMap.GetDrawTexture2DResourcesNumber(), D3D12_SHADER_VISIBILITY_PIXEL);
-	m_RootSignature[Signature_CubeMapTexture].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 1, D3D12_SHADER_VISIBILITY_PIXEL);
-	m_RootSignature[Signature_ShadowMap].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 1, D3D12_SHADER_VISIBILITY_PIXEL);
-	m_RootSignature[Signature_ShadowCubeMap].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, D3D12_SHADER_VISIBILITY_PIXEL);
-	m_RootSignature[Signature_SSAO].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 3, 1, D3D12_SHADER_VISIBILITY_PIXEL);
-
-
-	m_RootSignature.InitStaticSampler(StaticSamplerObject.SamplerDescs);
-	m_RootSignature.Finalize(L"RootSignature", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-	DirectXPipelineState.BindRootSignature(&m_RootSignature);
+	RootSignature.BuildRootSignature(GeometryMap.GetDrawTexture2DResourcesNumber());
+	DirectXPipelineState.BindRootSignature(RootSignature.GetRootSignature());
 
 	//构建模型
 	GeometryMap.Build();
@@ -139,8 +121,8 @@ void FRenderingPipeline::BuildPipeline()
 	//构建常量缓冲区
 	GeometryMap.BuildMeshConstantBuffer();
 
-	////构建材质常量缓冲区
-	//GeometryMap.BuildMaterialShaderResourceView();
+	//构建材质常量缓冲区
+	GeometryMap.BuildMaterialShaderResourceView();
 
 	////构建灯光常量缓冲区
 	//GeometryMap.BuildLightConstantBuffer();
@@ -167,13 +149,14 @@ void FRenderingPipeline::BuildPipeline()
 	RenderLayer.BuildPSO();
 }
 
-void FRenderingPipeline::PreDraw(FCommandContext& context, float DeltaTime)
+void FRenderingPipeline::PreDraw(GraphicsContext& gfxContext, float DeltaTime)
 {
 	//DirectXPipelineState.PreDraw(context, DeltaTime);
 	//GeometryMap.SetDescriptorHeaps();
-	//RootSignature.SetGraphicsRootSignature();
 
-	GeometryMap.Draw(DeltaTime);
+	gfxContext.SetRootSignature(*RootSignature.GetRootSignature());
+
+	GeometryMap.Draw(gfxContext,DeltaTime);
 
 	//渲染SSAO
 	//SSAO.Draw(DeltaTime);
@@ -203,18 +186,35 @@ void FRenderingPipeline::PreDraw(FCommandContext& context, float DeltaTime)
 	//RenderLayer.PreDraw(DeltaTime);
 }
 
-void FRenderingPipeline::Draw(FCommandContext& context, float DeltaTime)
+void FRenderingPipeline::Draw(GraphicsContext& gfxContext, float DeltaTime)
 {	
-	context.SetRootSignature(m_RootSignature);
 	//主视口
-	GeometryMap.DrawViewport(DeltaTime);
+	gfxContext.SetRootSignature(*RootSignature.GetRootSignature());
+	//GeometryMap.TransitionResource(BackBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	// 
+	gfxContext.TransitionResource(Graphics::g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	gfxContext.TransitionResource(Graphics::g_SceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
+	gfxContext.ClearColor(Graphics::g_SceneColorBuffer);
+	gfxContext.ClearDepth(Graphics::g_SceneDepthBuffer);
+	gfxContext.SetRenderTarget(Graphics::g_SceneColorBuffer.GetRTV(), Graphics::g_SceneDepthBuffer.GetDSV_DepthReadOnly());
+	gfxContext.SetViewportAndScissor(0, 0, Graphics::g_SceneColorBuffer.GetWidth(), Graphics::g_SceneColorBuffer.GetHeight());
 
+	GeometryMap.Draw(gfxContext, DeltaTime);
+
+	// 
+	//gfxContext.FlushResourceBarriers();
+
+//	CommandContext.SetRenderTargets(1, &BackBuffer.GetRTV(), BufferManager::g_SceneDepthZ.GetDSV());
+//	CommandContext.ClearColor(BackBuffer);
+//	CommandContext.ClearDepth(BufferManager::g_SceneDepthZ);
+//
+//	CommandContext.SetViewportAndScissor(0, 0, m_GameDesc.Width, m_GameDesc.Height);
 	////CubeMap 覆盖原先被修改的CubeMap
 	//GeometryMap.DrawCubeMapTexture(DeltaTime);
 
 	////各类层级
 	//RenderLayer.Draw(RENDERLAYER_BACKGROUND,DeltaTime);
-	RenderLayer.Draw(context, RENDERLAYER_OPAQUE, DeltaTime);
+	RenderLayer.Draw(gfxContext, RENDERLAYER_OPAQUE, DeltaTime);
 	//RenderLayer.Draw(RENDERLAYER_SKINNED_OPAQUE, DeltaTime);//渲染动画层
 	//RenderLayer.Draw(RENDERLAYER_TRANSPARENT, DeltaTime);
 
@@ -228,6 +228,8 @@ void FRenderingPipeline::Draw(FCommandContext& context, float DeltaTime)
 	//RenderLayer.Draw(RENDERLAYER_OPERATION_HANDLE, DeltaTime);
 
 	//DirectXPipelineState.CaptureKeyboardKeys();
+
+	//gfxContext.TransitionResource(Graphics::g_SceneDepthBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void FRenderingPipeline::PostDraw(float DeltaTime)

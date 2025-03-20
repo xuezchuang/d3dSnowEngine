@@ -41,7 +41,7 @@ void FAlphaTestRenderLayer::BuildPSO()
 	DirectXPipelineState->Build(AlphaTest);
 }
 
-void FAlphaTestRenderLayer::Draw(FCommandContext& context, float DeltaTime)
+void FAlphaTestRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
 {
 	DirectXPipelineState->ResetPSO(AlphaTest);
 

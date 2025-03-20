@@ -54,7 +54,7 @@ void FBackgroundRenderLayer::ResetPSO()
 	DirectXPipelineState->ResetPSO(Background);
 }
 
-void FBackgroundRenderLayer::Draw(FCommandContext& context, float DeltaTime)
+void FBackgroundRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
 {
 	ResetPSO();
 

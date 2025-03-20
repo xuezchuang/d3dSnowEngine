@@ -46,14 +46,14 @@ void CMeshManage::PostDraw(float DeltaTime)
     RenderingPipeline.PostDraw(DeltaTime);
 }
 
-void CMeshManage::Draw(float DeltaTime)
+void CMeshManage::Draw(GraphicsContext& gfxContext, float DeltaTime)
 {
-    //RenderingPipeline.Draw(DeltaTime);
+	RenderingPipeline.Draw(gfxContext, DeltaTime);
 }
 
-void CMeshManage::PreDraw(float DeltaTime)
+void CMeshManage::PreDraw(GraphicsContext& gfxContext, float DeltaTime)
 {
-    //RenderingPipeline.PreDraw(DeltaTime);
+    RenderingPipeline.PreDraw(gfxContext,DeltaTime);
 }
 
 CMeshComponent* CMeshManage::CreateSphereMeshComponent(const FCreateObjectParam& InObjectParam, float InRadius, uint32_t InAxialSubdivision, uint32_t InHeightSubdivision, bool bReverse)

@@ -1,19 +1,21 @@
 #include "../../../../../Interface/DirectXDeviceInterfece.h"
+#include "CommandContext.h"
 
 struct FIMGUIPipeline :public IDirectXDeviceInterfece_Struct
 {
 	FIMGUIPipeline();
 
-	void BuildDesciptorHeap();
+	
 
 	void Init();
 
-	void Draw(float DeltaTime);
+	void Draw(GraphicsContext& context,float DeltaTime);
 
 	void Exit();
 
 protected:
 	
+	void BuildDesciptorHeap();
 
 	void Tick(float DeltaTime);
 
