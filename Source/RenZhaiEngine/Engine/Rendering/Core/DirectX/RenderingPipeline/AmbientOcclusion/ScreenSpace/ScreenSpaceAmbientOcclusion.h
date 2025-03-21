@@ -59,17 +59,17 @@ public:
 
 	//各类偏移值
 public:
-	UINT GetDepthBufferSRVOffset() const;
+	//UINT GetDepthBufferSRVOffset() const;
 
-	UINT GetNormalBufferSRVOffset() const;
+	//UINT GetNormalBufferSRVOffset() const;
 	UINT GetNormalBufferRTVOffset() const;
 
-	UINT GetNoiseBufferSRVOffset() const;
+	//UINT GetNoiseBufferSRVOffset() const;
 
-	UINT GetAmbientBufferSRVOffset() const;
+	//UINT GetAmbientBufferSRVOffset() const;
 	UINT GetAmbientBufferRTVOffset() const;
 
-	UINT GetBilateralBlurSRVOffset() const;
+	//UINT GetBilateralBlurSRVOffset() const;
 	UINT GetBilateralBlurRTVOffset() const;
 
 	//基础变量

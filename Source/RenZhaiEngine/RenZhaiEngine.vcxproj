@@ -94,6 +94,7 @@
     <ClCompile Include="EditorEngine\LogEditor\LogEditor.cpp" />
     <ClCompile Include="EditorEngine\LogEditor\LogObject\LogSystem.cpp" />
     <ClCompile Include="EditorEngine\OutLineEditor\OutLineEditor.cpp" />
+    <ClCompile Include="EditorEngine\ProfilingEditor\ProfilingEditor.cpp" />
     <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\Core\OperationHandleBase.cpp" />
     <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\MoveArrow.cpp" />
     <ClCompile Include="EditorEngine\SelectEditor\OperationHandle\RotatorArrow.cpp" />
@@ -342,6 +343,7 @@
     <ClInclude Include="EditorEngine\LogEditor\LogEditor.h" />
     <ClInclude Include="EditorEngine\LogEditor\LogObject\LogSystem.h" />
     <ClInclude Include="EditorEngine\OutLineEditor\OutLineEditor.h" />
+    <ClInclude Include="EditorEngine\ProfilingEditor\ProfilingEditor.h" />
     <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\Core\OperationHandleBase.h" />
     <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\MoveArrow.h" />
     <ClInclude Include="EditorEngine\SelectEditor\OperationHandle\RotatorArrow.h" />

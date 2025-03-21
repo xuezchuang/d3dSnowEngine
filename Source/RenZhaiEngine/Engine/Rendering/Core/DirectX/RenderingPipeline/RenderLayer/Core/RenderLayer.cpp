@@ -31,15 +31,15 @@ void FRenderLayer::BuildShaderMacro(std::vector<ShaderType::FShaderMacro>& InMac
 		 InMacro.push_back(ShaderMacro);
 	 }
 
-	 {
-		 ShaderType::FShaderMacro ShaderMacro;
+	 //{
+		// ShaderType::FShaderMacro ShaderMacro;
 
-		 char TextureNumBuff[10] = { 0 };
-		 ShaderMacro.Name = "CUBE_MAP_NUM";
-		 ShaderMacro.Definition = _itoa(GeometryMap->GetDrawCubeMapResourcesNumber(), TextureNumBuff, 10);
+		// char TextureNumBuff[10] = { 0 };
+		// ShaderMacro.Name = "CUBE_MAP_NUM";
+		// ShaderMacro.Definition = _itoa(GeometryMap->GetDrawCubeMapResourcesNumber(), TextureNumBuff, 10);
 
-		 InMacro.push_back(ShaderMacro);
-	 }
+		// InMacro.push_back(ShaderMacro);
+	 //}
 
 	 {
 		 ShaderType::FShaderMacro ShaderMacro;

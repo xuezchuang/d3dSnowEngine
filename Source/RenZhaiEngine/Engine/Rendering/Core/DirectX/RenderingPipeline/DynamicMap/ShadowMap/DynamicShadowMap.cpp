@@ -45,11 +45,11 @@ void FDynamicShadowMap::UpdateCalculations(float DeltaTime, const FViewportInfo&
 						ShadowViewport->GetPosition().z,
 						1.f);
 
-				GeometryMap->UpdateCalculationsViewport(
-					DeltaTime,
-					ShadowViewportInfo,
-					GeometryMap->GetDynamicReflectionViewportNum() + //动态反射的摄像机
-					1);//主视口
+				//GeometryMap->UpdateCalculationsViewport(
+				//	DeltaTime,
+				//	ShadowViewportInfo,
+				//	GeometryMap->GetDynamicReflectionViewportNum() + //动态反射的摄像机
+				//	1);//主视口
 			}
 		}
 	}	

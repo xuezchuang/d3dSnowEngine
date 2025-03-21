@@ -6,6 +6,7 @@
 #include "BrowseEditor/BrowseEditor.h"
 #include "Core/EditorCommon.h"
 #include "DetailsEditor/OutsideDetailsEditor.h"
+#include "ProfilingEditor/ProfilingEditor.h"
 
 CEditorEngine::CEditorEngine()
 {
@@ -14,6 +15,7 @@ CEditorEngine::CEditorEngine()
 	Editors.push_back(std::make_shared<FOutLineEditor>());
 	Editors.push_back(std::make_shared<FOutsideDetailsEditor>());
 	Editors.push_back(std::make_shared<FBrowseEditor>());
+	Editors.push_back(std::make_shared<FProfilingEditor>());
 }
 
 int CEditorEngine::PreInit(FWinMainCommandParameters InParameters)

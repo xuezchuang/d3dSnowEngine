@@ -12,6 +12,7 @@
 #include "TextureManager.h"
 #include "../Engine/Mesh/Core/Material/MaterialConstantBuffer.h"
 #include "../Engine/Core/Viewport/ViewportTransformation.h"
+#include "../Engine/Component/Light/Core/LightConstantBuffer.h"
 
 enum ERenderingMeshType;
 class CMaterial;
@@ -189,7 +190,7 @@ struct FGeometryMap :public IDirectXDeviceInterfece_Struct
 	UINT GetDrawTexture2DResourcesNumber();
 
 	//CubeMap贴图数量
-	UINT GetDrawCubeMapResourcesNumber();
+	//UINT GetDrawCubeMapResourcesNumber();
 
 	//动态摄像机
 	UINT GetDynamicReflectionViewportNum();
@@ -203,8 +204,6 @@ public:
 public:
 	bool IsStartUPFog();
 
-public:
-	std::unique_ptr<FRenderingTexture>* FindRenderingTexture(const std::string& InKey);
 public:
 	void DrawShadow(float DeltaTime);
 	void DrawLight(float DeltaTime);
@@ -222,16 +221,18 @@ protected:
 
 	std::vector<FObjectTransformation> MeshObjectConstant;
 	FViewportTransformation ViewportTransformation;
+	FLightConstantBuffer LightConstantBuffer;
 
-	FConstantBufferViews MeshConstantBufferViews;
+	//FConstantBufferViews MeshConstantBufferViews;
 	//FConstantBufferViews MaterialConstantBufferViews;
 	//FConstantBufferViews ViewportConstantBufferViews;
 	FConstantBufferViews FogConstantBufferViews;
-	FConstantBufferViews LightConstantBufferViews;
+	//FConstantBufferViews LightConstantBufferViews;
 	FConstantBufferViews SkinnedConstantBufferViews;
 
-	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingTexture2DResources;
-	std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingCubeMapResources;
+	//std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingTexture2DResources;
+	//std::shared_ptr<class FRenderingTextureResourcesUpdate> RenderingCubeMapResources;
+
 	std::vector<CMaterial*> Materials;
 	std::vector<CMeshComponent*> DynamicReflectionMeshComponents;
 	CFogComponent* Fog;
@@ -241,5 +242,6 @@ protected:
 	std::vector<TextureRef> m_Textures;
 	//D3D12_CPU_DESCRIPTOR_HANDLE* m_TexturesDesHandle;
 	std::unique_ptr<D3D12_CPU_DESCRIPTOR_HANDLE[]> m_TexturesDesHandle;
+	std::unordered_map<std::string, int> m_TexName2ID;
 	std::vector<FMaterialConstantBuffer> m_MaterialConstantBufferViews;
 };

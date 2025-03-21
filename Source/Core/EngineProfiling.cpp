@@ -22,17 +22,15 @@
 #include <vector>
 #include <unordered_map>
 #include <array>
+#include <locale>
 
 using namespace Graphics;
 using namespace GraphRenderer;
 using namespace Math;
 using namespace std;
 
+
 #define PERF_GRAPH_ERROR uint32_t(0xFFFFFFFF)
-namespace EngineProfiling
-{
-    bool Paused = false;
-}
 
 class StatHistory
 {
@@ -191,224 +189,232 @@ private:
     uint32_t m_TimerIndex;
 };
 
+
+
+namespace EngineProfiling
+{
+	bool Paused = false;
+}
+
 class NestedTimingTree
 {
 public:
-    NestedTimingTree( const wstring& name, NestedTimingTree* parent = nullptr )
-        : m_Name(name), m_Parent(parent), m_IsExpanded(false), m_IsGraphed(false), m_GraphHandle(PERF_GRAPH_ERROR) {}
+	NestedTimingTree(const wstring& name, NestedTimingTree* parent = nullptr)
+		: m_Name(name), m_Parent(parent), m_IsExpanded(false), m_IsGraphed(false), m_GraphHandle(PERF_GRAPH_ERROR) {
+	}
 
-    NestedTimingTree* GetChild( const wstring& name )
-    {
-        auto iter = m_LUT.find(name);
-        if (iter != m_LUT.end())
-            return iter->second;
+	NestedTimingTree* GetChild(const wstring& name)
+	{
+		auto iter = m_LUT.find(name);
+		if (iter != m_LUT.end())
+			return iter->second;
 
-        NestedTimingTree* node = new NestedTimingTree(name, this);
-        m_Children.push_back(node);
-        m_LUT[name] = node;
-        return node;
-    }
+		NestedTimingTree* node = new NestedTimingTree(name, this);
+		m_Children.push_back(node);
+		m_LUT[name] = node;
+		return node;
+	}
 
-    NestedTimingTree* NextScope( void )
-    {
-        if (m_IsExpanded && m_Children.size() > 0)
-            return m_Children[0];
+	NestedTimingTree* NextScope(void)
+	{
+		if (m_IsExpanded && m_Children.size() > 0)
+			return m_Children[0];
 
-        return m_Parent->NextChild(this);
-    }
+		return m_Parent->NextChild(this);
+	}
 
-    NestedTimingTree* PrevScope( void )
-    {
-        NestedTimingTree* prev = m_Parent->PrevChild(this);
-        return prev == m_Parent ? prev : prev->LastChild();
-    }
+	NestedTimingTree* PrevScope(void)
+	{
+		NestedTimingTree* prev = m_Parent->PrevChild(this);
+		return prev == m_Parent ? prev : prev->LastChild();
+	}
 
-    NestedTimingTree* FirstChild( void )
-    {
-        return m_Children.size() == 0 ? nullptr : m_Children[0];
-    }
+	NestedTimingTree* FirstChild(void)
+	{
+		return m_Children.size() == 0 ? nullptr : m_Children[0];
+	}
 
-    NestedTimingTree* LastChild( void )
-    {
-        if (!m_IsExpanded || m_Children.size() == 0)
-            return this;
+	NestedTimingTree* LastChild(void)
+	{
+		if (!m_IsExpanded || m_Children.size() == 0)
+			return this;
 
-        return m_Children.back()->LastChild();
-    }
+		return m_Children.back()->LastChild();
+	}
 
-    NestedTimingTree* NextChild( NestedTimingTree* curChild )
-    {
-        ASSERT(curChild->m_Parent == this);
+	NestedTimingTree* NextChild(NestedTimingTree* curChild)
+	{
+		ASSERT(curChild->m_Parent == this);
 
-        for (auto iter = m_Children.begin(); iter != m_Children.end(); ++iter)
-        {
-            if (*iter == curChild)
-            {
-                auto nextChild = iter; ++nextChild;
-                if (nextChild != m_Children.end())
-                    return *nextChild;
-            }
-        }
+		for (auto iter = m_Children.begin(); iter != m_Children.end(); ++iter)
+		{
+			if (*iter == curChild)
+			{
+				auto nextChild = iter; ++nextChild;
+				if (nextChild != m_Children.end())
+					return *nextChild;
+			}
+		}
 
-        if (m_Parent != nullptr)
-            return m_Parent->NextChild(this);
-        else
-            return &sm_RootScope;
-    }
+		if (m_Parent != nullptr)
+			return m_Parent->NextChild(this);
+		else
+			return &sm_RootScope;
+	}
 
-    NestedTimingTree* PrevChild( NestedTimingTree* curChild )
-    {
-        ASSERT(curChild->m_Parent == this);
+	NestedTimingTree* PrevChild(NestedTimingTree* curChild)
+	{
+		ASSERT(curChild->m_Parent == this);
 
-        if (*m_Children.begin() == curChild)
-        {
-            if (this == &sm_RootScope)
-                return sm_RootScope.LastChild();
-            else
-                return this;
-        }
+		if (*m_Children.begin() == curChild)
+		{
+			if (this == &sm_RootScope)
+				return sm_RootScope.LastChild();
+			else
+				return this;
+		}
 
-        for (auto iter = m_Children.begin(); iter != m_Children.end(); ++iter)
-        {
-            if (*iter == curChild)
-            {
-                auto prevChild = iter; --prevChild;
-                return *prevChild;
-            }
-        }
+		for (auto iter = m_Children.begin(); iter != m_Children.end(); ++iter)
+		{
+			if (*iter == curChild)
+			{
+				auto prevChild = iter; --prevChild;
+				return *prevChild;
+			}
+		}
 
-        ERROR("All attempts to find a previous timing sample failed");
-        return nullptr;
-    }
+		ERROR("All attempts to find a previous timing sample failed");
+		return nullptr;
+	}
 
-    void StartTiming( CommandContext* Context )
-    {
-        m_StartTick = SystemTime::GetCurrentTick();
-        if (Context == nullptr)
-            return;
+	void StartTiming(CommandContext* Context)
+	{
+		m_StartTick = SystemTime::GetCurrentTick();
+		if (Context == nullptr)
+			return;
 
-        m_GpuTimer.Start(*Context);
+		m_GpuTimer.Start(*Context);
 
-        Context->PIXBeginEvent(m_Name.c_str());
-    }
+		Context->PIXBeginEvent(m_Name.c_str());
+	}
 
-    void StopTiming( CommandContext* Context )
-    {
-        m_EndTick = SystemTime::GetCurrentTick();
-        if (Context == nullptr)
-            return;
+	void StopTiming(CommandContext* Context)
+	{
+		m_EndTick = SystemTime::GetCurrentTick();
+		if (Context == nullptr)
+			return;
 
-        m_GpuTimer.Stop(*Context);
+		m_GpuTimer.Stop(*Context);
 
-        Context->PIXEndEvent();
-    }
+		Context->PIXEndEvent();
+	}
 
-    void GatherTimes(uint32_t FrameIndex)
-    {
-        if (sm_SelectedScope == this)
-        {
-            GraphRenderer::SetSelectedIndex(m_GpuTimer.GetTimerIndex());
-        }
-        if (EngineProfiling::Paused)
-        {
-            for (auto node : m_Children)
-                node->GatherTimes(FrameIndex);
-            return;
-        }
-        m_CpuTime.RecordStat(FrameIndex, 1000.0f * (float)SystemTime::TimeBetweenTicks(m_StartTick, m_EndTick));
-        m_GpuTime.RecordStat(FrameIndex, 1000.0f * m_GpuTimer.GetTime());
+	void GatherTimes(uint32_t FrameIndex)
+	{
+		if (sm_SelectedScope == this)
+		{
+			GraphRenderer::SetSelectedIndex(m_GpuTimer.GetTimerIndex());
+		}
+		if (EngineProfiling::Paused)
+		{
+			for (auto node : m_Children)
+				node->GatherTimes(FrameIndex);
+			return;
+		}
+		m_CpuTime.RecordStat(FrameIndex, 1000.0f * (float)SystemTime::TimeBetweenTicks(m_StartTick, m_EndTick));
+		m_GpuTime.RecordStat(FrameIndex, 1000.0f * m_GpuTimer.GetTime());
 
-        for (auto node : m_Children)
-            node->GatherTimes(FrameIndex);
+		for (auto node : m_Children)
+			node->GatherTimes(FrameIndex);
 
-        m_StartTick = 0;
-        m_EndTick = 0;
-    }
+		m_StartTick = 0;
+		m_EndTick = 0;
+	}
 
-    void SumInclusiveTimes(float& cpuTime, float& gpuTime)
-    {
-        cpuTime = 0.0f;
-        gpuTime = 0.0f;
-        for (auto iter = m_Children.begin(); iter != m_Children.end(); ++iter)
-        {
-            cpuTime += (*iter)->m_CpuTime.GetLast();
-            gpuTime += (*iter)->m_GpuTime.GetLast();
-        }
-    }
+	void SumInclusiveTimes(float& cpuTime, float& gpuTime)
+	{
+		cpuTime = 0.0f;
+		gpuTime = 0.0f;
+		for (auto iter = m_Children.begin(); iter != m_Children.end(); ++iter)
+		{
+			cpuTime += (*iter)->m_CpuTime.GetLast();
+			gpuTime += (*iter)->m_GpuTime.GetLast();
+		}
+	}
 
-    static void PushProfilingMarker( const wstring& name, CommandContext* Context );
-    static void PopProfilingMarker( CommandContext* Context );
-    static void Update( void );
-    static void UpdateTimes( void )
-    {
-        uint32_t FrameIndex = (uint32_t)Graphics::GetFrameCount();
+	static void PushProfilingMarker(const wstring& name, CommandContext* Context);
+	static void PopProfilingMarker(CommandContext* Context);
+	static void Update(void);
+	static void UpdateTimes(void)
+	{
+		uint32_t FrameIndex = (uint32_t)Graphics::GetFrameCount();
 
-        GpuTimeManager::BeginReadBack();
-        sm_RootScope.GatherTimes(FrameIndex);
-        s_FrameDelta.RecordStat(FrameIndex, GpuTimeManager::GetTime(0));
-        GpuTimeManager::EndReadBack();
+		GpuTimeManager::BeginReadBack();
+		sm_RootScope.GatherTimes(FrameIndex);
+		s_FrameDelta.RecordStat(FrameIndex, GpuTimeManager::GetTime(0));
+		GpuTimeManager::EndReadBack();
 
-        float TotalCpuTime, TotalGpuTime;
-        sm_RootScope.SumInclusiveTimes(TotalCpuTime, TotalGpuTime);
-        s_TotalCpuTime.RecordStat(FrameIndex, TotalCpuTime);
-        s_TotalGpuTime.RecordStat(FrameIndex, TotalGpuTime);
+		float TotalCpuTime, TotalGpuTime;
+		sm_RootScope.SumInclusiveTimes(TotalCpuTime, TotalGpuTime);
+		s_TotalCpuTime.RecordStat(FrameIndex, TotalCpuTime);
+		s_TotalGpuTime.RecordStat(FrameIndex, TotalGpuTime);
 
-        GraphRenderer::Update(XMFLOAT2(TotalCpuTime, TotalGpuTime), 0, GraphType::Global);
-    }
+		GraphRenderer::Update(XMFLOAT2(TotalCpuTime, TotalGpuTime), 0, GraphType::Global);
+	}
 
-    static float GetTotalCpuTime(void) { return s_TotalCpuTime.GetAvg(); }
-    static float GetTotalGpuTime(void) { return s_TotalGpuTime.GetAvg(); }
-    static float GetFrameDelta(void) { return s_FrameDelta.GetAvg(); }
+	static void Display(TextContext& Text, float x)
+	{
+		float curX = Text.GetCursorX();
+		Text.DrawString("  ");
+		float indent = Text.GetCursorX() - curX;
+		Text.SetCursorX(curX);
+		sm_RootScope.DisplayNode(Text, x - indent, indent);
+		sm_RootScope.StoreToGraph();
+	}
 
-    static void Display( TextContext& Text, float x )
-    {
-        float curX = Text.GetCursorX();
-        Text.DrawString("  ");
-        float indent = Text.GetCursorX() - curX;
-        Text.SetCursorX(curX);
-        sm_RootScope.DisplayNode( Text, x - indent, indent );
-        sm_RootScope.StoreToGraph();
-    }
-
-    void Toggle()
-    { 
-        //if (m_GraphHandle == PERF_GRAPH_ERROR)
-        //    m_GraphHandle = GraphRenderer::InitGraph(GraphType::Profile);
-        //m_IsGraphed = GraphRenderer::ManageGraphs(m_GraphHandle, GraphType::Profile);
-    }
-    bool IsGraphed(){ return m_IsGraphed;}
+	void Toggle()
+	{
+		//if (m_GraphHandle == PERF_GRAPH_ERROR)
+		//    m_GraphHandle = GraphRenderer::InitGraph(GraphType::Profile);
+		//m_IsGraphed = GraphRenderer::ManageGraphs(m_GraphHandle, GraphType::Profile);
+	}
+	bool IsGraphed() { return m_IsGraphed; }
 
 private:
 
-    void DisplayNode( TextContext& Text, float x, float indent );
-    void StoreToGraph(void);
-    void DeleteChildren( void )
-    {
-        for (auto node : m_Children)
-            delete node;
-        m_Children.clear();
-    }
+	void DisplayNode(TextContext& Text, float x, float indent);
+	void StoreToGraph(void);
+	void DeleteChildren(void)
+	{
+		for (auto node : m_Children)
+			delete node;
+		m_Children.clear();
+	}
 
-    wstring m_Name;
-    NestedTimingTree* m_Parent;
-    vector<NestedTimingTree*> m_Children;
-    unordered_map<wstring, NestedTimingTree*> m_LUT;
-    int64_t m_StartTick;
-    int64_t m_EndTick;
-    StatHistory m_CpuTime;
-    StatHistory m_GpuTime;
-    bool m_IsExpanded;
-    GpuTimer m_GpuTimer;
-    bool m_IsGraphed;
-    GraphHandle m_GraphHandle;
-    static StatHistory s_TotalCpuTime;
-    static StatHistory s_TotalGpuTime;
-    static StatHistory s_FrameDelta;
-    static NestedTimingTree sm_RootScope;
-    static NestedTimingTree* sm_CurrentNode;
-    static NestedTimingTree* sm_SelectedScope;
+	
+	NestedTimingTree* m_Parent;
+	unordered_map<wstring, NestedTimingTree*> m_LUT;
+	int64_t m_StartTick;
+	int64_t m_EndTick;
 
-    static bool sm_CursorOnGraph;
+	bool m_IsExpanded;
+	GpuTimer m_GpuTimer;
+	bool m_IsGraphed;
+	GraphHandle m_GraphHandle;
+public:
+	vector<NestedTimingTree*> m_Children;
+	wstring m_Name;
+	StatHistory m_CpuTime;
+	StatHistory m_GpuTime;
+	static NestedTimingTree sm_RootScope;
+	static NestedTimingTree* sm_CurrentNode;
+	static NestedTimingTree* sm_SelectedScope;
+
+	static bool sm_CursorOnGraph;
+
+	static StatHistory s_TotalCpuTime;
+	static StatHistory s_TotalGpuTime;
+	static StatHistory s_FrameDelta;
 
 };
 
@@ -456,9 +462,9 @@ namespace EngineProfiling
         if (!DrawFrameRate)
             return;
         
-        float cpuTime = NestedTimingTree::GetTotalCpuTime();
-        float gpuTime = NestedTimingTree::GetTotalGpuTime();
-        float frameRate = 1.0f / NestedTimingTree::GetFrameDelta();
+        float cpuTime = GetTotalCpuTime();
+        float gpuTime = GetTotalGpuTime();
+        float frameRate = 1.0f / GetFrameDelta();
 
         Text.DrawFormattedString( "CPU %7.3f ms, GPU %7.3f ms, %3u Hz\n",
             cpuTime, gpuTime, (uint32_t)(frameRate + 0.5f));
@@ -497,6 +503,46 @@ namespace EngineProfiling
     }
 
 } // EngineProfiling
+
+float GetTotalCpuTime(void) { return NestedTimingTree::s_TotalCpuTime.GetAvg(); }
+float GetTotalGpuTime(void) { return NestedTimingTree::s_TotalGpuTime.GetAvg(); }
+float GetFrameDelta(void) { return NestedTimingTree::s_FrameDelta.GetAvg(); }
+
+std::string WStringToString(const std::wstring& wstr)
+{
+	if (wstr.empty()) return std::string();
+
+	int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string str(size, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], size, nullptr, nullptr);
+
+	str.pop_back();  // È¥µôÄ©Î²µÄ¿Õ×Ö·û
+	return str;
+}
+
+void getAllProfilingTime(std::vector<T_PROFILING>& aProfilingTime)
+{
+	NestedTimingTree* RootScope = &NestedTimingTree::sm_RootScope;
+	
+	std::function<void(NestedTimingTree*)> IterAddTiming = [&](NestedTimingTree* tScope)
+		{
+			aProfilingTime.push_back(T_PROFILING());
+			T_PROFILING& profiling = aProfilingTime[aProfilingTime.size() - 1];
+			profiling.m_Name = WStringToString(tScope->m_Name);
+			profiling.CPUTime = tScope->m_CpuTime.GetAvg();
+			profiling.GPUTime = tScope->m_GpuTime.GetAvg();
+			for (size_t i = 0; i < tScope->m_Children.size(); i++)
+			{
+				IterAddTiming(tScope->m_Children[i]);
+			}
+		};
+	for (size_t i = 0; i < RootScope->m_Children.size(); i++)
+	{
+		IterAddTiming(RootScope->m_Children[i]);
+	}
+}
+
+
 
 void NestedTimingTree::PushProfilingMarker( const wstring& name, CommandContext* Context )
 {

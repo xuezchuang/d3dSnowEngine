@@ -31,6 +31,20 @@ namespace EngineProfiling
     bool IsPaused();
 }
 
+float GetTotalCpuTime(void);
+float GetTotalGpuTime(void);
+float GetFrameDelta(void);
+
+struct T_PROFILING
+{
+	std::string m_Name;
+	float CPUTime;
+	float GPUTime;
+	std::vector<T_PROFILING> child;
+};
+
+void getAllProfilingTime(std::vector<T_PROFILING>& aProfilingTime);
+
 #ifdef RELEASE
 class ScopedTimer
 {
@@ -58,4 +72,5 @@ public:
 private:
     CommandContext* m_Context;
 };
+
 #endif

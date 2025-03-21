@@ -269,10 +269,10 @@ CWindowsEngine* IDirectXDeviceInterfece::GetEngine() const
 //	return Interfece.GetD3dDevice();
 //}
 //
-//CLightManage* IDirectXDeviceInterfece_Struct::GetLightManage()const
-//{
-//	return Interfece.GetLightManage();
-//}
+CLightManage* IDirectXDeviceInterfece_Struct::GetLightManage()const
+{
+	return Interfece.GetLightManage();
+}
 //
 //CMeshManage* IDirectXDeviceInterfece_Struct::GetMeshManage()const
 //{

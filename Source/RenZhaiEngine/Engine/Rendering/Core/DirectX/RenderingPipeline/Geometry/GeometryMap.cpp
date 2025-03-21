@@ -2,7 +2,6 @@
 #include "../../../Buffer/ConstructBuffer.h"
 #include "../../../../../Mesh/Core/Mesh.h"
 #include "../../../../../Mesh/Core/Material/MaterialConstantBuffer.h"
-#include "../../../../../Component/Light/Core/LightConstantBuffer.h"
 #include "../../../../../Component/Light/SpotLightComponent.h"
 #include "../../../../../Component/Sky/FogComponent.h"
 #include "../../../../../Mesh/Core/Material/Material.h"
@@ -28,11 +27,11 @@ FGeometryMap::FGeometryMap()
 		Geometrys.insert(pair<int, FGeometry>(i, FGeometry()));
 	}
 
-	RenderingTexture2DResources = std::make_shared<FRenderingTextureResourcesUpdate>();
-	RenderingTexture2DResources->SetViewDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	//RenderingTexture2DResources = std::make_shared<FRenderingTextureResourcesUpdate>();
+	//RenderingTexture2DResources->SetViewDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 
-	RenderingCubeMapResources = std::make_shared<FRenderingTextureResourcesUpdate>();
-	RenderingCubeMapResources->SetViewDimension(D3D12_SRV_DIMENSION_TEXTURECUBE);
+	//RenderingCubeMapResources = std::make_shared<FRenderingTextureResourcesUpdate>();
+	//RenderingCubeMapResources->SetViewDimension(D3D12_SRV_DIMENSION_TEXTURECUBE);
 
 	Fog = NULL;
 }
@@ -55,7 +54,9 @@ void FGeometryMap::Draw(GraphicsContext& gfxContext, float DeltaTime)
 	}
 
 	//绘制灯光
-	DrawLight(DeltaTime);
+	{
+		gfxContext.SetDynamicConstantBufferView(Signature_Light, sizeof(FLightConstantBuffer), &LightConstantBuffer);
+	}
 
 	//绘制贴图
 	{
@@ -163,34 +164,36 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 				//外部资源导入
 				{
 					//这个是BaseColor
-					if (auto BaseColorTextureResourcesPtr = FindRenderingTexture(InMaterial->GetBaseColorIndexKey()))
-					{
-						MaterialConstantBuffer.BaseColorIndex = (*BaseColorTextureResourcesPtr)->RenderingTextureID;
-					}
-					else
+					auto& BaseColorTextureResourcesPtr = m_TexName2ID.find(InMaterial->GetBaseColorIndexKey());
+					if (BaseColorTextureResourcesPtr == m_TexName2ID.end())
 					{
 						MaterialConstantBuffer.BaseColorIndex = -1;
 					}
+					else
+					{
+						MaterialConstantBuffer.BaseColorIndex = BaseColorTextureResourcesPtr->second;
+					}
 
 					//法线
-					if (auto NormalTextureResourcesPtr = FindRenderingTexture(InMaterial->GetNormalIndexKey()))
-					{
-						MaterialConstantBuffer.NormalIndex = (*NormalTextureResourcesPtr)->RenderingTextureID;
-					}
-					else
+					auto& NormalTextureResourcesPtr = m_TexName2ID.find(InMaterial->GetNormalIndexKey());
+					if (NormalTextureResourcesPtr == m_TexName2ID.end())
 					{
 						MaterialConstantBuffer.NormalIndex = -1;
 					}
-
+					else
+					{
+						MaterialConstantBuffer.NormalIndex = NormalTextureResourcesPtr->second;
+					}
 
 					//高光
-					if (auto SpecularTextureResourcesPtr = FindRenderingTexture(InMaterial->GetSpecularKey()))
+					auto& SpecularTextureResourcesPtr = m_TexName2ID.find(InMaterial->GetSpecularKey());
+					if (SpecularTextureResourcesPtr == m_TexName2ID.end())
 					{
-						MaterialConstantBuffer.SpecularIndex = (*SpecularTextureResourcesPtr)->RenderingTextureID;
+						MaterialConstantBuffer.SpecularIndex = -1;
 					}
 					else
 					{
-						MaterialConstantBuffer.SpecularIndex = -1;
+						MaterialConstantBuffer.SpecularIndex = SpecularTextureResourcesPtr->second;
 					}
 				}
 
@@ -215,118 +218,115 @@ void FGeometryMap::UpdateMaterialShaderResourceView(float DeltaTime, const FView
 
 void FGeometryMap::UpdateLight(float DeltaTime, const FViewportInfo& ViewportInfo)
 {
-	////更新灯光
-	//FLightConstantBuffer LightConstantBuffer;
-	//for (size_t i = 0; i < GetLightManage()->Lights.size(); i++)
-	//{
-	//	if (CLightComponent* InLightComponent = GetLightManage()->Lights[i])
-	//	{
-	//		fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
-	//		LightConstantBuffer.SceneLights[i].LightIntensity = XMFLOAT3(LightIntensity.x, LightIntensity.y, LightIntensity.z);
-	//		LightConstantBuffer.SceneLights[i].LightDirection = InLightComponent->GetForwardVector();
+	//更新灯光
+	for (size_t i = 0; i < GetLightManage()->Lights.size(); i++)
+	{
+		if (CLightComponent* InLightComponent = GetLightManage()->Lights[i])
+		{
+			fvector_3d LightIntensity = InLightComponent->GetLightIntensity();
+			LightConstantBuffer.SceneLights[i].LightIntensity = XMFLOAT3(LightIntensity.x, LightIntensity.y, LightIntensity.z);
+			LightConstantBuffer.SceneLights[i].LightDirection = InLightComponent->GetForwardVector();
 
-	//		LightConstantBuffer.SceneLights[i].Position = InLightComponent->GetPosition();
-	//		LightConstantBuffer.SceneLights[i].LightType = InLightComponent->GetLightType();
+			LightConstantBuffer.SceneLights[i].Position = InLightComponent->GetPosition();
+			LightConstantBuffer.SceneLights[i].LightType = InLightComponent->GetLightType();
 
-	//		switch (InLightComponent->GetLightType())
-	//		{
-	//		case ELightType::DirectionalLight:
-	//		{
-	//			XMFLOAT3 ForwardVector = InLightComponent->GetForwardVector();
+			switch (InLightComponent->GetLightType())
+			{
+			case ELightType::DirectionalLight:
+			{
+				XMFLOAT3 ForwardVector = InLightComponent->GetForwardVector();
 
-	//			DynamicShadowMap.BuildParallelLightMatrix(
-	//				EngineMath::ToVector3d(ForwardVector), fvector_3d(0.f), 100.f);
+				DynamicShadowMap.BuildParallelLightMatrix(
+					EngineMath::ToVector3d(ForwardVector), fvector_3d(0.f), 100.f);
 
-	//			XMFLOAT4X4 ShadowViewMatrix;
-	//			XMFLOAT4X4 ShadowProjectMatrix;
-	//			DynamicShadowMap.GetViewportMatrix(ShadowViewMatrix, ShadowProjectMatrix);
+				XMFLOAT4X4 ShadowViewMatrix;
+				XMFLOAT4X4 ShadowProjectMatrix;
+				DynamicShadowMap.GetViewportMatrix(ShadowViewMatrix, ShadowProjectMatrix);
 
-	//			XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ShadowViewMatrix);
-	//			XMMATRIX ShadowProjectMatrixRTX = XMLoadFloat4x4(&ShadowProjectMatrix);
+				XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ShadowViewMatrix);
+				XMMATRIX ShadowProjectMatrixRTX = XMLoadFloat4x4(&ShadowProjectMatrix);
 
-	//			//NDC [-1,1]; = >[0,1]
-	//			//半兰伯特思想
-	//			XMMATRIX Transform =
-	//			{
-	//				0.5f, 0.0f, 0.0f, 0.0f,
-	//				0.0f, -0.5f, 0.0f, 0.0f,
-	//				0.0f, 0.0f, 1.0f, 0.0f,
-	//				0.5f, 0.5f, 0.0f, 1.0f
-	//			};
+				//NDC [-1,1]; = >[0,1]
+				//半兰伯特思想
+				XMMATRIX Transform =
+				{
+					0.5f, 0.0f, 0.0f, 0.0f,
+					0.0f, -0.5f, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					0.5f, 0.5f, 0.0f, 1.0f
+				};
 
-	//			XMMATRIX ShadowViewProjectMatrixRTX =
-	//				ShadowViewMatrixRTX * ShadowProjectMatrixRTX * Transform;
+				XMMATRIX ShadowViewProjectMatrixRTX =
+					ShadowViewMatrixRTX * ShadowProjectMatrixRTX * Transform;
 
-	//			//存储Shadow变换信息
-	//			XMStoreFloat4x4(&LightConstantBuffer.SceneLights[i].ShadowTransform, XMMatrixTranspose(ShadowViewProjectMatrixRTX));
+				//存储Shadow变换信息
+				XMStoreFloat4x4(&LightConstantBuffer.SceneLights[i].ShadowTransform, XMMatrixTranspose(ShadowViewProjectMatrixRTX));
 
-	//			break;
-	//		}
-	//		case ELightType::PointLight:
-	//		{
-	//			if (CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
-	//			{
-	//				LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
-	//				LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
-	//			}
+				break;
+			}
+			case ELightType::PointLight:
+			{
+				if (CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
+				{
+					LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
+					LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
+				}
 
-	//			break;
-	//		}
-	//		case ELightType::SpotLight:
-	//		{
-	//			if (CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
-	//			{
-	//				LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
-	//				LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
-	//			}
+				break;
+			}
+			case ELightType::SpotLight:
+			{
+				if (CRangeLightComponent* InRangeLightComponent = dynamic_cast<CRangeLightComponent*>(InLightComponent))
+				{
+					LightConstantBuffer.SceneLights[i].StartAttenuation = InRangeLightComponent->GetStartAttenuation();
+					LightConstantBuffer.SceneLights[i].EndAttenuation = InRangeLightComponent->GetEndAttenuation();
+				}
 
-	//			if (InLightComponent->GetLightType() == ELightType::SpotLight)
-	//			{
-	//				if (CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
-	//				{
-	//					LightConstantBuffer.SceneLights[i].ConicalInnerCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalInnerCorner());
-	//					LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
-	//				}
-	//			}
+				if (InLightComponent->GetLightType() == ELightType::SpotLight)
+				{
+					if (CSpotLightComponent* InSpotLightComponent = dynamic_cast<CSpotLightComponent*>(InLightComponent))
+					{
+						LightConstantBuffer.SceneLights[i].ConicalInnerCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalInnerCorner());
+						LightConstantBuffer.SceneLights[i].ConicalOuterCorner = math_utils::angle_to_radian(InSpotLightComponent->GetConicalOuterCorner());
+					}
+				}
 
-	//			XMFLOAT3 ForwardVector = InLightComponent->GetForwardVector();
-	//			XMFLOAT3 Position = InLightComponent->GetPosition();
+				XMFLOAT3 ForwardVector = InLightComponent->GetForwardVector();
+				XMFLOAT3 Position = InLightComponent->GetPosition();
 
-	//			DynamicShadowMap.BuildSpotLightMatrix(
-	//				EngineMath::ToVector3d(ForwardVector),
-	//				EngineMath::ToVector3d(Position),
-	//				370.f);
+				DynamicShadowMap.BuildSpotLightMatrix(
+					EngineMath::ToVector3d(ForwardVector),
+					EngineMath::ToVector3d(Position),
+					370.f);
 
-	//			XMFLOAT4X4 ShadowViewMatrix;
-	//			XMFLOAT4X4 ShadowProjectMatrix;
-	//			DynamicShadowMap.GetViewportMatrix(ShadowViewMatrix, ShadowProjectMatrix);
+				XMFLOAT4X4 ShadowViewMatrix;
+				XMFLOAT4X4 ShadowProjectMatrix;
+				DynamicShadowMap.GetViewportMatrix(ShadowViewMatrix, ShadowProjectMatrix);
 
-	//			XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ShadowViewMatrix);
-	//			XMMATRIX ShadowProjectMatrixRTX = XMLoadFloat4x4(&ShadowProjectMatrix);
+				XMMATRIX ShadowViewMatrixRTX = XMLoadFloat4x4(&ShadowViewMatrix);
+				XMMATRIX ShadowProjectMatrixRTX = XMLoadFloat4x4(&ShadowProjectMatrix);
 
-	//			//NDC [-1,1]; = >[0,1]
-	//			//半兰伯特思想
-	//			XMMATRIX Transform =
-	//			{
-	//				0.5f, 0.0f, 0.0f, 0.0f,
-	//				0.0f, -0.5f, 0.0f, 0.0f,
-	//				0.0f, 0.0f, 1.0f, 0.0f,
-	//				0.5f, 0.5f, 0.0f, 1.0f
-	//			};
+				//NDC [-1,1]; = >[0,1]
+				//半兰伯特思想
+				XMMATRIX Transform =
+				{
+					0.5f, 0.0f, 0.0f, 0.0f,
+					0.0f, -0.5f, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					0.5f, 0.5f, 0.0f, 1.0f
+				};
 
-	//			XMMATRIX ShadowViewProjectMatrixRTX =
-	//				ShadowViewMatrixRTX * ShadowProjectMatrixRTX * Transform;
+				XMMATRIX ShadowViewProjectMatrixRTX =
+					ShadowViewMatrixRTX * ShadowProjectMatrixRTX * Transform;
 
-	//			//存储Shadow变换信息
-	//			XMStoreFloat4x4(&LightConstantBuffer.SceneLights[i].ShadowTransform, XMMatrixTranspose(ShadowViewProjectMatrixRTX));
+				//存储Shadow变换信息
+				XMStoreFloat4x4(&LightConstantBuffer.SceneLights[i].ShadowTransform, XMMatrixTranspose(ShadowViewProjectMatrixRTX));
 
-	//			break;
-	//		}
-	//		}
-	//	}
-	//}
-
-	//LightConstantBufferViews.Update(0, &LightConstantBuffer);
+				break;
+			}
+			}
+		}
+	}
 }
 
 void FGeometryMap::UpdateFog(float DeltaTime, const FViewportInfo& ViewportInfo)
@@ -381,13 +381,13 @@ void FGeometryMap::BuildShadow()
 {
 	DynamicShadowMap.Init(2048, 2048);
 	DynamicShadowMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
-	DynamicShadowMap.BuildDepthStencilDescriptor();
-	DynamicShadowMap.BuildRenderTargetDescriptor();
+	//DynamicShadowMap.BuildDepthStencilDescriptor();
+	//DynamicShadowMap.BuildRenderTargetDescriptor();
 
-	DynamicShadowCubeMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
-	DynamicShadowCubeMap.BuildDepthStencilDescriptor();
-	DynamicShadowCubeMap.BuildRenderTargetDescriptor();
-	DynamicShadowCubeMap.BuildDepthStencil();
+	//DynamicShadowCubeMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
+	//DynamicShadowCubeMap.BuildDepthStencilDescriptor();
+	//DynamicShadowCubeMap.BuildRenderTargetDescriptor();
+	//DynamicShadowCubeMap.BuildDepthStencil();
 }
 
 void FGeometryMap::BuildMesh(const size_t InMeshHash, CMeshComponent* InMesh, const FSkinnedMeshRenderingData& MeshData)
@@ -483,6 +483,12 @@ void FGeometryMap::LoadTexture()
 				Texture2DResources = TextureManager::LoadDDSFromFile(TexturePath);
 				//Texture2DResources.LoadFromFile(TexturePath);
 			}
+			char Filename[1024] = { 0 };
+			get_path_clean_filename(Filename, TmpPath);
+			remove_string_start(Filename, ".dds");
+
+			m_TexName2ID.emplace(Filename, m_Textures.size() - 1);
+			
 		}
 
 		Engine_Log("texture fullname: [%s]", TmpPath);
@@ -509,19 +515,19 @@ void FGeometryMap::Build()
 
 void FGeometryMap::BuildDescriptorHeap()
 {
-	//+1摄像机
-	DescriptorHeap.Build(
-		GetDrawTexture2DResourcesNumber() + //Texture2D
-		GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
-		1 + //动态Cube贴图 反射
-		1 + //Shadow 直射灯 聚光灯 Shadow
-		1 + //ShadowCubeMap 点光源的 Shadow
-		1 + //UI
-		1 + //法线
-		1 + //深度
-		1 + //Noise图
-		1 + //SSAO
-		1); //双边模糊
+	////+1摄像机
+	//DescriptorHeap.Build(
+	//	GetDrawTexture2DResourcesNumber() + //Texture2D
+	//	GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
+	//	1 + //动态Cube贴图 反射
+	//	1 + //Shadow 直射灯 聚光灯 Shadow
+	//	1 + //ShadowCubeMap 点光源的 Shadow
+	//	1 + //UI
+	//	1 + //法线
+	//	1 + //深度
+	//	1 + //Noise图
+	//	1 + //SSAO
+	//	1); //双边模糊
 }
 
 void FGeometryMap::BuildMeshConstantBuffer()
@@ -569,21 +575,6 @@ void FGeometryMap::BuildMaterialShaderResourceView()
 	//	false);
 }
 
-void FGeometryMap::BuildLightConstantBuffer()
-{
-	//创建常量缓冲区
-	LightConstantBufferViews.CreateConstant(sizeof(FLightConstantBuffer), GetDrawLightObjectNumber());
-
-	////Handle
-	//CD3DX12_CPU_DESCRIPTOR_HANDLE DesHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(GetHeap()->GetCPUDescriptorHandleForHeapStart());
-	//
-	////构建常量缓冲区
-	//LightConstantBufferViews.BuildConstantBuffer(
-	//	DesHandle,
-	//	GetDrawLightObjectNumber(),
-	//	GetDrawMeshObjectNumber());
-}
-
 void FGeometryMap::BuildSkinnedMeshConstantBuffer()
 {
 	SkinnedConstantBufferViews.CreateConstant(sizeof(FSkinnedTransformation), 1);
@@ -610,10 +601,10 @@ UINT FGeometryMap::GetDrawTexture2DResourcesNumber()
 	//return RenderingTexture2DResources->Size();
 }
 
-UINT FGeometryMap::GetDrawCubeMapResourcesNumber()
-{
-	return RenderingCubeMapResources->Size();
-}
+//UINT FGeometryMap::GetDrawCubeMapResourcesNumber()
+//{
+//	return RenderingCubeMapResources->Size();
+//}
 
 UINT FGeometryMap::GetDynamicReflectionViewportNum()
 {
@@ -622,14 +613,14 @@ UINT FGeometryMap::GetDynamicReflectionViewportNum()
 
 void FGeometryMap::BuildTextureConstantBuffer()
 {
-	//构建Texture2D
-	RenderingTexture2DResources->BuildTextureConstantBuffer(
-		DescriptorHeap.GetHeap(), 0);//视口
+	////构建Texture2D
+	//RenderingTexture2DResources->BuildTextureConstantBuffer(
+	//	DescriptorHeap.GetHeap(), 0);//视口
 
-	//构建CubeMap
-	RenderingCubeMapResources->BuildTextureConstantBuffer(
-		DescriptorHeap.GetHeap(),
-		GetDrawTexture2DResourcesNumber());//视口
+	////构建CubeMap
+	//RenderingCubeMapResources->BuildTextureConstantBuffer(
+	//	DescriptorHeap.GetHeap(),
+	//	GetDrawTexture2DResourcesNumber());//视口
 }
 
 
@@ -649,38 +640,10 @@ bool FGeometryMap::IsStartUPFog()
 	return Fog != NULL;
 }
 
-std::unique_ptr<FRenderingTexture>* FGeometryMap::FindRenderingTexture(const std::string& InKey)
-{
-	if (auto RenderingTexture2DPtr = RenderingTexture2DResources->FindRenderingTexture(InKey))
-	{
-		return RenderingTexture2DPtr;
-	}
-	else if (auto RenderingCubeMapPtr = RenderingCubeMapResources->FindRenderingTexture(InKey))
-	{
-		return RenderingCubeMapPtr;
-	}
-
-	return nullptr;
-}
 
 void FGeometryMap::DrawShadow(float DeltaTime)
 {
 	DynamicShadowMap.Draw(DeltaTime);
-}
-
-void FGeometryMap::DrawLight(float DeltaTime)
-{
-	//UINT DescriptorOffset = GetD3dDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	//
-	//auto DesHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GetHeap()->GetGPUDescriptorHandleForHeapStart());
-	//DesHandle.Offset(
-	//	GetDrawMeshObjectNumber(), DescriptorOffset);
-	//
-	//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(2, DesHandle);
-
-	//GetGraphicsCommandList()->SetGraphicsRootConstantBufferView(
-	//	Signature_Light,
-	//	LightConstantBufferViews.GetBuffer()->GetGPUVirtualAddress());
 }
 
 

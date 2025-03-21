@@ -272,39 +272,39 @@ void FScreenSpaceAmbientOcclusion::DrawBlurConstantBufferViews(float DeltaTime, 
 
 void FScreenSpaceAmbientOcclusion::BuildDescriptors()
 {
-	if (GeometryMap && RenderLayer)
-	{
-		//保证CPU GPU SRV
-		BuildDepthBuffer();
+	//if (GeometryMap && RenderLayer)
+	//{
+	//	//保证CPU GPU SRV
+	//	BuildDepthBuffer();
 
-		NormalBuffer.SetSRVOffset(GetNormalBufferSRVOffset());
-		NormalBuffer.SetRTVOffset(GetNormalBufferRTVOffset());
-		NormalBuffer.BuildDescriptors();
-		NormalBuffer.BuildRenderTargetRTV();
-		NormalBuffer.BuildSRVDescriptors();
-		NormalBuffer.BuildRTVDescriptors();
+	//	NormalBuffer.SetSRVOffset(GetNormalBufferSRVOffset());
+	//	NormalBuffer.SetRTVOffset(GetNormalBufferRTVOffset());
+	//	NormalBuffer.BuildDescriptors();
+	//	NormalBuffer.BuildRenderTargetRTV();
+	//	NormalBuffer.BuildSRVDescriptors();
+	//	NormalBuffer.BuildRTVDescriptors();
 
-		NoiseBuffer.SetSRVOffset(GetNoiseBufferSRVOffset());
-		NoiseBuffer.BuildDescriptors();
-		NoiseBuffer.BuildRenderTargetRTV();
-		NoiseBuffer.BuildSRVDescriptors();
-		NoiseBuffer.BuildRTVDescriptors();
+	//	NoiseBuffer.SetSRVOffset(GetNoiseBufferSRVOffset());
+	//	NoiseBuffer.BuildDescriptors();
+	//	NoiseBuffer.BuildRenderTargetRTV();
+	//	NoiseBuffer.BuildSRVDescriptors();
+	//	NoiseBuffer.BuildRTVDescriptors();
 
-		AmbientBuffer.SetSRVOffset(GetAmbientBufferSRVOffset());
-		AmbientBuffer.SetRTVOffset(GetAmbientBufferRTVOffset());
-		AmbientBuffer.BuildDescriptors();
-		AmbientBuffer.BuildRenderTargetRTV();
-		AmbientBuffer.BuildSRVDescriptors();
-		AmbientBuffer.BuildRTVDescriptors();
+	//	AmbientBuffer.SetSRVOffset(GetAmbientBufferSRVOffset());
+	//	AmbientBuffer.SetRTVOffset(GetAmbientBufferRTVOffset());
+	//	AmbientBuffer.BuildDescriptors();
+	//	AmbientBuffer.BuildRenderTargetRTV();
+	//	AmbientBuffer.BuildSRVDescriptors();
+	//	AmbientBuffer.BuildRTVDescriptors();
 
-		//初始化双边模糊
-		BilateralBlur.SetSRVOffset(GetBilateralBlurSRVOffset());
-		BilateralBlur.SetRTVOffset(GetBilateralBlurRTVOffset());
-		BilateralBlur.BuildDescriptors();
-		BilateralBlur.BuildRenderTargetRTV();
-		BilateralBlur.BuildSRVDescriptors();
-		BilateralBlur.BuildRTVDescriptors();
-	}
+	//	//初始化双边模糊
+	//	BilateralBlur.SetSRVOffset(GetBilateralBlurSRVOffset());
+	//	BilateralBlur.SetRTVOffset(GetBilateralBlurRTVOffset());
+	//	BilateralBlur.BuildDescriptors();
+	//	BilateralBlur.BuildRenderTargetRTV();
+	//	BilateralBlur.BuildSRVDescriptors();
+	//	BilateralBlur.BuildRTVDescriptors();
+	//}
 }
 
 void FScreenSpaceAmbientOcclusion::Build()
@@ -430,26 +430,26 @@ void FScreenSpaceAmbientOcclusion::DrawBlur(float DeltaTime, bool bHorizontal)
 	//GetGraphicsCommandList()->ResourceBarrier(1, &ResourceBarrierPresentRenderTarget);
 }
 
-UINT FScreenSpaceAmbientOcclusion::GetDepthBufferSRVOffset() const
-{
-	return	GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
-			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
-			1 + //动态Cube贴图 反射
-			1 + //Shadow 直射灯 聚光灯 Shadow
-			1 + //ShadowCubeMap 点光源的 Shadow
-			1 + //UI
-			1;  //Nor
-}
+//UINT FScreenSpaceAmbientOcclusion::GetDepthBufferSRVOffset() const
+//{
+//	return	GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
+//			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
+//			1 + //动态Cube贴图 反射
+//			1 + //Shadow 直射灯 聚光灯 Shadow
+//			1 + //ShadowCubeMap 点光源的 Shadow
+//			1 + //UI
+//			1;  //Nor
+//}
 
-UINT FScreenSpaceAmbientOcclusion::GetNormalBufferSRVOffset() const
-{
-	return  GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
-			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
-			1 + //动态Cube贴图 反射
-			1 + //Shadow 直射灯 聚光灯 Shadow
-			1 + //ShadowCubeMap 点光源的 Shadow
-			1;//UI
-}
+//UINT FScreenSpaceAmbientOcclusion::GetNormalBufferSRVOffset() const
+//{
+//	return  GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
+//			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
+//			1 + //动态Cube贴图 反射
+//			1 + //Shadow 直射灯 聚光灯 Shadow
+//			1 + //ShadowCubeMap 点光源的 Shadow
+//			1;//UI
+//}
 
 UINT FScreenSpaceAmbientOcclusion::GetNormalBufferRTVOffset() const
 {
@@ -457,31 +457,31 @@ UINT FScreenSpaceAmbientOcclusion::GetNormalBufferRTVOffset() const
 			6 +//反射的CubeMap RTV
 			6; //ShadowCubeMap RTV Point Light
 }
+//
+//UINT FScreenSpaceAmbientOcclusion::GetNoiseBufferSRVOffset() const
+//{
+//	return  GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
+//			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
+//			1 + //动态Cube贴图 反射
+//			1 + //Shadow 直射灯 聚光灯 Shadow
+//			1 + //ShadowCubeMap 点光源的 Shadow
+//			1 + //UI
+//			1 + //法线
+//			1; //深度 
+//}
 
-UINT FScreenSpaceAmbientOcclusion::GetNoiseBufferSRVOffset() const
-{
-	return  GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
-			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
-			1 + //动态Cube贴图 反射
-			1 + //Shadow 直射灯 聚光灯 Shadow
-			1 + //ShadowCubeMap 点光源的 Shadow
-			1 + //UI
-			1 + //法线
-			1; //深度 
-}
-
-UINT FScreenSpaceAmbientOcclusion::GetAmbientBufferSRVOffset() const
-{
-	return	GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
-			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
-			1 + //动态Cube贴图 反射
-			1 + //Shadow 直射灯 聚光灯 Shadow
-			1 + //ShadowCubeMap 点光源的 Shadow
-			1 + //UI
-			1 + //法线
-			1 + //深度 
-			1;  //Noise图
-}
+//UINT FScreenSpaceAmbientOcclusion::GetAmbientBufferSRVOffset() const
+//{
+//	return	GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
+//			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
+//			1 + //动态Cube贴图 反射
+//			1 + //Shadow 直射灯 聚光灯 Shadow
+//			1 + //ShadowCubeMap 点光源的 Shadow
+//			1 + //UI
+//			1 + //法线
+//			1 + //深度 
+//			1;  //Noise图
+//}
 
 UINT FScreenSpaceAmbientOcclusion::GetAmbientBufferRTVOffset() const
 {
@@ -491,19 +491,19 @@ UINT FScreenSpaceAmbientOcclusion::GetAmbientBufferRTVOffset() const
 			1; //法线
 }
 
-UINT FScreenSpaceAmbientOcclusion::GetBilateralBlurSRVOffset() const
-{
-	return	GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
-			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
-			1 + //动态Cube贴图 反射
-			1 + //Shadow 直射灯 聚光灯 Shadow
-			1 + //ShadowCubeMap 点光源的 Shadow
-			1 + //UI
-			1 + //法线
-			1 + //深度 
-			1 + //Noise图
-			1;  //SSAO
-}
+//UINT FScreenSpaceAmbientOcclusion::GetBilateralBlurSRVOffset() const
+//{
+//	return	GeometryMap->GetDrawTexture2DResourcesNumber() + //Texture2D
+//			GeometryMap->GetDrawCubeMapResourcesNumber() + //静态Cube贴图 背景 天空球
+//			1 + //动态Cube贴图 反射
+//			1 + //Shadow 直射灯 聚光灯 Shadow
+//			1 + //ShadowCubeMap 点光源的 Shadow
+//			1 + //UI
+//			1 + //法线
+//			1 + //深度 
+//			1 + //Noise图
+//			1;  //SSAO
+//}
 
 UINT FScreenSpaceAmbientOcclusion::GetBilateralBlurRTVOffset() const
 {

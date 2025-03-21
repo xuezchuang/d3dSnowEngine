@@ -127,13 +127,13 @@ int CDirectXRenderingEngine::PostInit()
 		}*/
 
 		//灯光生成
-		/*if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
+		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
 		{
 			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
 			ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
 			ParallelLight->SetScale(fvector_3d(1));
 			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
-		}*/
+		}
 		//点灯光生成
 		//if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
 		//{
@@ -166,24 +166,24 @@ int CDirectXRenderingEngine::PostInit()
 			InBoxMesh->SetScale(fvector_3d(1));
 			if(CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
 			{
-				//InMaterial->SetBaseColor(fvector_4d(0.5f));
+				//InMaterial->SetBaseColor(fvector_4d(1.0f,0.0f,0.0f,1.0f));
 				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
 				InMaterial->SetBaseColor("stone"); 
 			}
 		}
 
-		//if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
-		//{
-		//	InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
-		//	InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
-		//	InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
-		//	InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
-		//	if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
-		//	{
-		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-		//		InMaterial->SetBaseColor("tile");
-		//	}
-		//}
+		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
+		{
+			InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
+			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
+			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
+			InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
+			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+			{
+				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+				InMaterial->SetBaseColor("tile");
+			}
+		}
 
 		goto FINIAL;
 

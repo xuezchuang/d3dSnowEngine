@@ -65,11 +65,8 @@ void FRenderingPipeline::BuildPipeline()
 	////构建雾气
 	//GeometryMap.BuildFog();
 
-	////构建动态的CubeMap
-	//DynamicCubeMap.Init(
-	//	&GeometryMap,
-	//	&DirectXPipelineState,
-	//	&RenderLayer);
+	//构建动态的CubeMap
+	DynamicCubeMap.Init(&GeometryMap, &DirectXPipelineState, &RenderLayer);
 
 	//SSAO.Init(
 	//	&GeometryMap,
@@ -77,16 +74,10 @@ void FRenderingPipeline::BuildPipeline()
 	//	&RenderLayer);
 
 	//SSAO.Init(GetVieportWidth(),GetVieportHeight());
-	//
-	//GeometryMap.DynamicShadowMap.Init(
-	//	&GeometryMap,
-	//	&DirectXPipelineState,
-	//	&RenderLayer);
 
-	//GeometryMap.DynamicShadowCubeMap.Init(
-	//	&GeometryMap,
-	//	&DirectXPipelineState,
-	//	&RenderLayer);
+	GeometryMap.DynamicShadowMap.Init(&GeometryMap, &DirectXPipelineState, &RenderLayer);
+
+	GeometryMap.DynamicShadowCubeMap.Init(&GeometryMap, &DirectXPipelineState, &RenderLayer);
 
 	//构建根签名
 	RootSignature.BuildRootSignature(GeometryMap.GetDrawTexture2DResourcesNumber());
@@ -115,8 +106,8 @@ void FRenderingPipeline::BuildPipeline()
 	////构建深度模板
 	//DynamicCubeMap.BuildDepthStencil();
 
-	////构建阴影
-	//GeometryMap.BuildShadow();
+	//构建阴影
+	GeometryMap.BuildShadow();
 
 	//构建常量缓冲区
 	GeometryMap.BuildMeshConstantBuffer();

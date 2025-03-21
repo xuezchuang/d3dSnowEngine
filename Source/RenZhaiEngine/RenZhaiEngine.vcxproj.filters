@@ -382,6 +382,9 @@
     <Filter Include="imgui\backends">
       <UniqueIdentifier>{ba91b78f-4821-4aff-899b-6c0493347240}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EditorEngine\ProfilingEditor">
+      <UniqueIdentifier>{8f371d5c-3e98-45cb-b3c4-80d450f74c52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\EngineVariableTable.cpp">
@@ -1101,6 +1104,9 @@
     </ClCompile>
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorEngine\ProfilingEditor\ProfilingEditor.cpp">
+      <Filter>EditorEngine\ProfilingEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1856,6 +1862,9 @@
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorEngine\ProfilingEditor\ProfilingEditor.h">
+      <Filter>EditorEngine\ProfilingEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

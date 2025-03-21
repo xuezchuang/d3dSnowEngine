@@ -110,7 +110,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 	//获取BaseColor
 	Material.BaseColor = GetMaterialBaseColor(MatConstBuffer, MVOut.TexCoord);
-	
+	return Material.BaseColor;
 	//BaseColor
 	if (MatConstBuffer.MaterialType == 12)
 	{
@@ -125,7 +125,10 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 	{
 		return float4(MVOut.Normal,1.f);
 	}
-
+	
+	//if (MatConstBuffer.MaterialType == 1)
+	//	return float4(1.0f, 0.0f, 0.0f, 1.0f);
+	
 	float4 AmbientLight = { 0.15f, 0.15f, 0.25f, 1.0f };
 	float3 ModelNormal = normalize(MVOut.Normal);
 
@@ -136,12 +139,12 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 
 	float4 FinalColor = { 0.f,0.f,0.f,1.f };
 
-	//return float4(1.0f, 0.0f, 0.0f, 1.0f);
-	
 	for (int i = 0; i < 16; i++)
 	{
 		if (length(SceneLights[i].LightIntensity.xyz) > 0.f)
 		{
+			//return float4(1.0f, 0.0f, 0.0f, 1.0f);
+			
 			//拿到Specular
 			float4 Specular = GetMaterialSpecular(MatConstBuffer, MVOut.TexCoord);
 
@@ -152,11 +155,13 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 			//兰伯特
 			if (MatConstBuffer.MaterialType == 0)
 			{
+				return float4(1.0f, 0.0f, 0.0f, 1.0f);
 				DotValue = pow(max(dot(ModelNormal, NormalizeLightDirection), 0.0),2.f);
 			}
 			//半兰伯特
 			else if (MatConstBuffer.MaterialType == 1)
 			{
+				//return float4(1.0f, 0.0f, 0.0f, 1.0f);
 				float DiffuseReflection = dot(ModelNormal, NormalizeLightDirection);
 				DotValue = max((DiffuseReflection * 0.5f + 0.5f), 0.0);//[-1,1] => [0,1]
 			}
@@ -391,7 +396,11 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 				//float3 F0 = { 0.1f,0.1f,0.1f };
 				//Specular.xyz = FresnelSchlickMethod(F0, ModelNormal, ViewDirection, 3).xyz;
 			}
-
+			else if (MatConstBuffer.MaterialType == 0)
+			{
+				return float4(1.0f, 0.0f, 0.0f, 1.0f);
+			}
+			
 			float4 Diffuse = Material.BaseColor;;
 			Specular = saturate(Specular);
 
@@ -466,7 +475,7 @@ float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
 	}
 	
 	//计算雾
-	MVOut.Color = GetFogValue(MVOut.Color, MVOut.WorldPosition);
+	//MVOut.Color = GetFogValue(MVOut.Color, MVOut.WorldPosition);
 
 	return MVOut.Color;
 }

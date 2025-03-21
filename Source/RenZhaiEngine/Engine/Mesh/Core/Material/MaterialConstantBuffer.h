@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../EngineMinimal.h"
 
-struct FMaterialConstantBuffer
+__declspec(align(16)) struct FMaterialConstantBuffer
 {
 	FMaterialConstantBuffer();
 

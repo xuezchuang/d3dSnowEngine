@@ -69,7 +69,7 @@ struct IDirectXDeviceInterfece_Struct
 public:
 	//ComPtr<ID3D12Fence> GetFence() const;
 	//ComPtr<ID3D12Device> GetD3dDevice() const;
-//	CLightManage* GetLightManage() const;
+	CLightManage* GetLightManage() const;
 //	CMeshManage* GetMeshManage()const;
 //	CWorld* GetWorld()const;
 //
