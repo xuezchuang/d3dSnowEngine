@@ -63,7 +63,7 @@ namespace GameCore
 
         float DeltaTime = Graphics::GetFrameTime();
     
-        //GameInput::Update(DeltaTime);
+        GameInput::Update(DeltaTime);
         EngineTuning::Update(DeltaTime);
         
         game.Update(DeltaTime);

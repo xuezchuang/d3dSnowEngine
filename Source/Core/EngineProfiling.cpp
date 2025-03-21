@@ -524,21 +524,21 @@ void getAllProfilingTime(std::vector<T_PROFILING>& aProfilingTime)
 {
 	NestedTimingTree* RootScope = &NestedTimingTree::sm_RootScope;
 	
-	std::function<void(NestedTimingTree*)> IterAddTiming = [&](NestedTimingTree* tScope)
+	std::function<void(NestedTimingTree*, std::vector<T_PROFILING>&)> IterAddTiming = [&](NestedTimingTree* tScope, std::vector<T_PROFILING>& aIter)
 		{
-			aProfilingTime.push_back(T_PROFILING());
-			T_PROFILING& profiling = aProfilingTime[aProfilingTime.size() - 1];
+			aIter.push_back(T_PROFILING());
+			T_PROFILING& profiling = aIter[aIter.size() - 1];
 			profiling.m_Name = WStringToString(tScope->m_Name);
 			profiling.CPUTime = tScope->m_CpuTime.GetAvg();
 			profiling.GPUTime = tScope->m_GpuTime.GetAvg();
 			for (size_t i = 0; i < tScope->m_Children.size(); i++)
 			{
-				IterAddTiming(tScope->m_Children[i]);
+				IterAddTiming(tScope->m_Children[i],profiling.child);
 			}
 		};
 	for (size_t i = 0; i < RootScope->m_Children.size(); i++)
 	{
-		IterAddTiming(RootScope->m_Children[i]);
+		IterAddTiming(RootScope->m_Children[i], aProfilingTime);
 	}
 }
 

@@ -222,8 +222,8 @@ namespace
             ASSERT(false, "Mouse CreateDevice failed.");
         if (FAILED(s_Mouse->SetDataFormat(&c_dfDIMouse2)))
             ASSERT(false, "Mouse SetDataFormat failed.");
-        if (FAILED(s_Mouse->SetCooperativeLevel(GameCore::g_hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
-            ASSERT(false, "Mouse SetCooperativeLevel failed.");
+		//if (FAILED(s_Mouse->SetCooperativeLevel(GameCore::g_hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
+		//	ASSERT(false, "Mouse SetCooperativeLevel failed.");
 
         KbmZeroInputs();
     }

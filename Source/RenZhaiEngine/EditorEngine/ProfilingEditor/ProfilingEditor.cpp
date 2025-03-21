@@ -37,13 +37,12 @@ void FProfilingEditor::DrawEditor(float DeltaTime)
 		aProfilingTime.clear();
 		getAllProfilingTime(aProfilingTime);
 
-
 		std::function<void(const T_PROFILING&)> ShowTiming = [&](const T_PROFILING& tProfiling)
 			{
+				ImGui::Text("%-20s CPU:%6.3f		GPU:%6.3f", tProfiling.m_Name.c_str(), tProfiling.CPUTime, tProfiling.GPUTime);
 				if (!tProfiling.child.empty())
 				{
-					bool bChildNodeOpen = ImGui::TreeNode("%s", tProfiling.m_Name.c_str());
-					ImGui::Text("CPU %7.3f ms  CPU %7.3f ms", tProfiling.CPUTime, tProfiling.GPUTime);
+					bool bChildNodeOpen = ImGui::TreeNode(tProfiling.m_Name.c_str());
 					if (bChildNodeOpen)
 					{
 						for (size_t i = 0; i < tProfiling.child.size(); i++)
@@ -52,10 +51,6 @@ void FProfilingEditor::DrawEditor(float DeltaTime)
 						}
 						ImGui::TreePop();
 					}
-				}
-				else
-				{
-					ImGui::Text("%-20s CPU:%6.3f		GPU:%6.3f", tProfiling.m_Name.c_str(), tProfiling.CPUTime, tProfiling.GPUTime);
 				}
 			};
 		for (size_t i = 0; i < aProfilingTime.size(); i++)
