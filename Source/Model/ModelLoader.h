@@ -97,6 +97,7 @@ namespace Renderer
         Math::AxisAlignedBox& boundingBox
     );
 
+	bool BuildModel_OBJ(ModelData& model, const std::wstring& filePath);
     bool BuildModel( ModelData& model, const glTF::Asset& asset, int sceneIdx = -1 );
     bool SaveModel( const std::wstring& filePath, const ModelData& model );
     

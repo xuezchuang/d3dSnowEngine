@@ -25,6 +25,7 @@
 
 #include <fstream>
 #include <unordered_map>
+#include "tiny_obj_loader.h"
 
 using namespace Renderer;
 using namespace Graphics;
@@ -134,6 +135,222 @@ void LoadMaterials(Model& model,
     }
 }
 
+bool FileExists2(const std::wstring& fileName)
+{
+	struct _stat64 fileStat;
+	return _wstat64(fileName.c_str(), &fileStat) == 0;
+}
+
+bool Renderer::BuildModel_OBJ(ModelData& model, const std::wstring& filePath)
+{
+	const std::wstring basePath = Utility::GetBasePath(filePath);
+
+	std::ifstream inputFile(filePath);
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string err;
+
+	tinyobj::LoadObj(&attrib, &shapes, &materials, &err, &inputFile, nullptr, true);
+
+	model.m_SceneGraph.resize(1);
+
+	GraphNode& node = model.m_SceneGraph[0];
+	node.xform = Matrix4(kIdentity);
+	node.rotation = Quaternion(kIdentity);
+	node.scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	node.matrixIdx = 0;
+	node.hasSibling = 0;
+
+	model.m_MaterialTextures.resize(materials.size());
+	model.m_MaterialConstants.resize(materials.size());
+	model.m_TextureNames.clear();
+	model.m_TextureOptions.clear();
+
+	std::map<std::string, uint16_t> fileNameMap;
+
+	for (size_t i = 0; i < materials.size(); i++)
+	{
+		MaterialTextureData& textureData = model.m_MaterialTextures[i];
+		textureData.addressModes = 0x55555;
+
+		const std::string& baseColorPath = materials[i].diffuse_texname;
+		const std::string& metallicRoughnessPath = materials[i].specular_texname;
+		const std::string& emissivePath = materials[i].emissive_texname;
+		const std::string& normalPath = materials[i].normal_texname;
+
+		const std::wstring baseColorFullPath = basePath + Utility::UTF8ToWideString(baseColorPath);
+		const std::wstring metallicRoughnessFullPath = basePath + Utility::UTF8ToWideString(metallicRoughnessPath);
+		const std::wstring emissiveFullPath = basePath + Utility::UTF8ToWideString(emissivePath);
+		const std::wstring normalFullPath = basePath + Utility::UTF8ToWideString(normalPath);
+
+		textureData.stringIdx[kBaseColor] = 0xFFFF;
+		textureData.stringIdx[kMetallicRoughness] = 0xFFFF;
+		textureData.stringIdx[kOcclusion] = 0xFFFF;
+		textureData.stringIdx[kEmissive] = 0xFFFF;
+		textureData.stringIdx[kNormal] = 0xFFFF;
+
+		bool alphaTest = false;
+		const std::string lowerCaseName = Utility::ToLower(baseColorPath);
+		if (lowerCaseName.find("thorn") != std::string::npos ||
+			lowerCaseName.find("plant") != std::string::npos ||
+			lowerCaseName.find("chain") != std::string::npos)
+		{
+			alphaTest = true;
+		}
+
+		// Handle base color texture
+		auto mapLookup = fileNameMap.find(baseColorPath);
+		if (mapLookup != fileNameMap.end())
+		{
+			textureData.stringIdx[kBaseColor] = mapLookup->second;
+		}
+		else if (baseColorPath.size() > 0 && FileExists2(baseColorFullPath))
+		{
+			fileNameMap[baseColorPath] = (uint16_t)model.m_TextureNames.size();
+			textureData.stringIdx[kBaseColor] = (uint16_t)model.m_TextureNames.size();
+			model.m_TextureNames.push_back(baseColorPath);
+			model.m_TextureOptions.push_back(TextureOptions(true, alphaTest, true));
+		}
+
+		// Handle occlusionMetallicRoughness texture
+		mapLookup = fileNameMap.find(metallicRoughnessPath);
+		if (mapLookup != fileNameMap.end())
+		{
+			textureData.stringIdx[kMetallicRoughness] = mapLookup->second;
+		}
+		else if (metallicRoughnessPath.size() > 0 && FileExists2(metallicRoughnessFullPath))
+		{
+			fileNameMap[metallicRoughnessPath] = (uint16_t)model.m_TextureNames.size();
+			textureData.stringIdx[kMetallicRoughness] = (uint16_t)model.m_TextureNames.size();
+			textureData.stringIdx[kOcclusion] = (uint16_t)model.m_TextureNames.size();
+			model.m_TextureNames.push_back(metallicRoughnessPath);
+			model.m_TextureOptions.push_back(TextureOptions(false, false, true));
+		}
+
+		// Handle emissive texture
+		mapLookup = fileNameMap.find(emissivePath);
+		if (mapLookup != fileNameMap.end())
+		{
+			textureData.stringIdx[kEmissive] = mapLookup->second;
+		}
+		else if (emissivePath.size() > 0 && FileExists2(emissiveFullPath))
+		{
+			fileNameMap[emissivePath] = (uint16_t)model.m_TextureNames.size();
+			textureData.stringIdx[kEmissive] = (uint16_t)model.m_TextureNames.size();
+			model.m_TextureNames.push_back(emissivePath);
+			model.m_TextureOptions.push_back(TextureOptions(true, false, true));
+		}
+
+		// Handle normal texture
+		mapLookup = fileNameMap.find(normalPath);
+		if (mapLookup != fileNameMap.end())
+		{
+			textureData.stringIdx[kNormal] = mapLookup->second;
+		}
+		else if (normalPath.size() > 0 && FileExists2(normalFullPath))
+		{
+			fileNameMap[normalPath] = (uint16_t)model.m_TextureNames.size();
+			textureData.stringIdx[kNormal] = (uint16_t)model.m_TextureNames.size();
+			model.m_TextureNames.push_back(normalPath);
+			model.m_TextureOptions.push_back(TextureOptions(false, false, true));
+		}
+
+		MaterialConstantData& constantData = model.m_MaterialConstants[i];
+		//constantData.baseColorFactor[0] = 1.0f;
+		//constantData.baseColorFactor[1] = 1.0f;
+		//constantData.baseColorFactor[2] = 1.0f;
+		//constantData.baseColorFactor[3] = 1.0f;
+		//constantData.emissiveFactor[0] = 1.0f;
+		//constantData.emissiveFactor[1] = 1.0f;
+		//constantData.emissiveFactor[2] = 1.0f;
+		constantData.baseColorFactor[0] = materials[i].ambient[0];
+		constantData.baseColorFactor[1] = materials[i].ambient[1];
+		constantData.baseColorFactor[2] = materials[i].ambient[2];
+		constantData.baseColorFactor[3] = 1.0f;
+		constantData.emissiveFactor[0] = materials[i].emission[0];
+		constantData.emissiveFactor[1] = materials[i].emission[1];
+		constantData.emissiveFactor[2] = materials[i].emission[2];
+		constantData.metallicFactor = 1.0f;
+		constantData.roughnessFactor = 1.0f;
+		constantData.normalTextureScale = 1.0f;
+		constantData.flags = 0x3C000000;
+		if (alphaTest)
+			constantData.flags |= 0x60; // twoSided + alphaTest
+	}
+
+	ASSERT(model.m_TextureOptions.size() == model.m_TextureNames.size());
+	for (size_t ti = 0; ti < model.m_TextureNames.size(); ++ti)
+	{
+		std::wstring fullPath = basePath + Utility::UTF8ToWideString(model.m_TextureNames[ti]);
+		CompileTextureOnDemand(fullPath, model.m_TextureOptions[ti]);
+	}
+
+	model.m_BoundingSphere = BoundingSphere(kZero);
+	model.m_BoundingBox = AxisAlignedBox(kZero);
+
+	glTF::Accessor PosStream;
+	PosStream.dataPtr = reinterpret_cast<byte*>(attrib.vertices.data());
+	PosStream.stride = 0;// mesh.vertexStride;
+	PosStream.count = (uint32_t)attrib.vertices.size();
+	PosStream.componentType = glTF::Accessor::kFloat;
+	PosStream.type = glTF::Accessor::kVec3;
+
+	glTF::Accessor UVStream;
+	UVStream.dataPtr = reinterpret_cast<byte*>(attrib.texcoords.data());
+	UVStream.stride = 12;// mesh.vertexStride;
+	UVStream.count = (uint32_t)attrib.texcoords.size();
+	UVStream.componentType = glTF::Accessor::kFloat;
+	UVStream.type = glTF::Accessor::kVec2;
+
+	glTF::Accessor NormalStream;
+	NormalStream.dataPtr = reinterpret_cast<byte*>(attrib.normals.data());
+	NormalStream.stride = 20;
+	NormalStream.count = (uint32_t)attrib.normals.size();
+	NormalStream.componentType = glTF::Accessor::kFloat;
+	NormalStream.type = glTF::Accessor::kVec3;
+
+	// We're going to piggy-back off of the work to compile glTF meshes by pretending that's what we have.
+	for (uint32_t i = 0; i < shapes.size(); ++i)
+	{
+		tinyobj::mesh_t& mesh = shapes[i].mesh;
+
+		glTF::Accessor IndexStream;
+		IndexStream.dataPtr = reinterpret_cast<byte*>(mesh.indices.data());
+		IndexStream.stride = 2;
+		IndexStream.count = (uint32_t)mesh.indices.size();
+		IndexStream.componentType = glTF::Accessor::kUnsignedShort;
+		IndexStream.type = glTF::Accessor::kScalar;
+
+		//glTF::Material material;
+		//material.flags = model.m_MaterialConstants[mesh.materialIndex].flags;
+		//material.index = mesh.materialIndex;
+
+		glTF::Mesh gltfMesh;
+		gltfMesh.primitives.resize(1);
+
+		glTF::Primitive& prim = gltfMesh.primitives[0];
+		prim.attributes[glTF::Primitive::kPosition] = &PosStream;
+		//prim.attributes[glTF::Primitive::kTexcoord0] = &UVStream;
+		//prim.attributes[glTF::Primitive::kNormal] = &NormalStream;
+		prim.indices = &IndexStream;
+		//prim.material = &material;
+		prim.attribMask = 0xB;
+		prim.mode = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		//memcpy(prim.minPos, &mesh.boundingBox.GetMin(), 12);
+		//memcpy(prim.maxPos, &mesh.boundingBox.GetMax(), 12);
+		prim.minIndex = 0;
+		prim.maxIndex = 0;
+
+		BoundingSphere sphereOS;
+		AxisAlignedBox boxOS;
+		Renderer::CompileMesh(model.m_Meshes, model.m_GeometryData, gltfMesh, 0, Matrix4(kIdentity), sphereOS, boxOS);
+		model.m_BoundingSphere = model.m_BoundingSphere.Union(sphereOS);
+		model.m_BoundingBox.AddBoundingBox(boxOS);
+	}
+	return true;
+}
+
 std::shared_ptr<Model> Renderer::LoadModel(const std::wstring& filePath, bool forceRebuild)
 {
     const std::wstring miniFileName = Utility::RemoveExtension(filePath) + L".mini";
@@ -200,6 +417,11 @@ std::shared_ptr<Model> Renderer::LoadModel(const std::wstring& filePath, bool fo
             if (!modelh3d.Load(filePath) || !modelh3d.BuildModel(modelData, basePath))
                 return nullptr;
         }
+		else if (fileExt == L"obj")
+		{
+			if (!BuildModel_OBJ(modelData, filePath))
+				return nullptr;
+		}
         else
         {
             Utility::Printf(L"Unsupported model file extension: %ws\n", fileExt.c_str());

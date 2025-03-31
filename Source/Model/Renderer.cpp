@@ -536,6 +536,17 @@ void MeshSorter::Sort()
 {
     struct { bool operator()(uint64_t a, uint64_t b) const { return a < b; } } Cmp;
     std::sort(m_SortKeys.begin(), m_SortKeys.end(), Cmp);
+
+	if (m_BatchType == kDefault)
+	{
+		int nTolRenderCount = 0;
+		for (const auto& it : m_SortObjects)
+		{
+			nTolRenderCount += it.mesh->draw[0].primCount;
+		}
+		SetRenderTriangleCount(nTolRenderCount);
+	}
+
 }
 
 void MeshSorter::RenderMeshes(

@@ -61,6 +61,7 @@ void Model::Render(
 
         pMesh += sizeof(Mesh) + (mesh.numDraws - 1) * sizeof(Mesh::Draw);
     }
+
 }
 
 void ModelInstance::Render(MeshSorter& sorter) const

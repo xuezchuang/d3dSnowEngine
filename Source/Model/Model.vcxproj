@@ -38,6 +38,7 @@
     <Import Project="..\PropertySheets\Build.props" />
     <Import Project="..\..\Packages\directxmesh_desktop_win10.2024.6.5.1\build\native\directxmesh_desktop_win10.targets" Condition="Exists('..\..\Packages\directxmesh_desktop_win10.2024.6.5.1\build\native\directxmesh_desktop_win10.targets')" />
     <Import Project="..\..\Packages\directxtex_desktop_win10.2024.6.5.1\build\native\directxtex_desktop_win10.targets" Condition="Exists('..\..\Packages\directxtex_desktop_win10.2024.6.5.1\build\native\directxtex_desktop_win10.targets')" />
+    <Import Project="..\..\packages\fbxsdk.2020.0.1.2\build\native\fbxsdk.targets" Condition="Exists('..\..\packages\fbxsdk.2020.0.1.2\build\native\fbxsdk.targets')" />
   </ImportGroup>
   <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
     <Import Project="..\PropertySheets\Desktop.props" />
@@ -63,6 +64,9 @@
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </AdditionalLibraryDirectories>
     </Lib>
+    <ClCompile>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">__WRL_NO_DEFAULT_LIB__;TINYOBJLOADER_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -79,6 +83,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SponzaRenderer.h" />
     <ClInclude Include="TextureConvert.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
@@ -185,5 +190,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\Packages\directxmesh_desktop_win10.2024.6.5.1\build\native\directxmesh_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Packages\directxmesh_desktop_win10.2024.6.5.1\build\native\directxmesh_desktop_win10.targets'))" />
     <Error Condition="!Exists('..\..\Packages\directxtex_desktop_win10.2024.6.5.1\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Packages\directxtex_desktop_win10.2024.6.5.1\build\native\directxtex_desktop_win10.targets'))" />
+    <Error Condition="!Exists('..\..\packages\fbxsdk.2020.0.1.2\build\native\fbxsdk.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\fbxsdk.2020.0.1.2\build\native\fbxsdk.targets'))" />
   </Target>
 </Project>
