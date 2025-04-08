@@ -403,6 +403,13 @@ void GameInput::Update( float frameDelta )
         s_AnalogsTC[i] = s_Analogs[i] * frameDelta;
     }
 
+
+	//if (GameInput::IsPressed(GameInput::kKey_f7))
+	//{
+	//	ShowCursor(FALSE);
+	//	//if (FAILED(s_Mouse->SetCooperativeLevel(GameCore::g_hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
+	//		//ASSERT(false, "Mouse SetCooperativeLevel failed.");
+	//}
 }
 
 bool GameInput::IsAnyPressed( void )

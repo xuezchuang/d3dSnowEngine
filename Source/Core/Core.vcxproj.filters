@@ -508,6 +508,7 @@
     <ClCompile Include="UploadBuffer.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Util\CommandLineArg.cpp" />
+    <ClCompile Include="GameInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitonicSort.h" />
@@ -533,7 +534,6 @@
     <ClInclude Include="EsramAllocator.h" />
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="FXAA.h" />
-    <ClInclude Include="GameInput.h" />
     <ClInclude Include="GpuResource.h" />
     <ClInclude Include="GpuTimeManager.h" />
     <ClInclude Include="GameCore.h" />
@@ -581,6 +581,7 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Util\CommandLineArg.h" />
     <ClInclude Include="VectorMath.h" />
+    <ClInclude Include="GameInput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Math\Functions.inl" />

@@ -3,6 +3,9 @@
 #include "../../Mesh/Core/Material/Material.h"
 #include "../../Core/Construction/MacroConstruction.h"
 #include "Core/MeshAssist.h"
+#include "assimp/Importer.hpp"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
 
 CCustomMeshComponent::CCustomMeshComponent()
 {
@@ -19,9 +22,11 @@ void CCustomMeshComponent::CreateMesh(
 	char Buff[1024] = { 0 };
 	get_path_clean_filename(Buff,InPath.c_str());
 
-	if (find_string(Buff, ".obj", 0) != -1 ||
-		find_string(Buff, ".OBJ", 0) != -1)
+	if (find_string(Buff, ".obj", 0) != -1 || find_string(Buff, ".OBJ", 0) != -1)
 	{
+		if (LoadObj(InPath, MeshData))
+			return;
+			
 		//拿到文件大小
 		unsigned int FileSize = get_file_size_by_filename(InPath.c_str());
 
@@ -40,8 +45,7 @@ void CCustomMeshComponent::CreateMesh(
 
 		delete Buff;
 	}
-	else if (find_string(Buff, ".fbx", 0) != -1 ||
-		find_string(Buff, ".FBX", 0) != -1)
+	else if (find_string(Buff, ".fbx", 0) != -1 || find_string(Buff, ".FBX", 0) != -1)
 	{
 		char PathBuff[1024] = { 0 };
 		get_full_path(PathBuff,1024, InPath.c_str());
@@ -179,6 +183,76 @@ bool CCustomMeshComponent::LoadObjFromBuff(char* InBuff, uint32_t InBuffSize, FM
 	}
 
 	return false;
+}
+
+bool CCustomMeshComponent::LoadObj(const string& InBuff, FMeshRenderingData& MeshData)
+{
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(InBuff,
+		aiProcess_Triangulate |        // 转换所有面为三角形
+		aiProcess_GenNormals |         // 如果没有法线，则生成法线
+		aiProcess_JoinIdenticalVertices // 合并相同顶点
+	);
+
+	int nTotalVertices = 0;
+
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[i];
+		nTotalVertices += mesh->mNumVertices;
+	}
+
+	int nIndex = 0;
+	MeshData.Data.VertexData.resize(nTotalVertices);
+
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[i];
+
+		MeshData.SectionDescribe.push_back(FMeshSection());
+		FMeshSection& Section = MeshData.SectionDescribe[MeshData.SectionDescribe.size() - 1];
+
+		for (unsigned int k = 0; k < mesh->mNumVertices; k++)
+		{
+			MeshData.Data.VertexData[nIndex].Position.x = mesh->mVertices[k].x;
+			MeshData.Data.VertexData[nIndex].Position.y = mesh->mVertices[k].y;
+			MeshData.Data.VertexData[nIndex].Position.z = mesh->mVertices[k].z;
+
+			if (mesh->HasNormals())
+			{
+				MeshData.Data.VertexData[nIndex].Normal.x = mesh->mNormals[k].x;
+				MeshData.Data.VertexData[nIndex].Normal.y = mesh->mNormals[k].y;
+				MeshData.Data.VertexData[nIndex].Normal.z = mesh->mNormals[k].z;
+			}
+
+			if (mesh->HasTextureCoords(0))
+			{
+				MeshData.Data.VertexData[nIndex].TexCoord.x = mesh->mTextureCoords[0][k].x;
+				MeshData.Data.VertexData[nIndex].TexCoord.y = mesh->mTextureCoords[0][k].y;
+			}
+
+			MeshData.Data.VertexData[nIndex].Color = XMFLOAT4(Colors::White);
+			nIndex++;
+		}
+
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) 
+		{
+			aiFace face = mesh->mFaces[i];
+
+			for (unsigned int j = 0; j < face.mNumIndices; j++) 
+			{
+				MeshData.Data.IndexData.push_back(face.mIndices[j]);
+			}
+		}
+
+		Section.IndexSize = MeshData.Data.IndexData.size();
+		Section.VertexSize = MeshData.Data.VertexData.size();
+
+	}
+
+	SpawnDefaultMaterial();
+
+	return true;
 }
 
 void CCustomMeshComponent::BuildKey(size_t& OutHashKey, const std::string& InPath, const FIEParam& InParam)

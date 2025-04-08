@@ -45,6 +45,10 @@ struct T_PROFILING
 
 void getAllProfilingTime(std::vector<T_PROFILING>& aProfilingTime);
 
+void SetRenderTriangleCount(int nCount);
+int GetRenderTriangleCount();
+
+
 #ifdef RELEASE
 class ScopedTimer
 {

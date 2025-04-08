@@ -36,7 +36,7 @@ using namespace Math;
 namespace SSAO
 {
     BoolVar Enable("Graphics/SSAO/Enable", true);
-    BoolVar DebugDraw("Graphics/SSAO/Debug Draw", false);
+    BoolVar DebugDraw("Graphics/SSAO/Debug Draw", true);
     BoolVar AsyncCompute("Graphics/SSAO/Async Compute", false);
     BoolVar ComputeLinearZ("Graphics/SSAO/Always Linearize Z", true);
 
@@ -538,12 +538,20 @@ void SSAO::Render( GraphicsContext& GfxContext, const float* ProjMat, float Near
         }
 
         ComputeContext& CC = GfxContext.GetComputeContext();
-        CC.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-        CC.TransitionResource(g_SSAOFullScreen, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-        CC.SetRootSignature(s_RootSignature);
-        CC.SetPipelineState(s_DebugSSAOCS);
-        CC.SetDynamicDescriptors(2, 0, 1, &g_SceneColorBuffer.GetUAV());
-        CC.SetDynamicDescriptors(3, 0, 1, &g_SSAOFullScreen.GetSRV());
-        CC.Dispatch2D(g_SSAOFullScreen.GetWidth(), g_SSAOFullScreen.GetHeight());
+		CC.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+		CC.TransitionResource(g_SSAOFullScreen, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+		CC.SetRootSignature(s_RootSignature);
+		CC.SetPipelineState(s_DebugSSAOCS);
+		CC.SetDynamicDescriptors(2, 0, 1, &g_SceneColorBuffer.GetUAV());
+		CC.SetDynamicDescriptors(3, 0, 1, &g_SSAOFullScreen.GetSRV());
+		CC.Dispatch2D(g_SSAOFullScreen.GetWidth(), g_SSAOFullScreen.GetHeight());
+
+		//CC.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+		//CC.TransitionResource(g_SceneDepthBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+		//CC.SetRootSignature(s_RootSignature);
+		//CC.SetPipelineState(s_DebugSSAOCS);
+		//CC.SetDynamicDescriptors(2, 0, 1, &g_SceneColorBuffer.GetUAV());
+		//CC.SetDynamicDescriptors(3, 0, 1, &g_SceneDepthBuffer.GetDepthSRV());
+		//CC.Dispatch2D(g_SceneDepthBuffer.GetWidth(), g_SceneDepthBuffer.GetHeight());
     }
 }

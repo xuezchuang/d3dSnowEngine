@@ -20,5 +20,8 @@ RWTexture2D<float3> OutColor : register( u0 );
 [numthreads( 8, 8, 1 )]
 void main( uint3 DTid : SV_DispatchThreadID )
 {
-    OutColor[DTid.xy] = SsaoBuffer[DTid.xy].xxx;
+	//if (SsaoBuffer[DTid.xy].x < 0.9)
+	//	OutColor[DTid.xy] = float3(1.0f, 1.0f, 0.0f);
+	//else
+		OutColor[DTid.xy] = SsaoBuffer[DTid.xy].xxx;
 }

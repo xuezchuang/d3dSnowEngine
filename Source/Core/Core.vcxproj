@@ -77,12 +77,12 @@
     <ClInclude Include="DepthOfField.h" />
     <ClInclude Include="DynamicDescriptorHeap.h" />
     <ClInclude Include="DescriptorHeap.h" />
+    <ClInclude Include="GameInput.h" />
     <ClInclude Include="GpuBuffer.h" />
     <ClInclude Include="EngineProfiling.h" />
     <ClInclude Include="EsramAllocator.h" />
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="FXAA.h" />
-    <ClInclude Include="GameInput.h" />
     <ClInclude Include="GpuResource.h" />
     <ClInclude Include="GpuTimeManager.h" />
     <ClInclude Include="GameCore.h" />
@@ -152,6 +152,7 @@
     <ClCompile Include="EngineTuning.cpp" />
     <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="FXAA.cpp" />
+    <ClCompile Include="GameInput.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GpuBuffer.cpp" />

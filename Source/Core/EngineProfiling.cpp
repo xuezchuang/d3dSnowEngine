@@ -194,6 +194,7 @@ private:
 namespace EngineProfiling
 {
 	bool Paused = false;
+	int nTriangleCount = 0;
 }
 
 class NestedTimingTree
@@ -543,6 +544,16 @@ void getAllProfilingTime(std::vector<T_PROFILING>& aProfilingTime)
 }
 
 
+
+void SetRenderTriangleCount(int nCount)
+{
+	EngineProfiling::nTriangleCount = nCount;
+}
+
+int GetRenderTriangleCount()
+{
+	return EngineProfiling::nTriangleCount;
+}
 
 void NestedTimingTree::PushProfilingMarker( const wstring& name, CommandContext* Context )
 {

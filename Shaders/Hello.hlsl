@@ -93,8 +93,9 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 	return Out;
 }
 
-float4 PixelShaderMain(MeshVertexOut MVOut) :SV_TARGET
+float4 PixelShaderMain(MeshVertexOut MVOut/*, out float depth : SV_Depth*/) : SV_TARGET
 {
+	//depth = 1.0 - MVOut.Position.z / MVOut.Position.w;
 	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
 
 	MVOut.TexPositionHome /= MVOut.TexPositionHome.w;

@@ -41,7 +41,8 @@ void GCamera::BeginInit()
 	////(1,1,0) (-1,1,0) (-1,-1,0) (1,-1,0) (1,1,1) (-1,1,1) (-1,-1,1) (1,-1,1)
 	////基于视野构建左手透视投影矩阵
 	SetFrustum(
-		0.25f * XM_PI,//以弧度为单位的自上而下的视场角。
+		//0.25f * XM_PI,//以弧度为单位的自上而下的视场角。
+		XMConvertToRadians(60.0f),
 		AspectRatio,//视图空间 X:Y 的纵横比。
 		1.0f,//到近剪裁平面的距离。必须大于零。
 		10000.f);//到远剪裁平面的距离。必须大于零。
@@ -246,19 +247,18 @@ void GCamera::MoveForward(float InValue)
 #if EDITOR_ENGINE
 	if (FOperationHandleSelectManage::Get()->IsCaptureMouseNotOnUI())
 #endif
+
+	if (CmeraType == ECmeraType::CameraRoaming)
 	{
-		if (CmeraType == ECmeraType::CameraRoaming)
-		{
-			XMFLOAT3 AT3Position = GetRootComponent()->GetPosition();
-			XMFLOAT3 AT3ForwardVector = GetRootComponent()->GetForwardVector();
+		XMFLOAT3 AT3Position = GetRootComponent()->GetPosition();
+		XMFLOAT3 AT3ForwardVector = GetRootComponent()->GetForwardVector();
 
-			XMVECTOR AmountMovement = XMVectorReplicate(InValue * 1.f);
-			XMVECTOR Forward = XMLoadFloat3(&AT3ForwardVector);
-			XMVECTOR Position = XMLoadFloat3(&AT3Position);
+		XMVECTOR AmountMovement = XMVectorReplicate(InValue * 1.f);
+		XMVECTOR Forward = XMLoadFloat3(&AT3ForwardVector);
+		XMVECTOR Position = XMLoadFloat3(&AT3Position);
 
-			XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Forward, Position));
-			GetRootComponent()->SetPosition(AT3Position);
-		}
+		XMStoreFloat3(&AT3Position, XMVectorMultiplyAdd(AmountMovement, Forward, Position));
+		GetRootComponent()->SetPosition(AT3Position);
 	}
 }
 

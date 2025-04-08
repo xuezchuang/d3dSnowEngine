@@ -289,65 +289,70 @@ bool Renderer::BuildModel_OBJ(ModelData& model, const std::wstring& filePath)
 	model.m_BoundingSphere = BoundingSphere(kZero);
 	model.m_BoundingBox = AxisAlignedBox(kZero);
 
-	glTF::Accessor PosStream;
-	PosStream.dataPtr = reinterpret_cast<byte*>(attrib.vertices.data());
-	PosStream.stride = 0;// mesh.vertexStride;
-	PosStream.count = (uint32_t)attrib.vertices.size();
-	PosStream.componentType = glTF::Accessor::kFloat;
-	PosStream.type = glTF::Accessor::kVec3;
+	uint32_t totalBufferSize = (uint32_t)(attrib.vertices.size() + shapes[0].mesh.indices.size());
 
-	glTF::Accessor UVStream;
-	UVStream.dataPtr = reinterpret_cast<byte*>(attrib.texcoords.data());
-	UVStream.stride = 12;// mesh.vertexStride;
-	UVStream.count = (uint32_t)attrib.texcoords.size();
-	UVStream.componentType = glTF::Accessor::kFloat;
-	UVStream.type = glTF::Accessor::kVec2;
+	Utility::ByteArray stagingBuffer;
+	stagingBuffer.reset(new std::vector<byte>(totalBufferSize));
+	uint8_t* uploadMem = stagingBuffer->data();
 
-	glTF::Accessor NormalStream;
-	NormalStream.dataPtr = reinterpret_cast<byte*>(attrib.normals.data());
-	NormalStream.stride = 20;
-	NormalStream.count = (uint32_t)attrib.normals.size();
-	NormalStream.componentType = glTF::Accessor::kFloat;
-	NormalStream.type = glTF::Accessor::kVec3;
-
-	// We're going to piggy-back off of the work to compile glTF meshes by pretending that's what we have.
+	std::memcpy(uploadMem, attrib.vertices.data(), attrib.vertices.size());
+	std::memcpy(uploadMem + attrib.vertices.size(), shapes[0].mesh.indices.data(), shapes[0].mesh.indices.size());
+	
+	size_t curVBOffset = 0;
+	size_t curDepthVBOffset = 0;
+	size_t curIBOffset = 0;
 	for (uint32_t i = 0; i < shapes.size(); ++i)
 	{
-		tinyobj::mesh_t& mesh = shapes[i].mesh;
+		tinyobj::mesh_t& Objmesh = shapes[i].mesh;
+		AxisAlignedBox BBox = AxisAlignedBox(kZero);
+		for (size_t j = 0; j < Objmesh.indices.size(); j++)
+		{
+			int nIndex = (Objmesh.indices[j].vertex_index * 3);
+			float* p = &attrib.vertices[nIndex];
+			Vector3 pos(*(p + 0), *(p + 1), *(p + 2));
+			BBox.AddPoint(pos);
+		}
+		Scalar maxRadius(kZero);
 
-		glTF::Accessor IndexStream;
-		IndexStream.dataPtr = reinterpret_cast<byte*>(mesh.indices.data());
-		IndexStream.stride = 2;
-		IndexStream.count = (uint32_t)mesh.indices.size();
-		IndexStream.componentType = glTF::Accessor::kUnsignedShort;
-		IndexStream.type = glTF::Accessor::kScalar;
+		Vector3 sphereCenterLS = (Vector3(*(XMFLOAT3*)&BBox.GetMin()) + Vector3(*(XMFLOAT3*)&BBox.GetMax())) * 0.5f;
+		maxRadius = Max(maxRadius, LengthSquare(BBox.GetDimensions()));
+		BoundingSphere BSphere = BoundingSphere(sphereCenterLS, maxRadius);
+		uint16_t psoFlags = PSOFlags::kHasPosition;
 
-		//glTF::Material material;
-		//material.flags = model.m_MaterialConstants[mesh.materialIndex].flags;
-		//material.index = mesh.materialIndex;
+		size_t vbSize = attrib.vertices.size();
+		size_t vbDepthSize = 0;
+		size_t ibSize = Objmesh.indices.size();
+		
 
-		glTF::Mesh gltfMesh;
-		gltfMesh.primitives.resize(1);
+		Mesh* mesh = (Mesh*)malloc(sizeof(Mesh) + sizeof(Mesh::Draw));
 
-		glTF::Primitive& prim = gltfMesh.primitives[0];
-		prim.attributes[glTF::Primitive::kPosition] = &PosStream;
-		//prim.attributes[glTF::Primitive::kTexcoord0] = &UVStream;
-		//prim.attributes[glTF::Primitive::kNormal] = &NormalStream;
-		prim.indices = &IndexStream;
-		//prim.material = &material;
-		prim.attribMask = 0xB;
-		prim.mode = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		//memcpy(prim.minPos, &mesh.boundingBox.GetMin(), 12);
-		//memcpy(prim.maxPos, &mesh.boundingBox.GetMax(), 12);
-		prim.minIndex = 0;
-		prim.maxIndex = 0;
+		mesh->bounds[0] = BSphere.GetCenter().GetX();
+		mesh->bounds[1] = BSphere.GetCenter().GetY();
+		mesh->bounds[2] = BSphere.GetCenter().GetZ();
+		mesh->bounds[3] = BSphere.GetRadius();
+		mesh->vbOffset = (uint32_t)curVBOffset;
+		mesh->vbSize = (uint32_t)vbSize;
+		mesh->vbDepthOffset = (uint32_t)curDepthVBOffset;
+		mesh->vbDepthSize = (uint32_t)vbDepthSize;
+		mesh->ibOffset = (uint32_t)curIBOffset;
+		mesh->ibSize = (uint32_t)ibSize;
+		mesh->vbStride = (uint8_t)12;
+		mesh->ibFormat = uint8_t(DXGI_FORMAT_R32_UINT);
+		mesh->meshCBV = (uint16_t)0;
+		mesh->materialCBV = 0;
+		mesh->psoFlags = psoFlags;
+		mesh->pso = 0xFFFF;
+		
+		mesh->numJoints = 0;
+		mesh->startJoint = 0xFFFF;
+		mesh->numDraws = (uint16_t)0;
 
-		BoundingSphere sphereOS;
-		AxisAlignedBox boxOS;
-		Renderer::CompileMesh(model.m_Meshes, model.m_GeometryData, gltfMesh, 0, Matrix4(kIdentity), sphereOS, boxOS);
-		model.m_BoundingSphere = model.m_BoundingSphere.Union(sphereOS);
-		model.m_BoundingBox.AddBoundingBox(boxOS);
+		model.m_Meshes.push_back(mesh);
+		curIBOffset += ibSize;
 	}
+
+	model.m_GeometryData.insert(model.m_GeometryData.end(), stagingBuffer->begin(), stagingBuffer->end());
+
 	return true;
 }
 

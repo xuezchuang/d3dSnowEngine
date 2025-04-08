@@ -130,8 +130,10 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 
 			//定义我们要绘制的哪种图元 点 线 面
 			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
-			context.SetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
-
+			//context.SetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
+			context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			//context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+			
 			//模型起始地址偏移
 			//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
 			//GetGraphicsCommandList()->SetGraphicsRootDescriptorTable(0, DesMeshHandle);

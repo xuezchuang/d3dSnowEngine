@@ -68,20 +68,43 @@ void FOpaqueRenderLayer::BuildPSO()
 {
 	Super::BuildPSO();
 	m_PSO.SetRootSignature(*DirectXPipelineState->GetRootSignature());
-	m_PSO.SetRasterizerState(Graphics::RasterizerDefaultCw);
-	m_PSO.SetBlendState(Graphics::BlendDisable);
-	
-	m_PSO.SetDepthStencilState(Graphics::DepthStateReadWrite);
+
+	D3D12_RASTERIZER_DESC RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	D3D12_BLEND_DESC BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	D3D12_DEPTH_STENCIL_DESC DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	//RasterizerState = Graphics::RasterizerDefault;
+	//RasterizerState = Graphics::RasterizerTwoSided;
+	//RasterizerDefaultCw.CullMode = D3D12_CULL_MODE_NONE;
+	//m_PSO.SetRasterizerState(RasterizerDefaultCw);
+	//D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC();
+	//BlendState = Graphics::BlendDisable;
+	//
+	DepthStencilState = Graphics::DepthStateReadWrite;
+	// D3D12_DEPTH_STENCIL_DESC DepthState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	//DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+	//m_PSO.SetDepthStencilState(DepthState);
+
+	//DepthStencilState.DepthEnable = true;
+	//DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	//DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//DepthStencilState.StencilEnable = false;
+
+	m_PSO.SetRasterizerState(RasterizerState);
+	m_PSO.SetBlendState(BlendState);
+	m_PSO.SetDepthStencilState(DepthStencilState);
+
 	m_PSO.SetInputLayout(InputElementDesc.size(), InputElementDesc.data());
 
 
 	m_PSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 
 	DXGI_FORMAT ColorFormat = Graphics::g_SceneColorBuffer.GetFormat();
-	//DXGI_FORMAT ColorFormat = Graphics::GetColorBuffer()->GetFormat();
 	DXGI_FORMAT DepthFormat = Graphics::g_SceneDepthBuffer.GetFormat();
 
 	m_PSO.SetRenderTargetFormats(1, &ColorFormat, DepthFormat);
+	//m_PSO.SetRenderTargetFormats(0, NULL, DepthFormat);
 
 	m_PSO.SetVertexShader(VertexShader.GetBufferPointer(), VertexShader.GetBufferSize());
 	m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());

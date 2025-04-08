@@ -196,9 +196,10 @@ public:
 		if (m_WindowsEngine = dynamic_cast<CWindowsEngine*>(Engine))
 		{
 			m_WindowsEngine->MianWindowsHandle = GetHwnd();
+			Init(m_WindowsEngine, WinMainParameters.HInstance, WinMainParameters.PrevInstance, WinMainParameters.CmdLine, WinMainParameters.ShowCmd);
 		}
 		UIPipeline.Init();
-		if (0)
+		if (1)
 			return;
 
 
@@ -226,6 +227,9 @@ public:
 			Sponza::Startup(m_Camera);
 #else
 			m_ModelInst = Renderer::LoadModel(L"Sponza/PBR/sponza2.gltf", forceRebuild);
+			//m_ModelInst = Renderer::LoadModel(L"Sponza/PBR/shaderBall.obj", forceRebuild);
+			//m_ModelInst = Renderer::LoadModel(L"Sponza/PBR/sponza.h3d", forceRebuild);
+			
 			m_ModelInst.Resize(100.0f * m_ModelInst.GetRadius());
 			OrientedBox obb = m_ModelInst.GetBoundingBox();
 			float modelRadius = Length(obb.GetDimensions()) * 0.5f;
@@ -263,14 +267,17 @@ public:
 		//else if (GameInput::IsFirstPressed(GameInput::kRShoulder))
 		//	DebugZoom.Increment();
 
-		m_CameraController->Update(deltaT);
+		//m_CameraController->Update(deltaT);
 
 		GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Update");
 
-		m_ModelInst.Update(gfxContext, deltaT);
+		//m_ModelInst.Update(gfxContext, deltaT);
+
+		m_DeltaTime = deltaT;
+		Tick(m_WindowsEngine, deltaT);
 
 		gfxContext.Finish();
-
+		return;
 		// We use viewport offsets to jitter sample positions from frame to frame (for TAA.)
 		// D3D has a design quirk with fractional offsets such that the implicit scissor
 		// region of a viewport is floor(TopLeftXY) and floor(TopLeftXY + WidthHeight), so
@@ -291,19 +298,19 @@ public:
 		m_MainScissor.right = (LONG)g_SceneColorBuffer.GetWidth();
 		m_MainScissor.bottom = (LONG)g_SceneColorBuffer.GetHeight();
 
-		//m_DeltaTime = deltaT;
-		//Tick(m_WindowsEngine, deltaT);
+
 	}
 	virtual void RenderScene(void) override
 	{
-		//m_WindowsEngine->RenderScene(m_DeltaTime);
+		m_WindowsEngine->RenderScene(m_DeltaTime);
 
 		//{
 		//	GraphicsContext& gfxContext = GraphicsContext::Begin(L"Render UI");
 		//	m_WindowsEngine->RenderScene(gfxContext, m_DeltaTime);
 		//	gfxContext.Finish();
 		//}
-		 
+		return;
+
 		GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Render");
 
 		uint32_t FrameIndex = TemporalEffects::GetFrameIndexMod2();

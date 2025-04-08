@@ -158,32 +158,74 @@ int CDirectXRenderingEngine::PostInit()
 		//	SpotLight->SetConicalOuterCorner(60.f);
 		//}	
 
-		
-		if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
+		if (0)
 		{
-			InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
-			InBoxMesh->SetPosition(XMFLOAT3(0.0f, 2.5f, 0.0f));
-			InBoxMesh->SetScale(fvector_3d(1));
-			if(CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
+			if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 			{
-				//InMaterial->SetBaseColor(fvector_4d(1.0f,0.0f,0.0f,1.0f));
-				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-				InMaterial->SetBaseColor("stone"); 
+				InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
+				InBoxMesh->SetPosition(XMFLOAT3(0.0f, 2.5f, 0.0f));
+				InBoxMesh->SetScale(fvector_3d(1));
+				if (CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
+				{
+					//InMaterial->SetBaseColor(fvector_4d(1.0f,0.0f,0.0f,1.0f));
+					InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+					InMaterial->SetBaseColor("stone");
+				}
 			}
-		}
 
-		if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
-		{
-			InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
-			InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
-			InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
-			InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
-			if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+			if (GPlaneMesh* InPlaneMesh = World->CreateActorObject<GPlaneMesh>())
 			{
-				InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-				InMaterial->SetBaseColor("tile");
+				InPlaneMesh->CreateMesh(20.0f, 30.0f, 60, 40);
+				InPlaneMesh->SetPosition(XMFLOAT3(0.f, -0.01f, 0.f));
+				InPlaneMesh->SetRotation(fvector_3d(0.f, 0.f, 0.0f));
+				InPlaneMesh->GetMeshComponent()->SetTextureScale(XMFLOAT3(8.0f, 8.0f, 1.0f));
+				if (CMaterial* InMaterial = (*InPlaneMesh->GetMaterials())[0])
+				{
+					InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+					InMaterial->SetBaseColor("tile");
+				}
 			}
 		}
+		else
+		{
+
+			if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//反射球
+			{
+				string Path = FEnginePathHelper::GetEngineContentPath() + "/cube.obj";
+				CustomMesh->CreateMesh(Path);
+
+				CustomMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
+				CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+				if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+				{
+					InMaterial->SetBaseColor(fvector_4d(1.f));
+					InMaterial->SetMaterialType(EMaterialType::Normal);
+
+					InMaterial->SetRoughness(0.01f);
+					InMaterial->SetFresnelF0(fvector_3d(0.5f));
+				}
+			}
+
+			if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//反射球
+			{
+				string Path = FEnginePathHelper::GetEngineContentPath() + "/shaderBall.obj";
+				CustomMesh->CreateMesh(Path);
+
+				CustomMesh->SetPosition(XMFLOAT3(-8.0f, -8.0f, 0.f));
+				CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+				if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+				{
+					InMaterial->SetBaseColor(fvector_4d(1.f));
+					InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+
+					InMaterial->SetRoughness(0.01f);
+					InMaterial->SetFresnelF0(fvector_3d(0.5f));
+				}
+			}
+		}
+		
+
+
 
 		goto FINIAL;
 
@@ -709,22 +751,6 @@ int CDirectXRenderingEngine::PostInit()
 			}
 		}
 
-		//if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//反射球
-		//{
-		//	string Path = "../RenZhaiEngine/Asset/man.obj";
-		//	CustomMesh->CreateMesh(Path);
-		//
-		//	CustomMesh->SetPosition(XMFLOAT3(0.f, -12, 30.f));
-		//	CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-		//	if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
-		//	{
-		//		InMaterial->SetBaseColor(fvector_4d(1.f));
-		//		InMaterial->SetMaterialType(EMaterialType::HalfLambert);
-		//
-		//		InMaterial->SetRoughness(0.01f);
-		//		InMaterial->SetFresnelF0(fvector_3d(0.5f));
-		//	}
-		//}
 		if (CClassObject* InObjectClass = AssetAssistLibrary::FindClass("Actor123"))
 		{
 			if (GActorObject* InActorObject = World->CreateActorObject<GActorObject>(InObjectClass))//透明的珠子
@@ -922,7 +948,8 @@ void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight, int wParam)
 void CDirectXRenderingEngine::RenderScene(float DeltaTime)
 {
 	GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Render");
-	MeshManage->Draw(gfxContext,DeltaTime);
+	MeshManage->PreDraw(gfxContext, DeltaTime);
+	//MeshManage->Draw(gfxContext,DeltaTime);
 	gfxContext.Finish();
 }
 

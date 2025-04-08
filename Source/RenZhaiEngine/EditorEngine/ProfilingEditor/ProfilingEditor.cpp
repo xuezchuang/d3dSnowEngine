@@ -31,6 +31,15 @@ void FProfilingEditor::DrawEditor(float DeltaTime)
 		ImGui::Text("frame %3u Hz", frameRate);
 		ImGui::TreePop();
 	}
+
+	bNodeOpen = ImGui::TreeNode("Render Info");
+	if (bNodeOpen)
+	{
+		int nTriangleCount = GetRenderTriangleCount();
+		ImGui::Text("RenderTriangleCount : %d", nTriangleCount);
+		ImGui::TreePop();
+	}
+
 	bNodeOpen = ImGui::TreeNode("Detail Info");
 	if (bNodeOpen)
 	{

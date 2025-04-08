@@ -6,6 +6,8 @@
 #include "CommandContext.h"
 #include "BufferManager.h"
 #include "Display.h"
+#include "SSAO.h"
+#include "../Engine/Core/Camera.h"
 
 FRenderingPipeline::FRenderingPipeline()
 {
@@ -144,11 +146,40 @@ void FRenderingPipeline::PreDraw(GraphicsContext& gfxContext, float DeltaTime)
 {
 	//DirectXPipelineState.PreDraw(context, DeltaTime);
 	//GeometryMap.SetDescriptorHeaps();
+	// 
 
 	gfxContext.SetRootSignature(*RootSignature.GetRootSignature());
+	// Begin rendering depth
+	gfxContext.TransitionResource(Graphics::g_SceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
+	gfxContext.ClearDepth(Graphics::g_SceneDepthBuffer);
+	//Graphics::g_SceneColorBuffer.SetClearColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+	//gfxContext.SetRenderTarget(Graphics::g_SceneColorBuffer.GetRTV(), Graphics::g_SceneDepthBuffer.GetDSV_DepthReadOnly());
+	gfxContext.SetDepthStencilTarget(Graphics::g_SceneDepthBuffer.GetDSV());
 
-	GeometryMap.Draw(gfxContext,DeltaTime);
+	if (m_Viewport.Width == 0)
+	{
+		DepthBuffer* DSV = &Graphics::g_SceneDepthBuffer;
 
+		m_Viewport.TopLeftX = 0.0f;
+		m_Viewport.TopLeftY = 0.0f;
+		m_Viewport.Width = (float)DSV->GetWidth();
+		m_Viewport.Height = (float)DSV->GetHeight();
+		m_Viewport.MinDepth = 0.0f;
+		m_Viewport.MaxDepth = 1.0f;
+
+		m_Scissor.left = 0;
+		m_Scissor.right = DSV->GetWidth();
+		m_Scissor.top = 0;
+		m_Scissor.bottom = DSV->GetWidth();
+	}
+	gfxContext.SetViewportAndScissor(m_Viewport, m_Scissor);
+	gfxContext.FlushResourceBarriers();
+	GeometryMap.Draw(gfxContext, DeltaTime);
+	RenderLayer.Draw(gfxContext, RENDERLAYER_OPAQUE, DeltaTime);
+
+	float ProjMat = GetCamera()->GetAspect();
+	SSAO::Render(gfxContext, &ProjMat, 1.0, 10000.0f);
+	
 	//渲染SSAO
 	//SSAO.Draw(DeltaTime);
 	//RootSignature.SetGraphicsRootSignature();
@@ -180,31 +211,41 @@ void FRenderingPipeline::PreDraw(GraphicsContext& gfxContext, float DeltaTime)
 void FRenderingPipeline::Draw(GraphicsContext& gfxContext, float DeltaTime)
 {	
 	//主视口
-	gfxContext.SetRootSignature(*RootSignature.GetRootSignature());
+	
 	//GeometryMap.TransitionResource(BackBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	// 
 	gfxContext.TransitionResource(Graphics::g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	gfxContext.TransitionResource(Graphics::g_SceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
-	gfxContext.ClearColor(Graphics::g_SceneColorBuffer);
 	gfxContext.ClearDepth(Graphics::g_SceneDepthBuffer);
-	gfxContext.SetRenderTarget(Graphics::g_SceneColorBuffer.GetRTV(), Graphics::g_SceneDepthBuffer.GetDSV_DepthReadOnly());
-	gfxContext.SetViewportAndScissor(0, 0, Graphics::g_SceneColorBuffer.GetWidth(), Graphics::g_SceneColorBuffer.GetHeight());
+	gfxContext.ClearColor(Graphics::g_SceneColorBuffer);
+	gfxContext.SetRenderTarget(Graphics::g_SceneColorBuffer.GetRTV(), Graphics::g_SceneDepthBuffer.GetDSV());
+	//gfxContext.SetViewportAndScissor(0, 0, Graphics::g_SceneColorBuffer.GetWidth(), Graphics::g_SceneColorBuffer.GetHeight());
+	if (m_Viewport.Width == 0)
+	{
+		DepthBuffer* DSV = &Graphics::g_SceneDepthBuffer;
 
-	GeometryMap.Draw(gfxContext, DeltaTime);
+		m_Viewport.TopLeftX = 0.0f;
+		m_Viewport.TopLeftY = 0.0f;
+		m_Viewport.Width = (float)DSV->GetWidth();
+		m_Viewport.Height = (float)DSV->GetHeight();
+		m_Viewport.MinDepth = 1.0f;
+		m_Viewport.MaxDepth = 0.0f;
 
-	// 
-	//gfxContext.FlushResourceBarriers();
-
-//	CommandContext.SetRenderTargets(1, &BackBuffer.GetRTV(), BufferManager::g_SceneDepthZ.GetDSV());
-//	CommandContext.ClearColor(BackBuffer);
-//	CommandContext.ClearDepth(BufferManager::g_SceneDepthZ);
-//
-//	CommandContext.SetViewportAndScissor(0, 0, m_GameDesc.Width, m_GameDesc.Height);
+		m_Scissor.left = 0;
+		m_Scissor.right = DSV->GetWidth();
+		m_Scissor.top = 0;
+		m_Scissor.bottom = DSV->GetWidth();
+	}
+	//gfxContext.SetDepthStencilTarget(Graphics::g_SceneDepthBuffer.GetDSV());
+	gfxContext.SetViewportAndScissor(m_Viewport, m_Scissor);
+	gfxContext.FlushResourceBarriers();
 	////CubeMap 覆盖原先被修改的CubeMap
 	//GeometryMap.DrawCubeMapTexture(DeltaTime);
 
 	////各类层级
 	//RenderLayer.Draw(RENDERLAYER_BACKGROUND,DeltaTime);
+	gfxContext.SetRootSignature(*RootSignature.GetRootSignature());
+	GeometryMap.Draw(gfxContext, DeltaTime);
 	RenderLayer.Draw(gfxContext, RENDERLAYER_OPAQUE, DeltaTime);
 	//RenderLayer.Draw(RENDERLAYER_SKINNED_OPAQUE, DeltaTime);//渲染动画层
 	//RenderLayer.Draw(RENDERLAYER_TRANSPARENT, DeltaTime);
@@ -221,6 +262,7 @@ void FRenderingPipeline::Draw(GraphicsContext& gfxContext, float DeltaTime)
 	//DirectXPipelineState.CaptureKeyboardKeys();
 
 	//gfxContext.TransitionResource(Graphics::g_SceneDepthBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
 }
 
 void FRenderingPipeline::PostDraw(float DeltaTime)

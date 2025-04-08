@@ -7,7 +7,8 @@ CWorld::CWorld()
 	BUILD_OBJECT_PARAMETERS_BY_NO_COMPONENT(, this);
 	Camera = CreateObject<GCamera>(Param, new GCamera());
 
-	Camera->SetPosition(XMFLOAT3(0.f, 10.f, -50.f));
+	Camera->SetPosition(XMFLOAT3(-5.0f, -5.0f, 3.0f));
+	//Camera->SetPosition(XMFLOAT3(0.f, 10.f, -50.f));
 	Level = NULL;
 }
 
