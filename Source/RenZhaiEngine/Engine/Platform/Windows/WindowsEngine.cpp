@@ -141,7 +141,7 @@ void CWindowsEngine::Tick(float DeltaTime)
 			//ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectMatrix;
 
 			ViewportInfo.ViewMatrix = World->GetCamera()->ViewMatrixRH;
-			ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectionMatrixRH;
+			ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectMatrixRHZ;
 
 			RenderingEngine->UpdateCalculations(DeltaTime, ViewportInfo);
 

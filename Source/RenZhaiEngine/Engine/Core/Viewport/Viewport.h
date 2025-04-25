@@ -16,14 +16,13 @@ public:
 	D3D12_VIEWPORT ViewprotInfo;
 	D3D12_RECT ViewprotRect;
 
-	//定义摄像机位置,UP，Right,Look
 	XMFLOAT4X4 ViewMatrix;
-
-	//可视范围 可视角度
 	XMFLOAT4X4 ProjectMatrix;
+
+	XMFLOAT4X4 ProjectMatrixRHZ;
 
 	// 右手坐标系矩阵（专用于 HBAO+）
 	XMFLOAT4X4 ViewMatrixRH;
-	XMFLOAT4X4 ProjectionMatrixRH;
+	XMFLOAT4X4 ProjectMatrixRH;
 
 };

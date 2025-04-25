@@ -83,7 +83,7 @@ void FOpaqueRenderLayer::BuildPSO()
 	DepthStencilState = Graphics::DepthStateReadWrite;
 	// D3D12_DEPTH_STENCIL_DESC DepthState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	//DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	//DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	//m_PSO.SetDepthStencilState(DepthState);
 
 	//DepthStencilState.DepthEnable = true;

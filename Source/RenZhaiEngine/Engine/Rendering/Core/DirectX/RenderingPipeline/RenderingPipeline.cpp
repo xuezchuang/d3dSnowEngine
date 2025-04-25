@@ -431,7 +431,7 @@ void FRenderingPipeline::RenderHBAOPlus(GraphicsContext& gfxContext, float Delta
 		
 	}
 
-	XMMATRIX ProjectMatrix = XMLoadFloat4x4(&GetCamera()->ProjectionMatrixRH);
+	XMMATRIX ProjectMatrix = XMLoadFloat4x4(&GetCamera()->ProjectMatrixRHZ);
 	//XMMATRIX ProjectMatrix = XMLoadFloat4x4(&GetCamera()->ProjectMatrix);
 	// DepthData
 	InputData.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjectMatrix);

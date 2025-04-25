@@ -34,7 +34,10 @@ void GClientViewport::SetFrustum(float InYFOV, float InAspect, float InZNear, fl
     XMStoreFloat4x4(&ProjectMatrix, Project);
 
 	XMMATRIX ProjectRH = XMMatrixPerspectiveFovRH(InYFOV, InAspect, InZNear, InZFar);
-	XMStoreFloat4x4(&ProjectionMatrixRH, ProjectRH);
+	XMStoreFloat4x4(&ProjectMatrixRH, ProjectRH);
+
+	XMMATRIX ProjectRHZ = XMMatrixPerspectiveFovRH(InYFOV, InAspect, InZFar, InZNear);
+	XMStoreFloat4x4(&ProjectMatrixRHZ, ProjectRHZ);
 #endif // USE_SIMPLE_LIB_MATH
 
     SetDirty(true);
