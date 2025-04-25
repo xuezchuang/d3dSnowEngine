@@ -137,9 +137,11 @@ void CWindowsEngine::Tick(float DeltaTime)
 			XMFLOAT3 ViewPosition = World->GetCamera()->GetPosition();
 			ViewportInfo.ViewPosition = XMFLOAT4(ViewPosition.x, ViewPosition.y, ViewPosition.z, 1.f);
 
-			ViewportInfo.ViewMatrix = World->GetCamera()->ViewMatrix;
+			//ViewportInfo.ViewMatrix = World->GetCamera()->ViewMatrix;
+			//ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectMatrix;
 
-			ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectMatrix;
+			ViewportInfo.ViewMatrix = World->GetCamera()->ViewMatrixRH;
+			ViewportInfo.ProjectMatrix = World->GetCamera()->ProjectionMatrixRH;
 
 			RenderingEngine->UpdateCalculations(DeltaTime, ViewportInfo);
 

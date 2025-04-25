@@ -4,8 +4,8 @@
 #include "../../Math/EngineMath.h"
 
 FViewport::FViewport()
-    :ViewMatrix(EngineMath::IdentityMatrix4x4())
-    , ProjectMatrix(EngineMath::IdentityMatrix4x4())
+	:ViewMatrix(EngineMath::IdentityMatrix4x4())
+    ,ProjectMatrix(EngineMath::IdentityMatrix4x4())
 {
     ResetScissorRect(
         FEngineRenderConfig::GetRenderConfig()->ScrrenWidth,

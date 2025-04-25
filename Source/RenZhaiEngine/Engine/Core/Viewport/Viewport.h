@@ -21,4 +21,9 @@ public:
 
 	//可视范围 可视角度
 	XMFLOAT4X4 ProjectMatrix;
+
+	// 右手坐标系矩阵（专用于 HBAO+）
+	XMFLOAT4X4 ViewMatrixRH;
+	XMFLOAT4X4 ProjectionMatrixRH;
+
 };

@@ -417,6 +417,12 @@ void Graphics::PreparePresentSDR(void)
 {
     GraphicsContext& Context = GraphicsContext::Begin(L"Present");
 
+	//Context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// Close the final context to be executed before frame present.
+	//Context.Finish();
+	//return;
+
     Context.SetRootSignature(s_PresentRS);
     Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

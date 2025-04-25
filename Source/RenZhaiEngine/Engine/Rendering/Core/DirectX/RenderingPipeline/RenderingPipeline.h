@@ -9,6 +9,7 @@
 #include "RenderLayer/RenderLayerManage.h"
 #include "UI/IMGUIPipeline.h"
 #include "AmbientOcclusion/ScreenSpace/ScreenSpaceAmbientOcclusion.h"
+#include "GFSDK_SSAO.h"
 //#include "RootSignature.h"
 
 class CMeshComponent;
@@ -32,6 +33,9 @@ public:
 	virtual void Draw(GraphicsContext& gfxContext, float DeltaTime);
 	virtual void PostDraw(float DeltaTime);
 
+	void InitializeHBAOPlus();
+	void InitializeHBAOParameters();
+	void RenderHBAOPlus(GraphicsContext& gfxContext, float DeltaTime);
 public:
 	FRenderLayerManage* GetRenderLayer() const { return const_cast<FRenderLayerManage*>(&RenderLayer); }
 protected:
@@ -50,6 +54,14 @@ protected:
 
 	D3D12_VIEWPORT m_Viewport;
 	D3D12_RECT m_Scissor;
+
+private:
+	GFSDK_SSAO_Parameters   mAOParameters;
+	GFSDK_SSAO_Context_D3D12* mSSAOContext;
+	DescriptorHeap mSSAODescriptorHeapCBVSRVUAV;
+	DescriptorHeap mSSAODescriptorHeapRTV;
+
+
 //protected:
 	//RootSignature m_RootSignature;
 };

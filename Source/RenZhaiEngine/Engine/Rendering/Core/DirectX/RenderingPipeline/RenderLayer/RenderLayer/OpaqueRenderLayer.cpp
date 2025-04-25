@@ -42,7 +42,7 @@ void FOpaqueRenderLayer::BuildShader()
 
 	std::wstring ShaderPath = BuildShadersPaths(L"Hello");
 	VertexShader.BuildShaders(ShaderPath, "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
-	PixelShader.BuildShaders(ShaderPath, "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
+	//PixelShader.BuildShaders(ShaderPath, "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
 
 	InputElementDesc =
 	{
@@ -75,7 +75,7 @@ void FOpaqueRenderLayer::BuildPSO()
 
 	//RasterizerState = Graphics::RasterizerDefault;
 	//RasterizerState = Graphics::RasterizerTwoSided;
-	//RasterizerDefaultCw.CullMode = D3D12_CULL_MODE_NONE;
+	RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 	//m_PSO.SetRasterizerState(RasterizerDefaultCw);
 	//D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC();
 	//BlendState = Graphics::BlendDisable;
@@ -83,7 +83,7 @@ void FOpaqueRenderLayer::BuildPSO()
 	DepthStencilState = Graphics::DepthStateReadWrite;
 	// D3D12_DEPTH_STENCIL_DESC DepthState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	//DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+	DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	//m_PSO.SetDepthStencilState(DepthState);
 
 	//DepthStencilState.DepthEnable = true;
@@ -107,7 +107,7 @@ void FOpaqueRenderLayer::BuildPSO()
 	//m_PSO.SetRenderTargetFormats(0, NULL, DepthFormat);
 
 	m_PSO.SetVertexShader(VertexShader.GetBufferPointer(), VertexShader.GetBufferSize());
-	m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());
+	//m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());
 	m_PSO.Finalize();
 }
 

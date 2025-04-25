@@ -116,8 +116,10 @@ void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportIn
 	XMMATRIX TexViewProjectionMatrix = XMMatrixMultiply(ViewProject, HalfLambert);
 
 	
-	XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, XMMatrixTranspose(ViewProject));
-	XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, XMMatrixTranspose(TexViewProjectionMatrix));
+	//XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, XMMatrixTranspose(ViewProject));
+	XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, ViewProject);
+	//XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, XMMatrixTranspose(TexViewProjectionMatrix));
+	XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, TexViewProjectionMatrix);
 
 	//拿到视口位置
 	ViewportTransformation.ViewportPosition = ViewportInfo.ViewPosition;
@@ -379,8 +381,8 @@ void FGeometryMap::BuildFog()
 
 void FGeometryMap::BuildShadow()
 {
-	DynamicShadowMap.Init(2048, 2048);
-	DynamicShadowMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
+	//DynamicShadowMap.Init(2048, 2048);
+	//DynamicShadowMap.BuildViewport(fvector_3d(0.f, 0.f, 0.f));
 	//DynamicShadowMap.BuildDepthStencilDescriptor();
 	//DynamicShadowMap.BuildRenderTargetDescriptor();
 

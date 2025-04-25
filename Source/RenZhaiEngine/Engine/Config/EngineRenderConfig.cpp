@@ -5,8 +5,8 @@ FEngineRenderConfig* FEngineRenderConfig::RenderConfig = nullptr;
 FEngineRenderConfig::FEngineRenderConfig()
 	//:ScrrenWidth(1920)
 	//,ScrrenHight(1080)
-	:ScrrenWidth(800)
-	,ScrrenHight(600)
+	:ScrrenWidth(1280)
+	,ScrrenHight(720)
 	,RefreshRate(60)
 	,SwapChainCount(2)
 {

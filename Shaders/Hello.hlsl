@@ -8,8 +8,8 @@ struct MeshVertexIn
 	float3 Position : POSITION;
 	float4 Color : COLOR;
 	float3 Normal : NORMAL;
-	float3 UTangent: TANGENT;
-	float2 TexCoord: TEXCOORD;
+	float3 UTangent : TANGENT;
+	float2 TexCoord : TEXCOORD;
 
 #ifdef SKINNED
 	float3 BoneWeights : WEIGHTS;
@@ -30,65 +30,66 @@ struct MeshVertexOut
 
 MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 {
-	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
+//	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
 
 	MeshVertexOut Out;
 
-#ifdef SKINNED
-	float Weights[4] = { 0.f,0.f,0.f,0.f };
-	Weights[0] = MV.BoneWeights.x;
-	Weights[1] = MV.BoneWeights.y;
-	Weights[2] = MV.BoneWeights.z;
-	Weights[3] = 1.f - (Weights[0] + Weights[1] + Weights[2]);
+//#ifdef SKINNED
+//	float Weights[4] = { 0.f,0.f,0.f,0.f };
+//	Weights[0] = MV.BoneWeights.x;
+//	Weights[1] = MV.BoneWeights.y;
+//	Weights[2] = MV.BoneWeights.z;
+//	Weights[3] = 1.f - (Weights[0] + Weights[1] + Weights[2]);
 
-	float3 BoneWidgetPosition = float3(0.f, 0.f, 0.f);
-	float3 BoneWidgetNormal = float3(0.f, 0.f, 0.f);
-	float3 BoneWidgetTangent = float3(0.f, 0.f, 0.f);
+//	float3 BoneWidgetPosition = float3(0.f, 0.f, 0.f);
+//	float3 BoneWidgetNormal = float3(0.f, 0.f, 0.f);
+//	float3 BoneWidgetTangent = float3(0.f, 0.f, 0.f);
 
-	for (int i = 0; i < 4; i++)
-	{
-		int BoneIndices = MV.BoneIndices[i]-1;
-		if (BoneIndices >= 0)
-		{
-			BoneWidgetPosition += Weights[i] * mul(float4(MV.Position, 1.f), SkinnedBoneTransform[BoneIndices]).xyz;
-			BoneWidgetNormal += Weights[i] * mul(MV.Normal, (float3x3)SkinnedBoneTransform[BoneIndices]);
-			BoneWidgetTangent += Weights[i] * mul(MV.UTangent, (float3x3)SkinnedBoneTransform[BoneIndices]);
-		}
-	}
+//	for (int i = 0; i < 4; i++)
+//	{
+//		int BoneIndices = MV.BoneIndices[i]-1;
+//		if (BoneIndices >= 0)
+//		{
+//			BoneWidgetPosition += Weights[i] * mul(float4(MV.Position, 1.f), SkinnedBoneTransform[BoneIndices]).xyz;
+//			BoneWidgetNormal += Weights[i] * mul(MV.Normal, (float3x3)SkinnedBoneTransform[BoneIndices]);
+//			BoneWidgetTangent += Weights[i] * mul(MV.UTangent, (float3x3)SkinnedBoneTransform[BoneIndices]);
+//		}
+//	}
 
-	MV.Position = BoneWidgetPosition;
-	MV.Normal = BoneWidgetNormal;
-	MV.UTangent = BoneWidgetTangent;
-#endif
+//	MV.Position = BoneWidgetPosition;
+//	MV.Normal = BoneWidgetNormal;
+//	MV.UTangent = BoneWidgetTangent;
+//#endif
 
 	//颜色
-	Out.Color = MV.Color;
+	//Out.Color = MV.Color;
 
 	//世界坐标
 	Out.WorldPosition = mul(float4(MV.Position, 1.f), WorldMatrix);
+	//Out.WorldPosition = mul(MV.Position, WorldMatrix);
 
-	Out.TexPositionHome = mul(Out.WorldPosition, TexViewProjectionMatrix);
+	//Out.TexPositionHome = mul(Out.WorldPosition, TexViewProjectionMatrix);
 
 	//变换到齐次剪辑空间
 	Out.Position = mul(Out.WorldPosition, ViewProjectionMatrix);
 
 	
-	if (MatConstBuffer.MaterialType == 13)
-	{
-		Out.Normal = MV.Normal;
-	}
-	else
-	{
-		//转法线
-		Out.Normal = mul(MV.Normal, (float3x3)NormalTransformation);
-	}
+	//if (MatConstBuffer.MaterialType == 13)
+	//{
+	//	Out.Normal = MV.Normal;
+	//}
+	//else
+	//{
+	//	//转法线
+	//	Out.Normal = mul(MV.Normal, (float3x3)NormalTransformation);
+	//}
 	
-	//切线
-	Out.UTangent = mul(MV.UTangent, (float3x3)NormalTransformation);
+	////切线
+	//Out.UTangent = mul(MV.UTangent, (float3x3)NormalTransformation);
 
-	//ui坐标
-	float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
-	Out.TexCoord = mul(MyTexCoord, MatConstBuffer.TransformInformation).xy;
+	////ui坐标
+	//float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
+	//Out.TexCoord = mul(MyTexCoord, MatConstBuffer.TransformInformation).xy;
 
 	return Out;
 }

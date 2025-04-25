@@ -126,14 +126,15 @@ int CDirectXRenderingEngine::PostInit()
 			BoxMesh->SetRotation(fvector_3d(60.f, 1.f, 20.f));
 		}*/
 
-		//灯光生成
-		if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
-		{
-			ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
-			ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
-			ParallelLight->SetScale(fvector_3d(1));
-			ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
-		}
+		////灯光生成
+		//if (GParallelLight* ParallelLight = World->CreateActorObject<GParallelLight>())
+		//{
+		//	ParallelLight->SetPosition(XMFLOAT3(10.f, -10.f, 10.f));
+		//	ParallelLight->SetRotation(fvector_3d(30.f, 0.f, 0.f));
+		//	ParallelLight->SetScale(fvector_3d(1));
+		//	ParallelLight->SetLightIntensity(fvector_3d(1.1f,1.1f,1.1f));
+		//}
+		// 
 		//点灯光生成
 		//if (GPointLight* PointLight = World->CreateActorObject<GPointLight>())
 		//{
@@ -191,6 +192,7 @@ int CDirectXRenderingEngine::PostInit()
 
 			if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//反射球
 			{
+				CustomMesh->Rename("111");
 				string Path = FEnginePathHelper::GetEngineContentPath() + "/cube.obj";
 				CustomMesh->CreateMesh(Path);
 
@@ -212,11 +214,32 @@ int CDirectXRenderingEngine::PostInit()
 				CustomMesh->CreateMesh(Path);
 
 				CustomMesh->SetPosition(XMFLOAT3(-8.0f, -8.0f, 0.f));
+
+				//XMVECTOR Forward = XMVector3Normalize(XMVectorSet(4.0f, 4.0f, 2.0f,0.0f));
+				//XMMATRIX LookMatrix = XMMatrixLookToRH(XMVectorZero(), Forward, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+				//XMVECTOR RotationQuat = XMQuaternionRotationMatrix(LookMatrix);
+				//XMFLOAT4 Quat;
+				//XMStoreFloat4(&Quat, RotationQuat);
+
+				//// 转成欧拉角（你使用的是 fvector_3d，所以单位是度）
+				//XMFLOAT3 EulerAngles;
+				//EulerAngles.x = atan2f(2.f * (Quat.w * Quat.x + Quat.y * Quat.z), 1.f - 2.f * (Quat.x * Quat.x + Quat.y * Quat.y));
+				//EulerAngles.y = asinf(2.f * (Quat.w * Quat.y - Quat.z * Quat.x));
+				//EulerAngles.z = atan2f(2.f * (Quat.w * Quat.z + Quat.x * Quat.y), 1.f - 2.f * (Quat.y * Quat.y + Quat.z * Quat.z));
+
+				//// 转成角度
+				//EulerAngles.x *= (180.0f / XM_PI);
+				//EulerAngles.y *= (180.0f / XM_PI);
+				//EulerAngles.z *= (180.0f / XM_PI);
+
+				//// 设置旋转
+				//CustomMesh->SetRotation(fvector_3d(EulerAngles.x, EulerAngles.y, EulerAngles.z));
+
 				CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
 				if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
 				{
 					InMaterial->SetBaseColor(fvector_4d(1.f));
-					InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+					InMaterial->SetMaterialType(EMaterialType::Normal);
 
 					InMaterial->SetRoughness(0.01f);
 					InMaterial->SetFresnelF0(fvector_3d(0.5f));
