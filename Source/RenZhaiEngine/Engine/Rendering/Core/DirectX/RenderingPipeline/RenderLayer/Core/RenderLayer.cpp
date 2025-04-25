@@ -244,8 +244,7 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 				for (auto &Tmp : InRenderingData->Sections)
 				{
 					FObjectTransformation& ObjectTransformation = GeometryMap->MeshObjectConstant[Tmp.MeshObjectIndex];
-					//XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));
-					XMStoreFloat4x4(&ObjectTransformation.World, ATRIXWorld);
+					XMStoreFloat4x4(&ObjectTransformation.World, XMMatrixTranspose(ATRIXWorld));
 					XMStoreFloat4x4(&ObjectTransformation.TextureTransformation, XMMatrixTranspose(ATRIXTextureTransform));
 
 					//XMStoreFloat4x4(&ObjectTransformation.World, ATRIXWorld);

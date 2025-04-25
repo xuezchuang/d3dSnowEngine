@@ -116,10 +116,8 @@ void FGeometryMap::UpdateCalculationsViewport(float DeltaTime, const FViewportIn
 	XMMATRIX TexViewProjectionMatrix = XMMatrixMultiply(ViewProject, HalfLambert);
 
 	
-	//XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, XMMatrixTranspose(ViewProject));
-	XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, ViewProject);
-	//XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, XMMatrixTranspose(TexViewProjectionMatrix));
-	XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, TexViewProjectionMatrix);
+	XMStoreFloat4x4(&ViewportTransformation.ViewProjectionMatrix, XMMatrixTranspose(ViewProject));
+	XMStoreFloat4x4(&ViewportTransformation.TexViewProjectionMatrix, XMMatrixTranspose(TexViewProjectionMatrix));
 
 	//拿到视口位置
 	ViewportTransformation.ViewportPosition = ViewportInfo.ViewPosition;

@@ -30,7 +30,7 @@ void GClientViewport::SetFrustum(float InYFOV, float InAspect, float InZNear, fl
     ));
 #else
     //基于视野构建左手透视投影矩阵
-	XMMATRIX Project = XMMatrixPerspectiveFovLH(InYFOV, InAspect, InZNear, InZFar);
+	XMMATRIX Project = XMMatrixPerspectiveFovLH(InYFOV, InAspect, InZFar,InZNear);
     XMStoreFloat4x4(&ProjectMatrix, Project);
 
 	XMMATRIX ProjectRH = XMMatrixPerspectiveFovRH(InYFOV, InAspect, InZNear, InZFar);
@@ -113,7 +113,7 @@ void GClientViewport::BuildViewMatrix(float DeltaTime)
 	XMMATRIX MatrixRH = XMMatrixLookAtRH(EyeV, LookAtV, UpV);
 	XMStoreFloat4x4(&ViewMatrixRH, MatrixRH);
 
-	LookAtV = EyeV + mViewVector;
+	//LookAtV = EyeV + mViewVector;
 	XMMATRIX MatrixLH = XMMatrixLookAtLH(EyeV, LookAtV, UpV);
 	XMStoreFloat4x4(&ViewMatrix, MatrixLH);
 }
