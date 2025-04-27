@@ -30,7 +30,7 @@ struct MeshVertexOut
 
 MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 {
-//	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
+	MaterialConstBuffer MatConstBuffer = Materials[MaterialIndex];
 
 	MeshVertexOut Out;
 
@@ -62,34 +62,34 @@ MeshVertexOut VertexShaderMain(MeshVertexIn MV)
 //#endif
 
 	//颜色
-	//Out.Color = MV.Color;
+	Out.Color = MV.Color;
 
 	//世界坐标
 	Out.WorldPosition = mul(float4(MV.Position, 1.f), WorldMatrix);
 	//Out.WorldPosition = mul(MV.Position, WorldMatrix);
 
-	//Out.TexPositionHome = mul(Out.WorldPosition, TexViewProjectionMatrix);
+	Out.TexPositionHome = mul(Out.WorldPosition, TexViewProjectionMatrix);
 
 	//变换到齐次剪辑空间
 	Out.Position = mul(Out.WorldPosition, ViewProjectionMatrix);
 
 	
-	//if (MatConstBuffer.MaterialType == 13)
-	//{
-	//	Out.Normal = MV.Normal;
-	//}
-	//else
-	//{
-	//	//转法线
-	//	Out.Normal = mul(MV.Normal, (float3x3)NormalTransformation);
-	//}
+	if (MatConstBuffer.MaterialType == 13)
+	{
+		Out.Normal = MV.Normal;
+	}
+	else
+	{
+		//转法线
+		Out.Normal = mul(MV.Normal, (float3x3) NormalTransformation);
+	}
 	
-	////切线
-	//Out.UTangent = mul(MV.UTangent, (float3x3)NormalTransformation);
+	//切线
+	Out.UTangent = mul(MV.UTangent, (float3x3) NormalTransformation);
 
-	////ui坐标
-	//float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
-	//Out.TexCoord = mul(MyTexCoord, MatConstBuffer.TransformInformation).xy;
+	//ui坐标
+	float4 MyTexCoord = mul(float4(MV.TexCoord, 0.0f, 1.f), ObjectTextureTransform);
+	Out.TexCoord = mul(MyTexCoord, MatConstBuffer.TransformInformation).xy;
 
 	return Out;
 }

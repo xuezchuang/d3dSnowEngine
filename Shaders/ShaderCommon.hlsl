@@ -16,7 +16,7 @@ TextureCube  SimpleShadowCubeMap: register(t1);//点光源 四面八方的照射 8
 
 cbuffer ObjectConstBuffer : register(b0)//b0->b14
 {
-	row_major float4x4 WorldMatrix; //世界矩阵
+	float4x4 WorldMatrix; //世界矩阵
 	float4x4 ObjectTextureTransform;
 	float4x4 NormalTransformation;//法线矩阵 处理不等比缩放
 	uint MaterialIndex;
@@ -33,7 +33,7 @@ cbuffer SkinnedConstBuffer : register(b1)//b0->b14
 cbuffer ViewportConstBuffer : register(b2)//b0->b14
 {
 	float4 ViewportPosition;
-	row_major float4x4 ViewProjectionMatrix;
+	float4x4 ViewProjectionMatrix;
 
 	float4x4 TexViewProjectionMatrix;
 };

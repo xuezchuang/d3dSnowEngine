@@ -159,7 +159,7 @@ int CDirectXRenderingEngine::PostInit()
 		//	SpotLight->SetConicalOuterCorner(60.f);
 		//}	
 
-		if (0)
+		if (1)
 		{
 			if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 			{
@@ -190,30 +190,31 @@ int CDirectXRenderingEngine::PostInit()
 		else
 		{
 
-			if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//·´ÉäÇò
-			{
-				CustomMesh->Rename("111");
-				string Path = FEnginePathHelper::GetEngineContentPath() + "/cube.obj";
-				CustomMesh->CreateMesh(Path);
+			//if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//·´ÉäÇò
+			//{
+			//	CustomMesh->Rename("111");
+			//	string Path = FEnginePathHelper::GetEngineContentPath() + "/cube.obj";
+			//	CustomMesh->CreateMesh(Path);
 
-				CustomMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
-				CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
-				if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
-				{
-					InMaterial->SetBaseColor(fvector_4d(1.f));
-					InMaterial->SetMaterialType(EMaterialType::Normal);
+			//	CustomMesh->SetPosition(XMFLOAT3(0.f, 0.f, 0.f));
+			//	CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+			//	if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+			//	{
+			//		InMaterial->SetBaseColor(fvector_4d(1.f));
+			//		InMaterial->SetMaterialType(EMaterialType::Normal);
 
-					InMaterial->SetRoughness(0.01f);
-					InMaterial->SetFresnelF0(fvector_3d(0.5f));
-				}
-			}
+			//		InMaterial->SetRoughness(0.01f);
+			//		InMaterial->SetFresnelF0(fvector_3d(0.5f));
+			//	}
+			//}
 
 			if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//·´ÉäÇò
 			{
 				string Path = FEnginePathHelper::GetEngineContentPath() + "/shaderBall.obj";
 				CustomMesh->CreateMesh(Path);
 
-				CustomMesh->SetPosition(XMFLOAT3(-8.0f, -8.0f, 0.f));
+				CustomMesh->SetRotation(fvector_3d(0.f, 90.f, 0.f));
+				//CustomMesh->SetPosition(XMFLOAT3(-8.0f, -8.0f, 0.f));
 
 				//XMVECTOR Forward = XMVector3Normalize(XMVectorSet(4.0f, 4.0f, 2.0f,0.0f));
 				//XMMATRIX LookMatrix = XMMatrixLookToRH(XMVectorZero(), Forward, XMVectorSet(0.f, 0.f, 1.f, 0.f));
@@ -235,7 +236,7 @@ int CDirectXRenderingEngine::PostInit()
 				//// ÉèÖÃÐý×ª
 				//CustomMesh->SetRotation(fvector_3d(EulerAngles.x, EulerAngles.y, EulerAngles.z));
 
-				CustomMesh->SetRotation(fvector_3d(0.f, 0.f, 0.f));
+				
 				if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
 				{
 					InMaterial->SetBaseColor(fvector_4d(1.f));
@@ -971,8 +972,8 @@ void CDirectXRenderingEngine::OnResetSize(int InWidth, int InHeight, int wParam)
 void CDirectXRenderingEngine::RenderScene(float DeltaTime)
 {
 	GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Render");
-	MeshManage->PreDraw(gfxContext, DeltaTime);
-	//MeshManage->Draw(gfxContext,DeltaTime);
+	//MeshManage->PreDraw(gfxContext, DeltaTime);
+	MeshManage->Draw(gfxContext,DeltaTime);
 	gfxContext.Finish();
 }
 

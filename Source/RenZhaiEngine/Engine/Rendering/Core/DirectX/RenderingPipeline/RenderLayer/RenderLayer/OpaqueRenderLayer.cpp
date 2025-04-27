@@ -42,7 +42,7 @@ void FOpaqueRenderLayer::BuildShader()
 
 	std::wstring ShaderPath = BuildShadersPaths(L"Hello");
 	VertexShader.BuildShaders(ShaderPath, "VertexShaderMain", "vs_5_1", D3DShaderMacro.data());
-	//PixelShader.BuildShaders(ShaderPath, "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
+	PixelShader.BuildShaders(ShaderPath, "PixelShaderMain", "ps_5_1", D3DShaderMacro.data());
 
 	InputElementDesc =
 	{
@@ -107,7 +107,7 @@ void FOpaqueRenderLayer::BuildPSO()
 	//m_PSO.SetRenderTargetFormats(0, NULL, DepthFormat);
 
 	m_PSO.SetVertexShader(VertexShader.GetBufferPointer(), VertexShader.GetBufferSize());
-	//m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());
+	m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());
 	m_PSO.Finalize();
 }
 

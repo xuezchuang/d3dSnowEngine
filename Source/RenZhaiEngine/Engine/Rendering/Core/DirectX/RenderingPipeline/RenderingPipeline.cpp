@@ -245,7 +245,7 @@ void FRenderingPipeline::Draw(GraphicsContext& gfxContext, float DeltaTime)
 		m_Scissor.left = 0;
 		m_Scissor.right = DSV->GetWidth();
 		m_Scissor.top = 0;
-		m_Scissor.bottom = DSV->GetWidth();
+		m_Scissor.bottom = DSV->GetHeight();
 	}
 	//gfxContext.SetDepthStencilTarget(Graphics::g_SceneDepthBuffer.GetDSV());
 	gfxContext.SetViewportAndScissor(m_Viewport, m_Scissor);
@@ -431,10 +431,12 @@ void FRenderingPipeline::RenderHBAOPlus(GraphicsContext& gfxContext, float Delta
 		
 	}
 
-	XMMATRIX ProjectMatrix = XMLoadFloat4x4(&GetCamera()->ProjectMatrixRHZ);
 	//XMMATRIX ProjectMatrix = XMLoadFloat4x4(&GetCamera()->ProjectMatrix);
+	//XMMATRIX ViewMatrixRH = XMMatrixMultiply(ProjectMatrix, XMMatrixScaling(1.0f, 1.0f, 1.0f));
+
+	XMMATRIX ViewMatrixRH = XMLoadFloat4x4(&GetCamera()->ProjectMatrixRHZ);
 	// DepthData
-	InputData.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ProjectMatrix);
+	InputData.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ViewMatrixRH);
 	InputData.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;
 	InputData.DepthData.MetersToViewSpaceUnits = 1.0f;
 	InputData.NormalData.Enable = false;
