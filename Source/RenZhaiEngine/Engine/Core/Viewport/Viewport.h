@@ -19,8 +19,6 @@ public:
 	XMFLOAT4X4 ViewMatrix;
 	XMFLOAT4X4 ProjectMatrix;
 
-	XMFLOAT4X4 ProjectMatrixRHZ;
-
 	// 右手坐标系矩阵（专用于 HBAO+）
 	XMFLOAT4X4 ViewMatrixRH;
 	XMFLOAT4X4 ProjectMatrixRH;

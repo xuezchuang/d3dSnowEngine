@@ -1,17 +1,11 @@
 #include "OperationHandleRenderLayer.h"
 #include "../../PipelineState/DirectXPipelineState.h"
 #include "../../Geometry/GeometryMap.h"
+#include "BufferManager.h"
 
 FOperationHandleRenderLayer::FOperationHandleRenderLayer()
 {
 	RenderPriority = 4678;
-}
-
-void FOperationHandleRenderLayer::Draw(float DeltaTime)
-{
-	ResetPSO();
-
-	//Super::Draw(DeltaTime);
 }
 
 void FOperationHandleRenderLayer::BuildShader()
@@ -44,21 +38,32 @@ void FOperationHandleRenderLayer::BuildShader()
 void FOperationHandleRenderLayer::BuildPSO()
 {
 	Super::BuildPSO();
+	m_PSO.SetRootSignature(*DirectXPipelineState->GetRootSignature());
 
-	CD3DX12_RASTERIZER_DESC RasterizerDesc(D3D12_DEFAULT);
-	RasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	RasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	D3D12_RASTERIZER_DESC RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	D3D12_BLEND_DESC BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	D3D12_DEPTH_STENCIL_DESC DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
-	DirectXPipelineState->SetRasterizerState(RasterizerDesc);
+	RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	DepthStencilState = Graphics::DepthStateReadWrite;
+	DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 
-	CD3DX12_DEPTH_STENCIL_DESC DepthStencilDesc = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	DepthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-	DirectXPipelineState->SetDepthStencilState(DepthStencilDesc);
+	m_PSO.SetRasterizerState(RasterizerState);
+	m_PSO.SetBlendState(BlendState);
+	m_PSO.SetDepthStencilState(DepthStencilState);
 
-	DirectXPipelineState->Build(Operation_Handle);
+	m_PSO.SetInputLayout(InputElementDesc.size(), InputElementDesc.data());
+
+	m_PSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+
+	DXGI_FORMAT ColorFormat = Graphics::g_SceneColorBuffer.GetFormat();
+	DXGI_FORMAT DepthFormat = Graphics::g_SceneDepthBuffer.GetFormat();
+
+	m_PSO.SetRenderTargetFormats(1, &ColorFormat, DepthFormat);
+	//m_PSO.SetRenderTargetFormats(0, NULL, DepthFormat);
+
+	m_PSO.SetVertexShader(VertexShader.GetBufferPointer(), VertexShader.GetBufferSize());
+	m_PSO.SetPixelShader(PixelShader.GetBufferPointer(), PixelShader.GetBufferSize());
+	m_PSO.Finalize();
 }
 
-void FOperationHandleRenderLayer::ResetPSO()
-{
-	DirectXPipelineState->ResetPSO(Operation_Handle);
-}

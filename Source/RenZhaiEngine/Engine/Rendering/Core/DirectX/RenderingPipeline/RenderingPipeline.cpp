@@ -267,8 +267,8 @@ void FRenderingPipeline::Draw(GraphicsContext& gfxContext, float DeltaTime)
 	////äÖÈ¾Ðý×ªÃæÆ¬
 	//RenderLayer.Draw(RENDERLAYER_OPERATION_HANDLE_ROT_PLANE, DeltaTime);
 
-	////äÖÈ¾²Ù×÷ÊÖ±ú
-	//RenderLayer.Draw(RENDERLAYER_OPERATION_HANDLE, DeltaTime);
+	//äÖÈ¾²Ù×÷ÊÖ±ú
+	RenderLayer.Draw(gfxContext, RENDERLAYER_OPERATION_HANDLE, DeltaTime);
 
 	//DirectXPipelineState.CaptureKeyboardKeys();
 
@@ -434,7 +434,7 @@ void FRenderingPipeline::RenderHBAOPlus(GraphicsContext& gfxContext, float Delta
 	//XMMATRIX ProjectMatrix = XMLoadFloat4x4(&GetCamera()->ProjectMatrix);
 	//XMMATRIX ViewMatrixRH = XMMatrixMultiply(ProjectMatrix, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 
-	XMMATRIX ViewMatrixRH = XMLoadFloat4x4(&GetCamera()->ProjectMatrixRHZ);
+	XMMATRIX ViewMatrixRH = XMLoadFloat4x4(&GetCamera()->ProjectMatrixRH);
 	// DepthData
 	InputData.DepthData.ProjectionMatrix.Data = GFSDK_SSAO_Float4x4((const GFSDK_SSAO_FLOAT*)&ViewMatrixRH);
 	InputData.DepthData.ProjectionMatrix.Layout = GFSDK_SSAO_ROW_MAJOR_ORDER;

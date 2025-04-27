@@ -15,16 +15,6 @@ FOpaqueRenderLayer::~FOpaqueRenderLayer()
 	RenderPriority = 2000;
 }
 
-void FOpaqueRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
-{
-	//重置当前的PSO
-	//ResetPSO();
-
-	context.SetPipelineState(m_PSO);
-
-	Super::Draw(context,DeltaTime);
-}
-
 void FOpaqueRenderLayer::DrawObject(float DeltaTime, std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
 {
 	//Super::DrawObject(DeltaTime, InWeakRenderingData, RC);
@@ -111,8 +101,3 @@ void FOpaqueRenderLayer::BuildPSO()
 	m_PSO.Finalize();
 }
 
-void FOpaqueRenderLayer::ResetPSO(GraphicsContext& context)
-{
-	//DirectXPipelineState->ResetPSO();
-	context.SetPipelineState(m_PSO);
-}

@@ -14,4 +14,8 @@ public:
 	virtual void Draw(float DeltaTime);
 
 	void CreateMesh(const string &InPath, const FIEParam& InParam = FIEParam());
+
+
+	CVARIABLE(CodeType = Resources, Category = Render, Draggable)
+	bool mTest;
 };

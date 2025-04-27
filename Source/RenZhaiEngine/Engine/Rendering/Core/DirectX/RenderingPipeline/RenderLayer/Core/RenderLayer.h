@@ -6,6 +6,7 @@
 #include "../../../../../../Shader/Core/ShaderType.h"
 #include "../../RenderingPipelineType.h"
 #include "PipelineState.h"
+#include "../Engine/Component/Mesh/Core/MeshComponentType.h"
 //#include "../PipelineState.h"
 //#include "../CommandContext.h"
 
@@ -22,7 +23,7 @@ class FRenderLayer
 {
 	friend struct FGeometry;
 	friend struct FGeometryMap;
-
+	
 public:
 	FBuildPSODelegate BuildPSODelegate;
 
@@ -33,10 +34,10 @@ public:
 	virtual void Init(FGeometryMap* InGeometryMap, FDirectXPipelineState* InDirectXPipelineState);
 
 	virtual void PreDraw(float DeltaTime);
-	virtual void Draw(GraphicsContext& context, float DeltaTime);
+	virtual void Draw(GraphicsContext& gfxContext, float DeltaTime);
 	virtual void PostDraw(float DeltaTime);
 
-	virtual void DrawObject(GraphicsContext& context,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData,ERenderingConditions RC = ERenderingConditions::RC_None);
+	virtual void DrawObject(GraphicsContext& gfxContext,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData,ERenderingConditions RC = ERenderingConditions::RC_None);
 	virtual void FindObjectDraw(float DeltaTime, const CMeshComponent* InKey);
 
 	virtual void BuildPSO();
@@ -46,10 +47,6 @@ public:
 	virtual void BuildShaderMacro(std::vector<ShaderType::FShaderMacro> &InMacro);
 
 	virtual void UpdateCalculations(float DeltaTime, const FViewportInfo& ViewportInfo);
-
-	//单独设置PSO
-	virtual void ResetPSO(GraphicsContext& GfxContext);
-	virtual void ResetPSO(EPipelineState InPipelineState);
 
 	//渲染 不包含设置PSO
 	virtual void DrawMesh(GraphicsContext& context,float DeltaTime,ERenderingConditions RC = ERenderingConditions::RC_None);

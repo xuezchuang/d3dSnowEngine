@@ -33,11 +33,8 @@ void GClientViewport::SetFrustum(float InYFOV, float InAspect, float InZNear, fl
 	XMMATRIX Project = XMMatrixPerspectiveFovLH(InYFOV, InAspect, InZFar,InZNear);
     XMStoreFloat4x4(&ProjectMatrix, Project);
 
-	XMMATRIX ProjectRH = XMMatrixPerspectiveFovRH(InYFOV, InAspect, InZNear, InZFar);
+	XMMATRIX ProjectRH = XMMatrixPerspectiveFovRH(InYFOV, InAspect, InZFar,InZNear);
 	XMStoreFloat4x4(&ProjectMatrixRH, ProjectRH);
-
-	XMMATRIX ProjectRHZ = XMMatrixPerspectiveFovRH(InYFOV, InAspect, InZFar, InZNear);
-	XMStoreFloat4x4(&ProjectMatrixRHZ, ProjectRHZ);
 #endif // USE_SIMPLE_LIB_MATH
 
     SetDirty(true);
@@ -105,28 +102,6 @@ void GClientViewport::BuildViewMatrix(float DeltaTime)
 		RightVector.z,	UPVector.z,	-ForwardVector.z,	0.f,
 		V3.x,			V3.y,		-V3.z,				1.f
 	};
-
-	//XMFLOAT3 EyePos = { -V3.x, -V3.y, -V3.z };
-
-	////XMFLOAT3 Up = GetRootComponent()->GetUPVector();
-	//XMFLOAT3 Up = XMFLOAT3(0, 0, 1.0);
-
-	//XMVECTOR EyeV = XMLoadFloat3(&EyePos);
-	//XMVECTOR DirV = XMLoadFloat3(&ForwardVector);
-	//XMVECTOR UpV = XMLoadFloat3(&UPVector);
-	////XMVECTOR UpV = XMLoadFloat3(&Up);
-	//XMVECTOR mViewVector = XMVector3Normalize({ -4.0f, -4.0f, -2.0f });
-
-	//XMVECTOR LookAtV = EyeV + mViewVector;
-	//
-	//XMMATRIX MatrixRH = XMMatrixLookAtRH(EyeV, LookAtV, UpV);
-	//XMStoreFloat4x4(&ViewMatrixRH, MatrixRH);
-
-	////LookAtV = EyeV + mViewVector;
-	//XMMATRIX MatrixLH = XMMatrixLookAtLH(EyeV, LookAtV, UpV);
-	//XMMATRIX mirrorZ = XMMatrixScaling(1.0f, 1.0f, -1.0f);
-	//MatrixLH = mirrorZ * MatrixLH;
-	//XMStoreFloat4x4(&ViewMatrix, MatrixLH);
 }
 
 void GClientViewport::OnResetSize(int InWidth, int InHeight)

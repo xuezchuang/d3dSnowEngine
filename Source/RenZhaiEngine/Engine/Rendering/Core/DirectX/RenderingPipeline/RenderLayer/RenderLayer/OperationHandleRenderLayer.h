@@ -7,11 +7,7 @@ class FOperationHandleRenderLayer :public FRenderLayer
 public:
 	FOperationHandleRenderLayer();
 
-	virtual void Draw(float DeltaTime);
-
-	virtual void BuildShader();
-	virtual void BuildPSO();
-	virtual int GetRenderLayerType() const { return 10; }
-
-	virtual void ResetPSO();
+	virtual void BuildShader()override;
+	virtual void BuildPSO()override;
+	virtual int GetRenderLayerType() const override { return RENDERLAYER_OPERATION_HANDLE; }
 };

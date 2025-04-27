@@ -78,7 +78,6 @@ int CDirectXRenderingEngine::PreInit(FWinMainCommandParameters InParameters)
 	return 0;
 }
 
-
 int CDirectXRenderingEngine::Init(FWinMainCommandParameters InParameters)
 {
 	InitDirect3D();
@@ -98,26 +97,23 @@ int CDirectXRenderingEngine::PostInit()
 
 	{
 #if EDITOR_ENGINE
-		//if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
-		//{
-		//	InMoveArrow->CreateMesh();
+		if (GMoveArrow* InMoveArrow = World->CreateActorObject<GMoveArrow>())
+		{
+			InMoveArrow->CreateMesh();
+			MoveArrow = InMoveArrow;
+		}
 
-		//	MoveArrow = InMoveArrow;
-		//}
+		if (GScalingArrow* InScalingArrow = World->CreateActorObject<GScalingArrow>())
+		{
+			InScalingArrow->CreateMesh();
+			ScalingArrow = InScalingArrow;
+		}
 
-		//if (GScalingArrow* InScalingArrow = World->CreateActorObject<GScalingArrow>())
-		//{
-		//	InScalingArrow->CreateMesh();
-
-		//	ScalingArrow = InScalingArrow;
-		//}
-
-		//if (GRotatorArrow* InRotatorArrow = World->CreateActorObject<GRotatorArrow>())
-		//{
-		//	InRotatorArrow->CreateMesh();
-
-		//	RotatorArrow = InRotatorArrow;
-		//}
+		if (GRotatorArrow* InRotatorArrow = World->CreateActorObject<GRotatorArrow>())
+		{
+			InRotatorArrow->CreateMesh();
+			RotatorArrow = InRotatorArrow;
+		}
 #endif
 		//¹¹½¨Mesh
 		/*if (GMesh* BoxMesh = MeshManage->CreateBoxMesh(4.f, 3.f, 1.5f))
@@ -205,7 +201,6 @@ int CDirectXRenderingEngine::PostInit()
 		}
 		else
 		{
-
 			//if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//·´ÉäÇò
 			//{
 			//	CustomMesh->Rename("111");
@@ -263,9 +258,6 @@ int CDirectXRenderingEngine::PostInit()
 				}
 			}
 		}
-		
-
-
 
 		goto FINIAL;
 

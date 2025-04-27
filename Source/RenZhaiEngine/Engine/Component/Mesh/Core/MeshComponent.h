@@ -19,9 +19,6 @@ class CMeshComponent :public CTransformationComponent
 	CVARIABLE()
 	vector<CMaterial*> Materials;
 
-	CVARIABLE()
-	bool Visible;
-
 public:
 	CMeshComponent();
 
@@ -63,6 +60,9 @@ public:
 
 protected:
 	bool bCastShadow;
-	bool bVisible;
 	bool bPickup;
+
+public:
+	CVARIABLE(CodeType = Resources, Category = "Render")
+	bool bVisible;
 };

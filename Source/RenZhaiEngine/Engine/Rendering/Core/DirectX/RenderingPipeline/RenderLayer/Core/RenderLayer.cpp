@@ -61,10 +61,10 @@ void FRenderLayer::PreDraw(float DeltaTime)
 
 }
 
-void FRenderLayer::Draw(GraphicsContext& context, float DeltaTime)
+void FRenderLayer::Draw(GraphicsContext& gfxContext, float DeltaTime)
 {
-	//模型构建
-	DrawMesh(context,DeltaTime);
+	gfxContext.SetPipelineState(m_PSO);
+	DrawMesh(gfxContext,DeltaTime);
 }
 
 void FRenderLayer::PostDraw(float DeltaTime)
@@ -87,7 +87,7 @@ void FRenderLayer::PostDraw(float DeltaTime)
 	}
 }
 
-void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
+void FRenderLayer::DrawObject(GraphicsContext& gfxContext,float DeltaTime,std::weak_ptr<FRenderingData>& InWeakRenderingData, ERenderingConditions RC)
 {
 	if (InWeakRenderingData.expired())//弱指针是不是被释放了
 	{
@@ -121,17 +121,17 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 			D3D12_VERTEX_BUFFER_VIEW VBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetVertexBufferView(InRenderingData->GeometryKey);
 			D3D12_INDEX_BUFFER_VIEW IBV = GeometryMap->Geometrys[InRenderingData->GeometryKey].GetIndexBufferView(InRenderingData->GeometryKey);
 
-			context.SetIndexBuffer(IBV);
-			context.SetVertexBuffer(0, VBV);
+			gfxContext.SetIndexBuffer(IBV);
+			gfxContext.SetVertexBuffer(0, VBV);
 
 			//D3D12_GPU_VIRTUAL_ADDRESS FirstVirtualMeshAddress = GeometryMap->MeshConstantBufferViews.GetBuffer()->GetGPUVirtualAddress();
 			//auto DesMeshHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(GeometryMap->GetHeap()->GetGPUDescriptorHandleForHeapStart());
 
 			//定义我们要绘制的哪种图元 点 线 面
 			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
-			//context.SetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
-			//context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+			//gfxContext.SetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
+			gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			//gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 			
 			//模型起始地址偏移
 			//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
@@ -145,20 +145,20 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 				//D3D12_GPU_VIRTUAL_ADDRESS SkinnedAddress =
 				//	SkinnedConstantBufferViews.GetBuffer()->GetGPUVirtualAddress() +
 				//	ConstantBufferByteSize * InSkinnedIndex;
-				//context.SetDynamicConstantBufferView(Signature_ObjectSkinned, sizeof(FObjectTransformation), ObjectConstant);
+				//gfxContext.SetDynamicConstantBufferView(Signature_ObjectSkinned, sizeof(FObjectTransformation), ObjectConstant);
 			}
 			else
 			{
-				//context.SetDynamicConstantBufferView(Signature_ObjectSkinned
+				//gfxContext.SetDynamicConstantBufferView(Signature_ObjectSkinned
 			}
 
 			for (FRenderingDataSection& Tmp : InRenderingData->Sections)
 			{
 				const FObjectTransformation& ObjectConstant = GeometryMap->MeshObjectConstant[Tmp.MeshObjectIndex];
-				context.SetDynamicConstantBufferView(Signature_Object, sizeof(FObjectTransformation), &ObjectConstant);
+				gfxContext.SetDynamicConstantBufferView(Signature_Object, sizeof(FObjectTransformation), &ObjectConstant);
 
 				//真正的绘制
-				context.DrawIndexedInstanced(
+				gfxContext.DrawIndexedInstanced(
 					Tmp.IndexSize,//顶点数量
 					1,//绘制实例数量
 					Tmp.IndexOffsetPosition,//顶点缓冲区第一个被绘制的索引
@@ -258,21 +258,12 @@ void FRenderLayer::UpdateCalculations(float DeltaTime, const FViewportInfo& View
 	}
 }
 
-void FRenderLayer::ResetPSO(GraphicsContext& GfxContext)
-{
-	
-}
 
-void FRenderLayer::ResetPSO(EPipelineState InPipelineState)
-{
-
-}
-
-void FRenderLayer::DrawMesh(GraphicsContext& context,float DeltaTime, ERenderingConditions RC)
+void FRenderLayer::DrawMesh(GraphicsContext& gfxContext,float DeltaTime, ERenderingConditions RC)
 {
 	for (auto& InRenderingData : RenderDatas)
 	{
-		DrawObject(context,DeltaTime, InRenderingData, RC);
+		DrawObject(gfxContext,DeltaTime, InRenderingData, RC);
 	}
 }
 
