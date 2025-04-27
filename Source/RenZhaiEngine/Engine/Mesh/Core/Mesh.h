@@ -15,8 +15,8 @@ class GMesh :public GActorObject,public IRenderingInterface,public IDirectXDevic
 {
 	CODEREFLECTION()
 
-	CVARIABLE()
-	CTransformationComponent* TransformationComponent;
+	//CVARIABLE()
+	//CTransformationComponent* TransformationComponent;
 
 	CVARIABLE()
 	CMeshComponent* MeshComponent;

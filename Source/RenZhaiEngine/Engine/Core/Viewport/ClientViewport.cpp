@@ -85,17 +85,26 @@ void GClientViewport::BuildViewMatrix(float DeltaTime)
 	fvector_3d V3;
     GetRootComponent()->GetCorrectionPosition(V3);
 
-	////构建Viewmatrix
+	//构建Viewmatrix
 	XMFLOAT3 RightVector = GetRootComponent()->GetRightVector();
 	XMFLOAT3 UPVector = GetRootComponent()->GetUPVector();
 	XMFLOAT3 ForwardVector = GetRootComponent()->GetForwardVector();
 
-	ViewMatrix = {
+	ViewMatrix = 
+	{
 		RightVector.x,	UPVector.x,	ForwardVector.x,	0.f,
 		RightVector.y,	UPVector.y,	ForwardVector.y,	0.f,
 		RightVector.z,	UPVector.z,	ForwardVector.z,	0.f,
-		V3.x,			V3.y,		V3.z,				1.f };
+		V3.x,			V3.y,		V3.z,				1.f 
+	};
 	
+	ViewMatrixRH =
+	{
+		RightVector.x,	UPVector.x,	-ForwardVector.x,	0.f,
+		RightVector.y,	UPVector.y,	-ForwardVector.y,	0.f,
+		RightVector.z,	UPVector.z,	-ForwardVector.z,	0.f,
+		V3.x,			V3.y,		-V3.z,				1.f
+	};
 
 	//XMFLOAT3 EyePos = { -V3.x, -V3.y, -V3.z };
 

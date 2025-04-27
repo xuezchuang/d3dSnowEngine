@@ -94,7 +94,6 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 		return;
 	}
 
-
 	if (std::shared_ptr<FRenderingData> InRenderingData = InWeakRenderingData.lock())
 	{
 		auto GetRenderingConditions = [&]() -> bool
@@ -131,8 +130,8 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 			//定义我们要绘制的哪种图元 点 线 面
 			EMaterialDisplayStatusType DisplayStatus = (*InRenderingData->Mesh->GetMaterials())[0]->GetMaterialDisplayStatus();
 			//context.SetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)DisplayStatus);
-			context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			//context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+			//context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 			
 			//模型起始地址偏移
 			//DesMeshHandle.Offset(InRenderingData.MeshObjectIndex, DescriptorOffset);
@@ -146,8 +145,6 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 				//D3D12_GPU_VIRTUAL_ADDRESS SkinnedAddress =
 				//	SkinnedConstantBufferViews.GetBuffer()->GetGPUVirtualAddress() +
 				//	ConstantBufferByteSize * InSkinnedIndex;
-
-
 				//context.SetDynamicConstantBufferView(Signature_ObjectSkinned, sizeof(FObjectTransformation), ObjectConstant);
 			}
 			else
@@ -159,7 +156,6 @@ void FRenderLayer::DrawObject(GraphicsContext& context,float DeltaTime,std::weak
 			{
 				const FObjectTransformation& ObjectConstant = GeometryMap->MeshObjectConstant[Tmp.MeshObjectIndex];
 				context.SetDynamicConstantBufferView(Signature_Object, sizeof(FObjectTransformation), &ObjectConstant);
-
 
 				//真正的绘制
 				context.DrawIndexedInstanced(

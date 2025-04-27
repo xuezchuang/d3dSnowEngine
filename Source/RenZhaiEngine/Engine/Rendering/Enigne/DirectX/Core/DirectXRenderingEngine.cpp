@@ -164,7 +164,7 @@ int CDirectXRenderingEngine::PostInit()
 			if (GBoxMesh* InBoxMesh = World->CreateActorObject<GBoxMesh>())
 			{
 				InBoxMesh->CreateMesh(5.f, 5.f, 5.f);
-				InBoxMesh->SetPosition(XMFLOAT3(0.0f, 2.5f, 0.0f));
+				InBoxMesh->SetPosition(XMFLOAT3(-8.0f, 2.5f, 0.0f));
 				InBoxMesh->SetScale(fvector_3d(1));
 				if (CMaterial* InMaterial = (*InBoxMesh->GetMaterials())[0])
 				{
@@ -184,6 +184,22 @@ int CDirectXRenderingEngine::PostInit()
 				{
 					InMaterial->SetMaterialType(EMaterialType::HalfLambert);
 					InMaterial->SetBaseColor("tile");
+				}
+			}
+
+			if (GCustomMesh* CustomMesh = World->CreateActorObject<GCustomMesh>())//·´ÉäÇò
+			{
+				string Path = FEnginePathHelper::GetEngineContentPath() + "/shaderBall.obj";
+				CustomMesh->CreateMesh(Path);
+
+				CustomMesh->SetPosition(XMFLOAT3(0.f, 2.0f, 0.f));
+				CustomMesh->SetRotation(fvector_3d(90.f, 0.0f, 0.f));
+				CustomMesh->SetScale(fvector_3d(2));
+
+				if (CMaterial* InMaterial = (*CustomMesh->GetMaterials())[0])
+				{
+					InMaterial->SetMaterialType(EMaterialType::HalfLambert);
+					InMaterial->SetBaseColor("stone");
 				}
 			}
 		}

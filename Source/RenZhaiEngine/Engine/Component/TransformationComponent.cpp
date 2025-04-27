@@ -38,8 +38,7 @@ void CTransformationComponent::SetRotation(const fvector_3d& InNewRotation)
 	float YawRadians = XMConvertToRadians(InNewRotation.y);
 	
 	//Ðý×ª¾ØÕó
-	XMMATRIX RotationRollPitchYawMatrix = XMMatrixRotationRollPitchYaw(
-		PithRadians, YawRadians,RollRadians);
+	XMMATRIX RotationRollPitchYawMatrix = XMMatrixRotationRollPitchYaw(PithRadians, YawRadians,RollRadians);
 
 	XMVECTOR Right = XMLoadFloat3(&RightVector);
 	XMVECTOR Up = XMLoadFloat3(&UPVector);

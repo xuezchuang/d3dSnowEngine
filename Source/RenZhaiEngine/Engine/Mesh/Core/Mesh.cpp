@@ -39,7 +39,7 @@ void GMesh::SetPosition(const XMFLOAT3& InNewPosition)
 	Super::SetPosition(InNewPosition);
 
 	//因为还未做根组件，暂时这么写
-	GetMeshComponent()->SetPosition(InNewPosition);
+	//GetMeshComponent()->SetPosition(InNewPosition);
 }
 
 void GMesh::SetRotation(const fvector_3d& InRotation)
@@ -47,7 +47,7 @@ void GMesh::SetRotation(const fvector_3d& InRotation)
 	Super::SetRotation(InRotation);
 
 	//因为还未做根组件，暂时这么写
-	GetMeshComponent()->SetRotation(InRotation);
+	//GetMeshComponent()->SetRotation(InRotation);
 }
 
 void GMesh::SetScale(const fvector_3d& InNewScale)
@@ -55,7 +55,7 @@ void GMesh::SetScale(const fvector_3d& InNewScale)
 	Super::SetScale(InNewScale);
 
 	//因为还未做根组件，暂时这么写
-	GetMeshComponent()->SetScale(InNewScale);
+	//GetMeshComponent()->SetScale(InNewScale);
 }
 
 UINT GMesh::GetMaterialNum() const
