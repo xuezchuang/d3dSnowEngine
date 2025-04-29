@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>HBAO</id>
+    <version>1.0.3</version>
+    <authors>xuezchuang</authors>
+    <owners>xuezchuang</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>HBAO (Horizon-Based Ambient Occlusion) native library</description>
+    <tags>native HBAO ambient-occlusion graphics</tags>
+  </metadata>
+  <files>
+    <!-- 头文件 -->
+	 <file src="HBAO.targets" target="build\native\HBAO.targets" />
+    <file src="HBAO\include\*.h" target="build\native\include" />
+    
+    <!-- 所有 .lib 和 .dll 文件 -->
+    <file src="HBAO\lib\*.lib" target="build\native\lib" />
+    <file src="HBAO\lib\*.dll" target="build\native\bin" />
+  </files>
+</package>
